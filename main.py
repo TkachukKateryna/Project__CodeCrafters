@@ -10,7 +10,7 @@ class HelpMe:
         # (приклад: dict = {'номер, що відповідає номеру у діалоговому вікні': {'class':'RecordManager.command_dict','name':'text'}, 'номер, що відповідає номеру у діалоговому вікні': {'class':'Sorting.command_dict', 'name':text'}})
         # Відповідно, далі скрипт створює екземпляр класу та "витягає" з нього список команд. Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
 
-        modules = {'0':{'class':'class_name().command_dict', 'name':'сортувальника файлів'},'1':{'class':ContactBook(True).command_dict, 'name':'менеджера контактів'}}
+        modules = {'0':{'class':'class_name().command_dict', 'name':'сортувальника файлів'},'1':{'class':self.command_data['Contact_book'], 'name':'менеджера контактів'},'2':{'class':self.command_data['Record_manager'], 'name':'менеджера записів'}}
         module_tips = ["Помічник має декілька функцій: сортування файлів у заданій директорії, менеджер контактів та записів, тут могла бути ваша реклама.","0. Щоб подивитись список команд для сортування файлів, введіть у консоль '0'.","1. Щоб подивитись список команд для менеджера контактів та записів, введіть у консоль '1'."]
         general_info = "________________________\n" + '\n'.join(f'{key}' for key in module_tips) + "\n________________________"
         print(general_info)
@@ -32,10 +32,31 @@ class InputManager(HelpMe):
         # структура збереження даних: {record_id:Record_class_instance}
         # Record_class_instance зберігає ім'я, Д/Р, телефони, пошти, тощо. Питання тільки в тому, чи треба для усього цього свої окремі класи, чи буде достатньо просто змінних? 
         # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класуі "витягнути" з нього оброблену змінну).
-        self.data = {}
+        self.command_data = {}
+        self.notepad = ContactBook()
+        self.record = RecordManager()
+        self.command_data['Contact_book'] = self.notepad.command_dict
+        self.command_data['Record_manager'] = self.record.command_dict
+        can_have_a_command = [self.notepad, self.record]
+        self.actions = self.action_filler(can_have_a_command)
+        self.actions["help"] = self.help
+        self.actions["quit"] = quit
+        self.actions["close"] = quit
+        self.actions["exit"] = quit
+        self.actions["leave"] = quit
+        
 
     def default_action(self):
         print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
+
+    def action_filler(self, can_have_a_command):
+        actions_dict = {}
+        for item in can_have_a_command:
+            if hasattr(item, 'method_table'):
+                for k,v in item.method_table.items():
+                    actions_dict[k] = v
+
+        return actions_dict
 
     def main(self):
         while True:
@@ -46,8 +67,7 @@ class InputManager(HelpMe):
             # структура нового списку actions: {'help':{'class':'class_name', 'methods':{'method1':'method1_name','method2':'method2_name'}, 'arguments':[arg1,arg2,arg3]}}
             # яким чином створюється діалог? Зчитується кількість методів, і доти, доки всі ці методи не отримали певні значення, менеджер буде просити ці значення надати (тут, напевно, треба буде прикрутити словник з локалізацією).
             # В кінці, створюється екземпляр зазначеного класа і в нього викликається метод з цими аргументами.
-            actions = {
-                "help": self.help,
+            
                 #"add": ContactAdder().add, 
                 #"edit": ContactEditor().edit,
                 #"remove": ContactRemover().remove,
@@ -64,14 +84,24 @@ class InputManager(HelpMe):
                 #set_directory(input - default directory.)
                 #sort_files(input - directory)
                 #P.S: all file_format and category key-value pairs must be dislocated to the configs. 
-                "quit": quit,
-                "close": quit,
-                "exit": quit,
-                "leave": quit,
-            }
 
-            selected_action = actions.get(command, self.default_action)
-            selected_action()
+            if command in self.actions.keys():
+                if type(self.actions[command]) != dict:
+                    selected_action = self.actions[command]
+                    selected_action()
+                else:
+                    tmp_array = {'ContactBook':self.notepad, 'Record':self.record}
+                    #tmp_class = tmp_array[self.actions[command]['class']]
+                    for key,value in self.actions[command]['methods'].items():
+                        if value == {}:
+                            key()
+                        else:
+                            for k,v in value.items():
+                                while True:
+                                    command = input(v).strip().lower()
+                                    if command != '':
+                                        print("As it should be.")
+                                        break
 
 
 if __name__ == "__main__":

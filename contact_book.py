@@ -1,15 +1,20 @@
 # Dummy mode is used to extract command_dict from the class. Set True only if called from 'help' method.
 class ContactBook:
-    def __init__(self,dummy_mode=False):
+    def __init__(self):
         self.command_dict = {'command':'description', 'sample_text2':'sample_text2'}
-        if dummy_mode == False:
-            self.data = {}
-            self.priority_ids = []
-            self.record_cnt = 0
-            self.size_check = False
-            self.file = "storage.bin"
+        self.data = {}
+        self.priority_ids = []
+        self.record_cnt = 0
+        self.size_check = False
+        self.file = "storage.bin"
+        self.update_file("load",0)
 
-            self.update_file("load",0)
+
+        self.method_table = {'save_notes':{'class':'ContactBook', 'methods':{self.save_changes:[],self.update_file:['mode','r_id']}}, 
+                             'try_to_check':{'class':'ContactBook', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!'}}}}
+
+    def test_printer(self,argument=None):
+        print("Stage_1_test_successful!")
 
     # Prepares self.data to be saved.
     #Explanation: operates in two modes: 'add' and 'any_other_value'. If called with mode 'add', requires record id. returns a dict ONLY with a selected record. 
