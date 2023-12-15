@@ -10,7 +10,7 @@ class HelpMe:
         # (приклад: dict = {'номер, що відповідає номеру у діалоговому вікні': {'class':'RecordManager.command_dict','name':'text'}, 'номер, що відповідає номеру у діалоговому вікні': {'class':'Sorting.command_dict', 'name':text'}})
         # Відповідно, далі скрипт створює екземпляр класу та "витягає" з нього список команд. Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
 
-        modules = {'0':{'class':'class_name().command_dict', 'name':'сортувальника файлів'},'1':{'class':self.command_data['Contact_book'], 'name':'менеджера контактів'},'2':{'class':self.command_data['Record_manager'], 'name':'менеджера записів'}}
+        modules = {'0':{'class':'self.command_data[section_name]', 'name':'сортувальника файлів'},'1':{'class':self.command_data['Contact_book'], 'name':'менеджера контактів'},'2':{'class':'self.command_data[section_name]', 'name':'менеджера записів'}}
         module_tips = ["Помічник має декілька функцій: сортування файлів у заданій директорії, менеджер контактів та записів, тут могла бути ваша реклама.","0. Щоб подивитись список команд для сортування файлів, введіть у консоль '0'.","1. Щоб подивитись список команд для менеджера контактів та записів, введіть у консоль '1'."]
         general_info = "________________________\n" + '\n'.join(f'{key}' for key in module_tips) + "\n________________________"
         print(general_info)
@@ -36,8 +36,6 @@ class InputManager(HelpMe):
         self.command_data = {}
         self.notepad = ContactBook()
         self.record = RecordManager()
-        self.command_data['Contact_book'] = self.notepad.command_dict
-        self.command_data['Record_manager'] = self.record.command_dict
         can_have_a_command = [self.notepad, self.record]
         self.actions = self.action_filler(can_have_a_command)
         self.actions["help"] = self.help
@@ -54,20 +52,26 @@ class InputManager(HelpMe):
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
     # структура нового списку actions: 
-    #{'console_command_name':{'class':'class_name', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
+    #{'console_command_name':{'class':'class_name', 'description':'description_text', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
     def action_filler(self, can_have_a_command):
         actions_dict = {}
         for item in can_have_a_command:
-            if hasattr(item, 'method_table'):
-                for k,v in item.method_table.items():
-                    actions_dict[k] = v
+            if hasattr(item, 'method_table') and item.method_table != {}:
+                for com_name,parameters in item.method_table.items():
+                    actions_dict[com_name] = parameters
+                    if 'description' in parameters.keys():
+                        conversion_dict = {self.notepad:'Contact_book', self.record:'Record_manager'}
+                        if not conversion_dict[item] in self.command_data:
+                            self.command_data[conversion_dict[item]] = {}
+                            
+                        self.command_data[conversion_dict[item]][com_name] = parameters['description']
 
         return actions_dict
 
     def main(self):
         while True:
             command = input('Будь ласка, введіть необхідну команду або ключове слово "help" для відображення списку доступних команд: ').strip().lower()
-            
+                # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
                 #"add": ContactAdder().add, 
                 #"edit": ContactEditor().edit,
                 #"remove": ContactRemover().remove,
@@ -84,6 +88,7 @@ class InputManager(HelpMe):
                 #set_directory(input - default directory.)
                 #sort_files(input - directory)
                 #P.S: all file_format and category key-value pairs must be dislocated to the configs. 
+
 
             # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
