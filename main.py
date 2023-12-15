@@ -43,6 +43,11 @@ class ContactManager:
                 #show_all(), 
                 #remove(input - record name, but removing only by record_id. if multiple found, show all and ask to choose (by assigning temporary index to every element)), 
                 #show_birthdays(input - timedelta{days}) 
+
+                #commands for file sorter:
+                #set_directory(input - default directory.)
+                #sort_files(input - directory)
+                #P.S: all file_format and category key-value pairs must be dislocated to the configs. 
                 "quit": quit,
             }
 
