@@ -90,18 +90,18 @@ class InputManager(HelpMe):
                     selected_action = self.actions[command]
                     selected_action()
                 else:
-                    tmp_array = {'ContactBook':self.notepad, 'Record':self.record}
-                    #tmp_class = tmp_array[self.actions[command]['class']]
                     for key,value in self.actions[command]['methods'].items():
                         if value == {}:
                             key()
                         else:
+                            arguments_list = []
                             for k,v in value.items():
                                 while True:
-                                    command = input(v).strip().lower()
+                                    command = input(v)
                                     if command != '':
-                                        print("As it should be.")
+                                        arguments_list.append(command)
                                         break
+                            key(*arguments_list)
 
 
 if __name__ == "__main__":
