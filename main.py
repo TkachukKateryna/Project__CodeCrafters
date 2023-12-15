@@ -39,7 +39,7 @@ class InputManager(HelpMe):
 
             actions = {
                 "help": self.help,
-                #"add": ContactAdder().add, # Syntaxis: 'add' + 'contact/note/birthday/phone/email' + contact_name, i.e. record name (if changing existing contact)
+                #"add": ContactAdder().add, 
                 #"edit": ContactEditor().edit,
                 #"remove": ContactRemover().remove,
                 # commands for contact book: 
