@@ -1,6 +1,6 @@
 class ContactBook:
     def __init__(self):
-        self.command_dict = {'add':'Add new contact', 'del':'delete existing contact'}
+        self.command_dict = {'command':'description', 'sample_text2':'sample_text2'}
         self.data = {}
         self.priority_ids = []
         self.record_cnt = 0
@@ -67,7 +67,6 @@ class ContactBook:
         elif mode == "load":
             with open(file, 'rb') as storage:
                 tmp_data = pickle.load(storage)
-                # print(tmp_data)
                 for ids,data in tmp_data.items():
                     if ids == 'Init_mem':
                         self.record_cnt = data['Record_cnt']
@@ -76,6 +75,7 @@ class ContactBook:
                         self.data[data[ids]] = Record(data['Name'],data['Birthday']) # Re-creating Record() class. Can be named differently, rewrite if neccessary.
                         self.data[data[ids]].phones = data['Phone']
                         # TODO: add support for loading the notes
+                        
         # If mode == add, adding record to file (with correct id). If mode == 'del', removes the record by id, overwrites saved data with the new self.data + technical variables. 
         #With "ed", overwrites saved data with the new self.data + technical variables
 
