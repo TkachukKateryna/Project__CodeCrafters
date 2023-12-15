@@ -11,10 +11,10 @@ class ContactBook:
 
 
         self.method_table = {'save_notes':{'class':'ContactBook', 'methods':{self.save_changes:[],self.update_file:['mode','r_id']}}, 
-                             'try_to_check':{'class':'ContactBook', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!'}}}}
+                             'try_to_check':{'class':'ContactBook', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!','argument_dame':'The second one argument you are supposed to avoid at any costs. Beware!','argument_fame':'The last one argument you are supposed to avoid at any costs. Beware!'}}}}
 
-    def test_printer(self,argument=None):
-        print("Stage_1_test_successful!")
+    def test_printer(self,*args):
+        print(args)
 
     # Prepares self.data to be saved.
     #Explanation: operates in two modes: 'add' and 'any_other_value'. If called with mode 'add', requires record id. returns a dict ONLY with a selected record. 
