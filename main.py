@@ -3,7 +3,7 @@ import record_manager
 import notes_manager
 import sorting
 
-class HelpMe():
+class HelpMe:
     def __init__(self,calling_class):
         print(calling_class.command_dict)
         string = "________________________\nСписок доступних команд:\n"
@@ -61,5 +61,5 @@ class InputManager:
 
 if __name__ == "__main__":
     print("Я ваш персональний помічник. Як я можу вам допомогти?")
-    manager = ContactManager()
+    manager = InputManager()
     manager.main()
