@@ -1,4 +1,3 @@
-# Dummy mode is used to extract command_dict from the class. Set True only if called from 'help' method.
 class ContactBook:
     def __init__(self):
         self.command_dict = {'command':'description', 'sample_text2':'sample_text2'}
