@@ -1,4 +1,4 @@
-import contact_book
+from contact_book import ContactBook
 import record_manager
 import notes_manager
 import sorting
@@ -7,11 +7,26 @@ class HelpMe:
     # def __init__(self,calling_class):
     #     self.tell(calling_class)
 
-    def tell(self,calling_class):
-        string = "________________________\nСписок доступних команд:\n"
-        string +='\n'.join(f'{key} - {value}' for key, value in calling_class.command_dict.items())
-        string += "\n________________________"
-        print(string)
+    def help(self,command_parsed):
+        # Поки що видає лише команди цього класу. Як варіант, при запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо).
+        # Коли користувач обере тему, видає список команд відповідного класу з референсного словника (приклад: dict = {'Створення запису': 'Record', 'Сортування файлів': 'Sorting'})
+        # Відповідно, далі скрипт створює екземпляр класу та "витягає" з нього список команд. Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін.
+
+        modules = {'1':'class_name().command_dict','2':ContactBook(True).command_dict}
+        general_info = "________________________\n"
+        general_info += "Помічник має декілька функцій: сортування файлів у заданій директорії, менеджер контактів та записів, тут могла бути ваша реклама.\n1. Щоб подивитись список команд для сортування файлів, введіть у консоль '1'\n2. Щоб подивитись список команд для менеджера контактів та записів, введіть у консоль '2'."
+        general_info += "\n________________________"
+        print(general_info)
+        while True:
+            answer = input('Будь ласка, оберіть номер розділу або напишіть "leave" щоби повернутися у попереднє меню: ').strip().lower()
+            if answer in modules:
+                string = "________________________\nСписок доступних команд:\n"
+                string +='\n'.join(f'{key} - {value}' for key, value in modules[answer].items())
+                string += "\n________________________"
+                print(string)
+            elif answer == "leave":
+                break
+
 
 
 class InputManager(HelpMe):
@@ -24,19 +39,13 @@ class InputManager(HelpMe):
         self.data = {}
         self.command_dict = {'add':'Add new contact', 'del':'delete existing contact'}
 
-    def help(self):
-        # Поки що видає лише команди цього класу. Як варіант, при запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо).
-        # Коли користувач обере тему, видає список команд відповідного класу з референсного словника (приклад: dict = {'Створення запису': 'Record', 'Сортування файлів': 'Sorting'})
-        # Відповідно, далі скрипт створює екземпляр класу та "витягає" з нього список команд. Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін.
-        self.tell(self)
-
     def default_action(self):
         print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
 
     def main(self):
         while True:
             command = input('Будь ласка, введіть необхідну команду або ключове слово "help" для відображення списку доступних команд: ').strip().lower()
-
+            command_parsed = command.split()
             actions = {
                 "help": self.help,
                 #"add": ContactAdder().add, 
@@ -61,8 +70,8 @@ class InputManager(HelpMe):
                 "leave": quit,
             }
 
-            selected_action = actions.get(command, self.default_action)
-            selected_action()
+            selected_action = actions.get(command_parsed[0], self.default_action)
+            selected_action(command_parsed)
 
 
 if __name__ == "__main__":

@@ -1,13 +1,14 @@
 class ContactBook:
-    def __init__(self):
+    def __init__(self,dummy_mode=False):
         self.command_dict = {'command':'description', 'sample_text2':'sample_text2'}
-        self.data = {}
-        self.priority_ids = []
-        self.record_cnt = 0
-        self.size_check = False
-        self.file = "storage.bin"
+        if dummy_mode == False:
+            self.data = {}
+            self.priority_ids = []
+            self.record_cnt = 0
+            self.size_check = False
+            self.file = "storage.bin"
 
-        self.update_file("load",0)
+            self.update_file("load",0)
 
     # Prepares self.data to be saved.
     #Explanation: operates in two modes: 'add' and 'any_other_value'. If called with mode 'add', requires record id. returns a dict ONLY with a selected record. 
@@ -75,7 +76,7 @@ class ContactBook:
                         self.data[data[ids]] = Record(data['Name'],data['Birthday']) # Re-creating Record() class. Can be named differently, rewrite if neccessary.
                         self.data[data[ids]].phones = data['Phone']
                         # TODO: add support for loading the notes
-                        
+
         # If mode == add, adding record to file (with correct id). If mode == 'del', removes the record by id, overwrites saved data with the new self.data + technical variables. 
         #With "ed", overwrites saved data with the new self.data + technical variables
 
