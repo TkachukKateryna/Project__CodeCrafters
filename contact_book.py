@@ -73,7 +73,7 @@ class ContactBook:
                         self.record_cnt = data['Record_cnt']
                         self.priority_ids = data['Priority_ids']
                     else:
-                        self.data[data[ids]] = Record(data['Name'],data['Birthday']) # Re-creating Record() class. Can be named differently, rewrite if neccessary.
+                        self.data[data[ids]] = RecordManager(data['Name'],data['Birthday']) # Re-creating Record() class. Can be named differently, rewrite if neccessary.
                         self.data[data[ids]].phones = data['Phone']
                         # TODO: add support for loading the notes
 
