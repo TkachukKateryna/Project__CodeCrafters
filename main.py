@@ -1,5 +1,6 @@
-import notes
-import record
+import contact_book
+import record_manager
+import notes_manager
 import sorting
 
 class HelpMe():
