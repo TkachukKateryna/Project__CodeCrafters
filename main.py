@@ -4,9 +4,6 @@ import notes_manager
 import sorting
 
 class HelpMe:
-    # def __init__(self,calling_class):
-    #     self.tell(calling_class)
-
     def help(self):
         # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо).
         # Коли користувач обере тему, видає список команд відповідного класу з референсного словника (приклад: dict = {'номер, що відповідає номеру у діалоговому вікні': 'RecordManager.command_dict', 'номер, що відповідає номеру у діалоговому вікні': 'Sorting.command_dict'})
