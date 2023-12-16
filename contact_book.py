@@ -29,7 +29,7 @@ class ContactBook(): #UserDict
     def test_printer(self,*args):
         print(args)
 
-    # Prepares self.data to be saved.
+    # Prepares self.data[id] to be saved.
     #Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
     #Used to add new lines to the file.bin
     def prepare_data(self,mode:str,record_id=None):
