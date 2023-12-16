@@ -1,4 +1,6 @@
-from record_manager import RecordManager
+#import pickle
+from collections import UserDict
+#from record_manager import MiscChecks, RecordManager
 from contact_book import ContactBook
 import notes_manager
 import sorting
@@ -28,15 +30,15 @@ class HelpMe:
 
         func_str = func_str[:len(func_str)-2]
 
-        general_info = f"________________________\nПомічник має такі функції: {func_str}. {func_str_p2}Якщо хочете повернутися у попереднє меню, напишіть '{bcolors.RED}leave{bcolors.GREEN}'."
+        general_info = f"________________________\nПомічник має такі функції: {func_str}. {func_str_p2}Якщо хочете повернутися у головне меню, напишіть '{bcolors.RED}back{bcolors.GREEN}'."
         print(general_info)
         while True:
             answer = input(bcolors.CYAN + 'Будь ласка, оберіть номер розділу: ' + bcolors.GREEN).strip().lower()
             if answer in self.help_modules.keys():
                 string = f"________________________\nСписок доступних команд для {self.help_modules[answer]['localization']['name']}:\n"
-                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\nЯкщо хочете повернутися у попереднє меню, напишіть '{bcolors.RED}leave{bcolors.GREEN}'." + "\n________________________"
+                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\nЯкщо хочете повернутися у головне меню, напишіть '{bcolors.RED}back{bcolors.GREEN}'." + "\n________________________"
                 print(string)
-            elif answer == "leave":
+            elif answer == "back":
                 break
 
 
@@ -50,16 +52,16 @@ class InputManager(HelpMe):
         # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класу і "витягнути" з нього оброблену змінну).
             # Upd: або просто записати функцію перевірки у клас RecordManager - від цього, в теорії, ніхто не постраждає.
         self.help_modules = {}
-        self.notepad = ContactBook()
-        self.record = RecordManager()
-        can_have_a_command = [self.notepad, self.record]
+        self.notepad = "None" #NoteFile()
+        self.contactbook = ContactBook()
+        can_have_a_command = [self.contactbook]
         self.actions = self.action_filler(can_have_a_command)
         self.actions["help"] = self.help
         self.actions["quit"] = quit
         self.actions["close"] = quit
         self.actions["exit"] = quit
         self.actions["leave"] = quit
-        
+
 
     def default_action(self):
         print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
@@ -78,7 +80,7 @@ class InputManager(HelpMe):
                 for com_name,parameters in item.method_table.items():
                     actions_dict[com_name] = parameters
                     if 'description' in parameters.keys():
-                        conversion_dict = {self.notepad:'Contact_book', self.record:'Record_manager'}
+                        conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager'}
                         if not str(filler_ids) in self.help_modules:
                             self.help_modules[str(filler_ids)] = {'name':conversion_dict[item],'scripts':{},'localization':{}}
                         
@@ -127,7 +129,7 @@ class InputManager(HelpMe):
                             arguments_list = []
                             for k,v in value.items():
                                 while True:
-                                    command = input(v)
+                                    command = input(v + ':   ')
                                     if command != '':
                                         arguments_list.append(command)
                                         break
