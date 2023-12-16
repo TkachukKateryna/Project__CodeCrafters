@@ -3,22 +3,37 @@ from contact_book import ContactBook
 import notes_manager
 import sorting
 
+class bcolors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    DEFAULT = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class HelpMe:
     def help(self):
-        # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо).
-        # Коли користувач обере тему, видає список команд відповідного класу з референсного словника 
-        # (приклад: dict = {'номер, що відповідає номеру у діалоговому вікні': {'class':'RecordManager.command_dict','name':'text'}, 'номер, що відповідає номеру у діалоговому вікні': {'class':'Sorting.command_dict', 'name':text'}})
-        # Відповідно, далі скрипт створює екземпляр класу та "витягає" з нього список команд. Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
+        # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо). Коли користувач обере тему, видає список команд відповідного класу з self.help_modules
+        # Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
+        # Структура self.help_modules: self.help_modules = {str(index):{'name':'module_name','scripts':{'script1':'descr_text','script2':'descr_text'},'localization':{'name':'text', 'description':'text'}}}
+        func_str = ''
+        func_str_p2 = '\n'
+        for k,v in self.help_modules.items():
+            func_str += self.help_modules[k]['localization']['description'] + ', '
+            func_str_p2 += f"{k}. Щоб подивитись список команд для {self.help_modules[k]['localization']['name']}, введіть у консоль '{bcolors.RED}{k}{bcolors.GREEN}'.\n"
 
-        modules = {'0':{'class':'self.command_data[section_name]', 'name':'сортувальника файлів'},'1':{'class':self.command_data['Contact_book'], 'name':'менеджера контактів'},'2':{'class':'self.command_data[section_name]', 'name':'менеджера записів'}}
-        module_tips = ["Помічник має декілька функцій: сортування файлів у заданій директорії, менеджер контактів та записів, тут могла бути ваша реклама.","0. Щоб подивитись список команд для сортування файлів, введіть у консоль '0'.","1. Щоб подивитись список команд для менеджера контактів та записів, введіть у консоль '1'."]
-        general_info = "________________________\n" + '\n'.join(f'{key}' for key in module_tips) + "\n________________________"
+        func_str = func_str[:len(func_str)-2]
+
+        general_info = f"________________________\nПомічник має такі функції: {func_str}. {func_str_p2}Якщо хочете повернутися у попереднє меню, напишіть '{bcolors.RED}leave{bcolors.GREEN}'."
         print(general_info)
         while True:
-            answer = input('Будь ласка, оберіть номер розділу або напишіть "leave" щоби повернутися у попереднє меню: ').strip().lower()
-            if answer in modules:
-                string = "________________________\nСписок доступних команд для " + modules[answer]['name'] + ":\n"
-                string +='\n'.join(f'{key} - {value}' for key, value in modules[answer]['class'].items()) + "\n________________________"
+            answer = input(bcolors.CYAN + 'Будь ласка, оберіть номер розділу: ' + bcolors.GREEN).strip().lower()
+            if answer in self.help_modules.keys():
+                string = f"________________________\nСписок доступних команд для {self.help_modules[answer]['localization']['name']}:\n"
+                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + "\n________________________"
                 print(string)
             elif answer == "leave":
                 break
@@ -33,7 +48,7 @@ class InputManager(HelpMe):
         # Record_class_instance зберігає ім'я, Д/Р, телефони, пошти, тощо. Питання тільки в тому, чи треба для усього цього свої окремі класи, чи буде достатньо просто змінних? 
         # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класу і "витягнути" з нього оброблену змінну).
             # Upd: або просто записати функцію перевірки у клас RecordManager - від цього, в теорії, ніхто не постраждає.
-        self.command_data = {}
+        self.help_modules = {}
         self.notepad = ContactBook()
         self.record = RecordManager()
         can_have_a_command = [self.notepad, self.record]
@@ -55,22 +70,28 @@ class InputManager(HelpMe):
     #{'console_command_name':{'class':'class_name', 'description':'description_text', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
     def action_filler(self, can_have_a_command):
         actions_dict = {}
+        filler_ids = -1
         for item in can_have_a_command:
             if hasattr(item, 'method_table') and item.method_table != {}:
+                filler_ids += 1
                 for com_name,parameters in item.method_table.items():
                     actions_dict[com_name] = parameters
                     if 'description' in parameters.keys():
                         conversion_dict = {self.notepad:'Contact_book', self.record:'Record_manager'}
-                        if not conversion_dict[item] in self.command_data:
-                            self.command_data[conversion_dict[item]] = {}
-                            
-                        self.command_data[conversion_dict[item]][com_name] = parameters['description']
+                        if not str(filler_ids) in self.help_modules:
+                            self.help_modules[str(filler_ids)] = {'name':conversion_dict[item],'scripts':{},'localization':{}}
+                        
+                        if com_name != '__localization_insert':
+                            self.help_modules[str(filler_ids)]['scripts'][com_name] = parameters['description']
+                        else:
+                            self.help_modules[str(filler_ids)]['localization']['description'] = parameters['description']
+                            self.help_modules[str(filler_ids)]['localization']['name'] = parameters['name']
 
         return actions_dict
 
     def main(self):
         while True:
-            command = input('Будь ласка, введіть необхідну команду або ключове слово "help" для відображення списку доступних команд: ').strip().lower()
+            command = input(bcolors.CYAN + 'Будь ласка, введіть необхідну команду або ключове слово "help" для відображення списку доступних команд: ' + bcolors.GREEN).strip().lower()
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
                 #"add": ContactAdder().add, 
                 #"edit": ContactEditor().edit,
