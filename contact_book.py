@@ -104,7 +104,7 @@ class ContactBook(): #UserDict
                     try:
                         while True:  
                             record = PersUnpickler(storage).load()
-                            print(record)
+                            # print(record)
                             self.data[id_generator] = RecordManager()
                             self.data[id_generator].load_data(name=record['Name'],phones=record['Phones'],birthday=record['Birthday'],email=record['Email'],address=record['Address'])
                             id_generator += 1
