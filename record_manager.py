@@ -56,10 +56,9 @@ class MiscChecks:
 # Екземпляр класу. Відповідає за зберігання усіх змінних запису. Створюється у ContactBook. Необов'язкові поля можуть бути пропущені символами "n"/"N".
 # У самому класі зберігається лише функціонал запису/зміни/видалення. Все інше наслідується від MiscChecks.
 class RecordManager(MiscChecks):
-    def __init__(self, name):
-        self.method_table = {}
+    def __init__(self):
         self.phones = []
-        self.name = name
+        self.name = "Unnamed contact"
         self.birthday = None
         self.email = None
         self.address = None
@@ -71,12 +70,20 @@ class RecordManager(MiscChecks):
         if type(self.p_check(phone)) == str:
             phone = self.p_check(phone)
             self.phones.append(phone)
-            print(f"Added number {phone} to the record (named '{self.name}')!")
+            #print(f"Added number {phone} to the record (named '{self.name}')!")
 
     def add_birthday(self,birthday):
         if self.birthday_check(birthday):
             self.birthday = self.birthday_check(birthday)
-            print(f"Added birthday {birthday} to the record (named '{self.name}')!")
+            #print(f"Added birthday {birthday} to the record (named '{self.name}')!")
+
+    def add_name(self,name:str):
+        self.name = name
+
+    def add_email(self,email:str):
+        if self.email_check(email):
+            self.email = email
+            #print(f"Added email {email} to the record (named '{self.name}')!")
 
     def add_address(self,address:str):
         self.address = address
@@ -96,7 +103,15 @@ class RecordManager(MiscChecks):
                 self.birthday = self.birthday_check(new_birthday)
                 return
         
-        raise ValueError("Birthday not set yet!")
+        raise ValueError("Birthday is not set yet!")
+            
+    def edit_email(self,new_email:str):
+        if self.email != None:
+            if type(self.email_check(new_email)) == str:
+                self.email = new_email
+                return
+        
+        raise ValueError("Email is not set yet!")
         
     def edit_name(self,name:str):
         self.name = name
@@ -116,6 +131,9 @@ class RecordManager(MiscChecks):
     
     def remove_name(self):
         self.name = "Unnamed contact"
+
+    def remove_email(self):
+        self.email = None
 
     def remove_address(self):
         self.address = None
