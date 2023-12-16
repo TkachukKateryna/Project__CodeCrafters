@@ -84,7 +84,10 @@ class RecordManager(MiscChecks):
                 return
         
         raise ValueError("Birthday not set yet!")
-    
+        
+    def edit_name(self,name:str):
+        self.name = name
+
     def remove_phone(self,phone:str):
         if self.has_phone(phone):
             self.phones.remove(phone)
@@ -94,6 +97,9 @@ class RecordManager(MiscChecks):
     
     def remove_birthday(self):
         self.birthday = None
+    
+    def remove_name(self):
+        self.name = "Unnamed contact"
 
     def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
