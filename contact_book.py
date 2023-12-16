@@ -1,4 +1,5 @@
-class ContactBook:
+from collections import UserDict
+class ContactBook(UserDict):
     def __init__(self):
         self.data = {}
         self.priority_ids = []
