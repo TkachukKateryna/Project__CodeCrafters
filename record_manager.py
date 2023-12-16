@@ -39,6 +39,12 @@ class MiscChecks:
         else:
             raise ValueError("Wrong birthday format. The correct format would be: MM-DD-YYYY")
         
+    def has_phone(self,phone:str):
+        for i in self.phones:
+            if i.value == phone:
+                return True
+           
+        return False 
 
 
 class RecordManager(MiscChecks):
@@ -61,6 +67,15 @@ class RecordManager(MiscChecks):
         if self.birthday_check(birthday):
             self.birthday = self.birthday_check(birthday)
             print(f"Added birthday {birthday} to the record (named '{self.name}')!")
+
+    def edit_phone(self,phone:str,new_phone:str):
+        if self.has_phone(phone):
+            if type(self.p_check(new_phone)) == str:
+                self.phones.remove(phone)
+                self.phones.append(new_phone)
+                return
+        
+        raise ValueError("Phone not found!")
 
     def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
