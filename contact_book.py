@@ -30,10 +30,8 @@ class ContactBook(): #UserDict
         print(args)
 
     # Prepares self.data to be saved.
-    #Explanation: operates in two modes: 'add' and 'any_other_value'. If called with mode 'add', requires record id. returns a dict ONLY with a selected record. 
-    #Used to add new data to the file.bin
-    #The second mode requires no id. Used to remove/edit the record in the file (which are, in their essence, the same overwriting procedure). 
-    #Prepares all of self.data + technical vars. Be mindful, that technical variables are always saved under 'Init_mem' id.
+    #Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
+    #Used to add new lines to the file.bin
     def prepare_data(self,mode:str,record_id=None):
         if mode == "add":
             for rid,record in self.data.items():
