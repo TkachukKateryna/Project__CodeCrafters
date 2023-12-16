@@ -37,7 +37,7 @@ class ContactBook(): #UserDict
         if mode == "add":
             for rid,record in self.data.items():
                 if rid == record_id:
-                    return {'Name':record.name,'Phones':record.phones,'Birthday':record.birthday}
+                    return {'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address}
     
     
     # Dynamicly adds new records, deletes records, creates file.bin, etc.
@@ -71,7 +71,7 @@ class ContactBook(): #UserDict
                             return id_generator if id_generator else None
                     
                     for id,record in self.data.items():
-                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday})
+                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address})
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
@@ -86,7 +86,7 @@ class ContactBook(): #UserDict
                             return id_generator if id_generator else None
                     
                     for id,record in self.data.items():
-                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday})
+                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address})
                         id_generator += 1
                     self.generated_ids = id_generator
         elif mode == "load":
@@ -105,14 +105,14 @@ class ContactBook(): #UserDict
                         while True:  
                             record = PersUnpickler(storage).load()
                             print(record)
-                            self.data[id_generator] = RecordManager(record['Name'])
-                            self.data[id_generator].load_data(name=record['Name'],phones=record['Phones'],birthday=record['Birthday'])
+                            self.data[id_generator] = RecordManager()
+                            self.data[id_generator].load_data(name=record['Name'],phones=record['Phones'],birthday=record['Birthday'],email=record['Email'],address=record['Address'])
                             id_generator += 1
                     except EOFError:
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
                         print('Reached the end of file!')
-            print(self.data)
+            #print(self.data)
 
         # If mode == add, adding record to file (with correct id). If mode == 'del', removes the record by id, overwrites saved data with the new self.data + technical variables. 
         #With "ed", overwrites saved data with the new self.data + technical variables
