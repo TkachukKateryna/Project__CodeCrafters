@@ -21,9 +21,10 @@ class ContactBook(): #UserDict
         self.file = "storage.bin"
         self.update_file("load",0)
 
-
+        self.opnng = f"Введіть, будь ласка, "
+        self.non_obligatory = f"( або '{bcolors.RED}N{bcolors.GREEN}',якщо бажаєте додати пізніше)"
         self.method_table = {'__localization_insert':{'name':'менеджера контактів','description':'менеджер контактів та записів'},
-                            'contact_create':{'class':'ContactBook', 'description':"Додає новий запис до книги контактів. Потрібно обов'язково вказати ім'я, а телефони та день народження можна додати й пізніше.", 'methods':{self.add_contact:{'name':"Введіть, будь ласка, ім'я (обов'язково)",'phone':f"Введіть, будь ласка, номер телефону (або '{bcolors.RED}N{bcolors.GREEN}',якщо бажаєте додати пізніше)", 'birthday':f"Введіть, будь ласка, день народження контакта (або '{bcolors.RED}N{bcolors.GREEN}',якщо бажаєте додати пізніше)"}}}, 
+                            'contact_create':{'class':'ContactBook', 'description':"Додає новий запис до книги контактів. Потрібно обов'язково вказати ім'я, а телефони та день народження можна додати й пізніше.", 'methods':{self.add_contact:{'name':f"{self.opnng}ім'я{self.non_obligatory}",'phone':f"{self.opnng}номер телефону{self.non_obligatory}", 'birthday':f"{self.opnng}день народження контакта{self.non_obligatory}", 'email':f"{self.opnng}електронну пошту контакта{self.non_obligatory}", 'address':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}, 
                             'try_to_check':{'class':'ContactBook', 'description':'description_text', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!','argument_dame':'The second one argument you are supposed to avoid at any costs. Beware!','argument_fame':'The last one argument you are supposed to avoid at any costs. Beware!'}}}}
 
     def test_printer(self,*args):
@@ -120,17 +121,28 @@ class ContactBook(): #UserDict
     def save_changes(self):
         self.update_file("ed")
 
-    def add_contact(self,name,phone,birthday):
-        new_record = RecordManager(name)
-        if phone.lower() != 'n':
+    def add_contact(self,name,phone,birthday,email,address):
+        new_record = RecordManager()
+        if self.dialogue_check(name):
+            new_record.add_name(name)
+        if self.dialogue_check(phone):
             new_record.add_phone(phone)
-        if birthday.lower() != 'n':
+        if self.dialogue_check(birthday):
             new_record.add_birthday(birthday)
+        if self.dialogue_check(email):
+            new_record.add_email(email)
+        if self.dialogue_check(address):
+            new_record.add_address(address)
 
         self.id_assign(mode="add",record=new_record)
         self.update_file("add",self.generated_ids)
         print(new_record)
     
+    def dialogue_check(self,variable):
+        if variable.lower() != 'n':
+            return True
+        return False
+
     def id_assign(self,mode:str,record:RecordManager):
         if mode == "add":
             if len(self.priority_ids) > 0:
