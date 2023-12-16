@@ -76,6 +76,13 @@ class RecordManager(MiscChecks):
                 return
         
         raise ValueError("Phone not found!")
+    
+    def remove_phone(self,phone:str):
+        if self.has_phone(phone):
+            self.phones.remove(phone)
+            return
+        
+        raise ValueError("Phone not found!")
 
     def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
