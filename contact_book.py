@@ -146,20 +146,3 @@ class ContactBook(): #UserDict
             for k,v in self.data.items():
                 if v == record:
                     self.priority_ids.append(k)
-        
-
-# if __name__ == '__main__':
-#     book = ContactBook()
-#     test_record = RecordManager('Biba')
-#     test_record.add_phone('0201592745')
-#     test_record.add_phone('1201592746')
-#     test_record.birthday = '01-01-2002'
-
-#     book.add_record(test_record)
-#     print(book.data)
-    # book.data['0'] = {'Name':'Santa','Birthday':'20-02-3012','Phones':['01','73']}
-    # book.update_file(mode="add",r_id='0')
-    # book.data['1'] = {'Name':'Biba','Birthday':'11-02-3012','Phones':['55','29']}
-    # book.update_file(mode="add",r_id='1')
-    # book.data['2'] = {'Name':'Boba','Birthday':'30-02-3011','Phones':['90','06']}
-    # book.update_file(mode="add",r_id='2')
