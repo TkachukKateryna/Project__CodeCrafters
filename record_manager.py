@@ -77,12 +77,23 @@ class RecordManager(MiscChecks):
         
         raise ValueError("Phone not found!")
     
+    def edit_birthday(self,new_birthday:str):
+        if self.birthday != None:
+            if type(self.birthday_check(new_birthday)) == str:
+                self.birthday = self.birthday_check(new_birthday)
+                return
+        
+        raise ValueError("Birthday not set yet!")
+    
     def remove_phone(self,phone:str):
         if self.has_phone(phone):
             self.phones.remove(phone)
             return
         
         raise ValueError("Phone not found!")
+    
+    def remove_birthday(self):
+        self.birthday = None
 
     def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
