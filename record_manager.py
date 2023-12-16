@@ -36,6 +36,16 @@ class MiscChecks:
         else:
             raise ValueError("Wrong birthday format. The correct format would be: MM-DD-YYYY")
         
+    def email_check(self,email):
+        from re import search
+        # Format: text@text.text
+        if email == None:
+            return None
+        elif (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
+            return email
+        else:
+            raise ValueError("Wrong email format. The correct format would be: text@text.text")
+        
     def has_phone(self,phone:str):
         for i in self.phones:
             if i.value == phone:
