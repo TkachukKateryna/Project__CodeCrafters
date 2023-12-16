@@ -57,6 +57,7 @@ class ContactBook(): #UserDict
                         return st_r_id if st_r_id else None
 
                 PersPickler(storage).dump(self.prepare_data("add",record_id=r_id))
+                self.generated_ids += 1
         elif mode == "del":
             with open(file, 'wb') as storage:
                 if r_id in self.data:
