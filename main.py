@@ -33,7 +33,7 @@ class HelpMe:
             answer = input(bcolors.CYAN + 'Будь ласка, оберіть номер розділу: ' + bcolors.GREEN).strip().lower()
             if answer in self.help_modules.keys():
                 string = f"________________________\nСписок доступних команд для {self.help_modules[answer]['localization']['name']}:\n"
-                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + "\n________________________"
+                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\nЯкщо хочете повернутися у попереднє меню, напишіть '{bcolors.RED}leave{bcolors.GREEN}'." + "\n________________________"
                 print(string)
             elif answer == "leave":
                 break
@@ -91,7 +91,7 @@ class InputManager(HelpMe):
 
     def main(self):
         while True:
-            command = input(bcolors.CYAN + 'Будь ласка, введіть необхідну команду або ключове слово "help" для відображення списку доступних команд: ' + bcolors.GREEN).strip().lower()
+            command = input(f'{bcolors.CYAN}Будь ласка, введіть необхідну команду або ключове слово "{bcolors.RED}help{bcolors.CYAN}" для відображення списку доступних команд: {bcolors.GREEN}').strip().lower()
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
                 #"add": ContactAdder().add, 
                 #"edit": ContactEditor().edit,
