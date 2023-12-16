@@ -56,7 +56,6 @@ class ContactBook(): #UserDict
                 st_r_id = self.generated_ids
                 class PersPickler(pickle.Pickler):
                     def persistent_id(self, obj):
-                        """Return a persistent id for the `bar` object only"""
                         return st_r_id if st_r_id else None
 
                 PersPickler(storage).dump(self.prepare_data("add",record_id=r_id))
@@ -69,7 +68,6 @@ class ContactBook(): #UserDict
                     id_generator = 0
                     class PersPickler(pickle.Pickler):
                         def persistent_id(self, obj):
-                            """Return a persistent id for the `bar` object only"""
                             return id_generator if id_generator else None
                     
                     for id,record in self.data.items():
