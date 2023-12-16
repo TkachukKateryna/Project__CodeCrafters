@@ -8,7 +8,8 @@ class ContactBook:
         self.update_file("load",0)
 
 
-        self.method_table = {'save_notes':{'class':'ContactBook', 'description':'description_text', 'methods':{self.save_changes:{},self.update_file:{'mode':"function work mode",'r_id':"id of a certain record"}}}, 
+        self.method_table = {'__localization_insert':{'name':'менеджера контактів','description':'менеджер контактів та записів'},
+                            'save_notes':{'class':'ContactBook', 'description':'description_text', 'methods':{self.save_changes:{},self.update_file:{'mode':"function work mode",'r_id':"id of a certain record"}}}, 
                             'try_to_check':{'class':'ContactBook', 'description':'description_text', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!','argument_dame':'The second one argument you are supposed to avoid at any costs. Beware!','argument_fame':'The last one argument you are supposed to avoid at any costs. Beware!'}}}}
 
     def test_printer(self,*args):
