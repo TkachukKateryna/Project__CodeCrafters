@@ -51,6 +51,8 @@ class RecordManager(MiscChecks):
         self.phones = []
         self.name = name
         self.birthday = None
+        self.email = None
+        self.address = None
 
     def __str__(self):
         return f"Record name: {self.name}, Birthday: {self.birthday}, phones: {'; '.join(p for p in self.phones)}"
@@ -65,6 +67,9 @@ class RecordManager(MiscChecks):
         if self.birthday_check(birthday):
             self.birthday = self.birthday_check(birthday)
             print(f"Added birthday {birthday} to the record (named '{self.name}')!")
+
+    def add_address(self,address:str):
+        self.address = address
 
     def edit_phone(self,phone:str,new_phone:str):
         if self.has_phone(phone):
@@ -86,6 +91,9 @@ class RecordManager(MiscChecks):
     def edit_name(self,name:str):
         self.name = name
 
+    def edit_address(self,address:str):
+        self.address = address
+
     def remove_phone(self,phone:str):
         if self.has_phone(phone):
             self.phones.remove(phone)
@@ -98,6 +106,9 @@ class RecordManager(MiscChecks):
     
     def remove_name(self):
         self.name = "Unnamed contact"
+
+    def remove_address(self):
+        self.address = None
 
     def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
