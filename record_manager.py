@@ -138,7 +138,9 @@ class RecordManager(MiscChecks):
     def remove_address(self):
         self.address = None
 
-    def load_data(self,name,phones,birthday): # To avoid reoccurring checks when loading from storage.bin
+    def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
         self.name = name
         self.birthday = birthday
+        self.email = email
+        self.address = address
