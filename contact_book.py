@@ -22,10 +22,12 @@ class ContactBook(): #UserDict
         self.update_file("load",0)
 
         self.opnng = f"Введіть, будь ласка, "
-        self.non_obligatory = f"( або '{bcolors.RED}N{bcolors.GREEN}',якщо бажаєте додати пізніше)"
-        self.method_table = {'__localization_insert':{'name':'менеджера контактів','description':'менеджер контактів та записів'},
-                            'contact_create':{'class':'ContactBook', 'description':"Додає новий запис до книги контактів. Потрібно обов'язково вказати ім'я, а телефони та день народження можна додати й пізніше.", 'methods':{self.add_contact:{'name':f"{self.opnng}ім'я{self.non_obligatory}",'phone':f"{self.opnng}номер телефону{self.non_obligatory}", 'birthday':f"{self.opnng}день народження контакта{self.non_obligatory}", 'email':f"{self.opnng}електронну пошту контакта{self.non_obligatory}", 'address':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}, 
-                            'try_to_check':{'class':'ContactBook', 'description':'description_text', 'methods':{self.test_printer:{'argument_name':'The one argument you are supposed to avoid at any costs. Beware!','argument_dame':'The second one argument you are supposed to avoid at any costs. Beware!','argument_fame':'The last one argument you are supposed to avoid at any costs. Beware!'}}}}
+        self.non_obligatory = f"( або '{bcolors.RED}N{bcolors.GREEN}', якщо бажаєте додати пізніше)"
+        self.opnng_en = f"Please, enter the "
+        self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.GREEN}', if you want to add it later)"
+        self.method_table = {'__localization_insert':{'name':{'en':"of the contact manager", 'uk':"менеджера контактів"},'description':{'en':"contact manager", 'uk':"менеджер контактів та записів"}},
+                            'contact_create':{'class':'ContactBook', 'description':{'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",'uk':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 'methods':{self.add_contact:{'name':{'en':f"{self.opnng}name{self.non_obligatory}",'uk':f"{self.opnng}ім'я{self.non_obligatory}"},'phone':{'en':f"{self.opnng}phone number{self.non_obligatory}",'uk':f"{self.opnng}номер телефону{self.non_obligatory}"}, 'birthday':{'en':f"{self.opnng}birthday{self.non_obligatory}",'uk':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 'email':{'en':f"{self.opnng}email{self.non_obligatory}",'uk':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 'address':{'en':f"{self.opnng}address{self.non_obligatory}",'uk':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}, 
+                            'try_to_check':{'class':'ContactBook', 'description':{'en':'description_text', 'uk':"текст_опису"}, 'methods':{self.test_printer:{'argument_1':{'en':'text_en','uk':'text_uk'},'argument_2':{'en':'text_en','uk':'text_uk'}}}}}
 
     def test_printer(self,*args):
         print(args)
