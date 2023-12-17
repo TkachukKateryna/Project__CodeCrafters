@@ -63,7 +63,7 @@ class InputManager(HelpMe):
         self.contactbook = ContactBook()
         can_have_a_command = [self.contactbook]
         self.actions = self.action_filler(can_have_a_command)
-        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':"Please,choose the language",'uk':f"Будь ласка, оберіть мову"}}}}
+        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':"Будь ласка, оберіть мову / Please, choose the language",'uk':f"Будь ласка, оберіть мову"}}}}
         
         self.actions["help"] = self.help
         self.actions["quit"] = quit
