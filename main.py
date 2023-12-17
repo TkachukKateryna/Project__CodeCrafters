@@ -1,9 +1,6 @@
-#import pickle
-from collections import UserDict
-#from record_manager import MiscChecks, RecordManager
 from contact_book import ContactBook
 import notes_manager
-import sorting
+from sorting import FileSorter
 
 class bcolors:
     HEADER = '\033[95m'
@@ -27,8 +24,7 @@ class HelpMe:
                        'part_3':{'en':"The assistant has the next functions: ",'uk':"Помічник має такі функції: "},
                        'part_4':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"},
                        'part_5':{'en':"'Please, choose the section number: ",'uk':"'Будь ласка, оберіть номер розділу: "},
-                       'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "},
-                       'part_7':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"}}
+                       'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "}}
         func_str = ''
         func_str_p2 = '\n'
         for k,v in self.help_modules.items():
@@ -37,13 +33,13 @@ class HelpMe:
 
         func_str = func_str[:len(func_str)-2]
 
-        general_info = f"________________________\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
+        general_info = f"{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
         print(general_info)
         while True:
             answer = input(f"{bcolors.CYAN}{help_phrase['part_5'][self.language]}{bcolors.GREEN}").strip().lower()
             if answer in self.help_modules.keys():
-                string = f"________________________\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
-                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_7'][self.language]}{bcolors.RED}back{bcolors.GREEN}'." + "\n________________________"
+                string = f"{'_' * 80}\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
+                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'.\n{'_' * 80}"
                 print(string)
             elif answer == "back":
                 break
@@ -61,9 +57,10 @@ class InputManager(HelpMe):
         self.help_modules = {}
         self.notepad = "None" #NoteFile()
         self.contactbook = ContactBook()
-        can_have_a_command = [self.contactbook]
+        self.sorter = FileSorter()
+        can_have_a_command = [self.contactbook, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
-        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':"Будь ласка, оберіть мову / Please, choose the language",'uk':f"Будь ласка, оберіть мову"}}}}
+        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language",'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language"}}}}
         
         self.actions["help"] = self.help
         self.actions["quit"] = quit
@@ -84,8 +81,8 @@ class InputManager(HelpMe):
             self.language = self.languages[lang]
     
     def print_languages(self):
-        string = "Список доступних мов:  /   Languages available:\n"
-        string += '\n'.join(f'{key}. {value}' for key, value in self.languages_local.items()) 
+        string = f"{bcolors.GREEN}Список доступних мов:  {bcolors.RED}/{bcolors.GREEN}   Languages available:\n"
+        string += '\n'.join(f'{bcolors.RED}{key}{bcolors.GREEN}. {value}' for key, value in self.languages_local.items()) + '\n'
         print(string)
 
 
@@ -103,7 +100,7 @@ class InputManager(HelpMe):
                 for com_name,parameters in item.method_table.items():
                     actions_dict[com_name] = parameters
                     if 'description' in parameters.keys():
-                        conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager'}
+                        conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager', self.sorter:'Sorter'}
                         if not str(filler_ids) in self.help_modules:
                             self.help_modules[str(filler_ids)] = {'name':conversion_dict[item],'scripts':{},'localization':{}}
                         
@@ -119,7 +116,7 @@ class InputManager(HelpMe):
         while True:
             command = ''
             if self.language != None:
-                print(f"{bcolors.YELLOW}{self.input_phrase['part_0'][self.language]}")
+                print(f"{bcolors.GREEN}{self.input_phrase['part_0'][self.language]}")
                 command = input(f"{bcolors.CYAN}{self.input_phrase['part_1'][self.language]}{bcolors.RED}help{bcolors.CYAN}{self.input_phrase['part_2'][self.language]}{bcolors.GREEN}").strip().lower()
             else:
                 command = 'change_language'
