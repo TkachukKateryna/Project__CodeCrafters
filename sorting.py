@@ -26,7 +26,7 @@ class FileSorter:
                 self.known_formats[format] = category
 
         self.method_table = {'__localization_insert':{'name':{'en':"of the file sorter", 'uk':"сортувальника файлів"},'description':{'en':"files sorter", 'uk':"сортувальник файлів"}}, 
-                            'sort_files':{'class':'Sorter', 'description':{'en':'Sorts all files according to the specified path (including folders and files inside of them).', 'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них)."}, 'methods':{self.starter:{'input':{'en':'Please, enter the path to the folder we will be sorting.','uk':'Введіть, будь ласка, шлях до папки, яку будемо сортувати.'},'output':{'en':'Please, enter the path to the folder, where sorted files will be stored','uk':'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли.'}}}}}
+                            'sort_files':{'class':'Sorter', 'description':{'en':'Sorts all files according to the specified path (including folders and files inside of them).', 'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них)."}, 'methods':{self.starter:{'input':{'en':'Please, enter the path to the folder we will be sorting','uk':'Введіть, будь ласка, шлях до папки, яку будемо сортувати'},'output':{'en':'Please, enter the path to the folder, where sorted files will be stored','uk':'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли'}}}}}
 
     def starter(self, arg1: str, arg2: str):
         path = './empty_folder'
