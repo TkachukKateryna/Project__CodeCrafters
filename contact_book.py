@@ -31,8 +31,8 @@ class ContactBook(): #UserDict
         print(args)
 
     # Prepares self.data[id] to be saved.
-    #Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
-    #Used to add new lines to the file.bin
+    # Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
+    # Used to add new lines to the file.bin
     def prepare_data(self,mode:str,record_id=None):
         if mode == "add":
             for rid,record in self.data.items():
@@ -41,6 +41,8 @@ class ContactBook(): #UserDict
     
     
     # Dynamicly adds new records, deletes records, creates file.bin, etc.
+    # If mode == add, adding record to file (with correct persistent id). If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
+    # With "ed", overwrites saved data with the new parsed self.data
     def update_file(self,mode:str,r_id=None):
         import pickle
         from pathlib import Path
@@ -114,8 +116,6 @@ class ContactBook(): #UserDict
                         print('Reached the end of file!')
             #print(self.data)
 
-        # If mode == add, adding record to file (with correct id). If mode == 'del', removes the record by id, overwrites saved data with the new self.data + technical variables. 
-        #With "ed", overwrites saved data with the new self.data + technical variables
 
     #Saves self.data and some technical variables. Can be used, although everything should be saved automatically. may be used to ensure, that nothing will be lost.
     def save_changes(self):
