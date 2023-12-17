@@ -22,21 +22,28 @@ class HelpMe:
         # Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
         # Тільки не забуваємо перевіряти, щоб назви КОНСОЛЬНИХ команд з вашого модулю не співпадали з назвами з інших модулів.
         # Структура self.help_modules: self.help_modules = {str(index):{'name':'module_name','scripts':{'script1':'descr_text','script2':'descr_text'},'localization':{'name':'text', 'description':'text'}}}
+        help_phrase = {'part_1':{'en':". To see the list of commands for ",'uk':". Щоб подивитись список команд для "},
+                       'part_2':{'en':", enter in the console '",'uk':", введіть у консоль '"},
+                       'part_3':{'en':"The assistant has the next functions: ",'uk':"Помічник має такі функції: "},
+                       'part_4':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"},
+                       'part_5':{'en':"'Please, choose the section number: ",'uk':"'Будь ласка, оберіть номер розділу: "},
+                       'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "},
+                       'part_7':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"}}
         func_str = ''
         func_str_p2 = '\n'
         for k,v in self.help_modules.items():
-            func_str += self.help_modules[k]['localization']['description'] + ', '
-            func_str_p2 += f"{k}. Щоб подивитись список команд для {self.help_modules[k]['localization']['name']}, введіть у консоль '{bcolors.RED}{k}{bcolors.GREEN}'.\n"
+            func_str += self.help_modules[k]['localization']['description'][self.language] + ', '
+            func_str_p2 += f"{k}{help_phrase['part_1'][self.language]}{self.help_modules[k]['localization']['name'][self.language]}{help_phrase['part_2'][self.language]}{bcolors.RED}{k}{bcolors.GREEN}'.\n"
 
         func_str = func_str[:len(func_str)-2]
 
-        general_info = f"________________________\nПомічник має такі функції: {func_str}. {func_str_p2}Якщо хочете повернутися у головне меню, напишіть '{bcolors.RED}back{bcolors.GREEN}'."
+        general_info = f"________________________\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
         print(general_info)
         while True:
-            answer = input(bcolors.CYAN + 'Будь ласка, оберіть номер розділу: ' + bcolors.GREEN).strip().lower()
+            answer = input(f"{bcolors.CYAN}{help_phrase['part_5'][self.language]}{bcolors.GREEN}").strip().lower()
             if answer in self.help_modules.keys():
-                string = f"________________________\nСписок доступних команд для {self.help_modules[answer]['localization']['name']}:\n"
-                string += '\n'.join(f'{key} - {value}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\nЯкщо хочете повернутися у головне меню, напишіть '{bcolors.RED}back{bcolors.GREEN}'." + "\n________________________"
+                string = f"________________________\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
+                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_7'][self.language]}{bcolors.RED}back{bcolors.GREEN}'." + "\n________________________"
                 print(string)
             elif answer == "back":
                 break
@@ -56,15 +63,31 @@ class InputManager(HelpMe):
         self.contactbook = ContactBook()
         can_have_a_command = [self.contactbook]
         self.actions = self.action_filler(can_have_a_command)
+        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':"Please,choose the language",'uk':f"Будь ласка, оберіть мову"}}}}
+        
         self.actions["help"] = self.help
         self.actions["quit"] = quit
         self.actions["close"] = quit
         self.actions["exit"] = quit
         self.actions["leave"] = quit
 
+        self.input_phrase = {'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
+        self.language = None
+        self.languages = {'0':'en','1':'uk'}
+        self.languages_local = {'0':'English','1':'Українська'}
 
     def default_action(self):
         print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
+
+    def set_language(self,lang):
+        if lang in self.languages:
+            self.language = self.languages[lang]
+    
+    def print_languages(self):
+        string = "Список доступних мов:  /   Languages available:\n"
+        string += '\n'.join(f'{key}. {value}' for key, value in self.languages_local.items()) 
+        print(string)
+
 
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
@@ -94,7 +117,13 @@ class InputManager(HelpMe):
 
     def main(self):
         while True:
-            command = input(f'{bcolors.CYAN}Будь ласка, введіть необхідну команду або ключове слово "{bcolors.RED}help{bcolors.CYAN}" для відображення списку доступних команд: {bcolors.GREEN}').strip().lower()
+            command = ''
+            if self.language != None:
+                command = input(f"{bcolors.CYAN}{self.input_phrase['part_1'][self.language]}{bcolors.RED}help{bcolors.CYAN}{self.input_phrase['part_2'][self.language]}{bcolors.GREEN}").strip().lower()
+            else:
+                command = 'change_language'
+                self.language = 'en'
+            
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
                 # commands for contact book: 
                 # help(input - action_type(sorting/contact_book'etc). If None or undefined input - show general tips, i.e. a list of modules, their general description, how to use 'help' properly), 
@@ -125,11 +154,12 @@ class InputManager(HelpMe):
                             arguments_list = []
                             for k,v in value.items():
                                 while True:
-                                    command = input(v + ':   ')
+                                    command = input(v[self.language] + ':   ')
                                     if command != '':
                                         arguments_list.append(command)
                                         break
                             key(*arguments_list)
+                            command = ''
 
 
 if __name__ == "__main__":
