@@ -1,5 +1,5 @@
 import pickle
-
+# Уф. Навіть не знаю, з чого почати. Скоріше за все, буду розбирати на созвоні, бо писанини тут, з моєї сторони, має бути (надто) багато. Team Lead.
 class Note:
     def __init__(self, title, text, tags=None):
         self.title = title # Заголовок нотатки
