@@ -96,17 +96,13 @@ class InputManager(HelpMe):
         while True:
             command = input(f'{bcolors.CYAN}Будь ласка, введіть необхідну команду або ключове слово "{bcolors.RED}help{bcolors.CYAN}" для відображення списку доступних команд: {bcolors.GREEN}').strip().lower()
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
-                #"add": ContactAdder().add, 
-                #"edit": ContactEditor().edit,
-                #"remove": ContactRemover().remove,
                 # commands for contact book: 
                 # help(input - action_type(sorting/contact_book'etc). If None or undefined input - show general tips, i.e. a list of modules, their general description, how to use 'help' properly), 
-                # add(input - record_name. Starts dialogue, which can be cancelled at any point (record will not be saved). Bot will be asking to fill the fields one-by-one. if user doesn't want to fill a certain field, he can write '-' in console. ), 
-                #edit(input - record_name. Ask which element of a record the user desires to change, give a list of options. After succssessfully editing chosen field, return to the question. To stop editing, user must write 'done' in console), 
-                #find(input - record_name), 
-                #show_all(), 
-                #remove(input - record name, but removing only by record_id. if multiple found, show all and ask to choose (by assigning temporary index to every element)), 
-                #show_birthdays(input - timedelta{days}) 
+                # contact_edit(input - record_name. Ask which element of a record the user desires to change, give a list of options. After succssessfully editing chosen field, return to the question. To stop editing, user must write 'done' in console), 
+                # contact_find(input - any_contact_related_data), 
+                # contact_show_all(), 
+                # remove (input - record name, but removing only by record_id. if multiple found, show all and ask to choose (by assigning temporary index to every element)), 
+                # show_birthdays(input - timedelta{days}) 
 
                 #commands for file sorter:
                 #set_directory(input - default directory.)
