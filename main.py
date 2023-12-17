@@ -71,7 +71,7 @@ class InputManager(HelpMe):
         self.actions["exit"] = quit
         self.actions["leave"] = quit
 
-        self.input_phrase = {'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
+        self.input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
         self.language = None
         self.languages = {'0':'en','1':'uk'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -119,6 +119,7 @@ class InputManager(HelpMe):
         while True:
             command = ''
             if self.language != None:
+                print(f"{bcolors.YELLOW}{self.input_phrase['part_0'][self.language]}")
                 command = input(f"{bcolors.CYAN}{self.input_phrase['part_1'][self.language]}{bcolors.RED}help{bcolors.CYAN}{self.input_phrase['part_2'][self.language]}{bcolors.GREEN}").strip().lower()
             else:
                 command = 'change_language'
@@ -163,6 +164,5 @@ class InputManager(HelpMe):
 
 
 if __name__ == "__main__":
-    print("Я ваш персональний помічник. Як я можу вам допомогти?")
     manager = InputManager()
     manager.main()
