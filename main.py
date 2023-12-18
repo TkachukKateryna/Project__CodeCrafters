@@ -249,19 +249,24 @@ class InputManager(HelpMe):
                         if value == {}:
                             key()
                         else:
-                            print(f"{bcolors.GREEN}{input_phrase['part_3'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'\n")
                             arguments_list = []
-                            for k,v in value.items():
-                                while True:
-                                    command = input(v[self.language] + f':   {bcolors.RED}')
-                                    if command == 'leave':
-                                        self.say_goodbye()
-                                        return
-                                    if command != '':
-                                        arguments_list.append(command)
-                                        break
-                            key(*arguments_list)
-                            command = ''
+                            result = ' '
+                            while type(result) == str:
+                                for k,v in value.items():
+                                    while True:
+                                        command = input(v[self.language] + f':   {bcolors.RED}')
+                                        if command == 'leave':
+                                            self.say_goodbye()
+                                            return
+                                        if command != '':
+                                            arguments_list.append(command)
+                                            break
+                                        
+                                result = key(*arguments_list)
+                                if type(result) == str:
+                                    arguments_list = []
+                                    print(result)
+                                command = ''
 
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
