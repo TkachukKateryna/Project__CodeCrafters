@@ -186,6 +186,7 @@ class ContactBook(): #UserDict
         string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
         print(string)
         self.update_file(mode="add",r_id=self.generated_ids)
+        self.ongoing = None
         return True
 
     def dialogue_check(self,variable):
