@@ -1,6 +1,9 @@
 from contact_book import ContactBook
 import notes_manager
 from sorting import FileSorter
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.styles import Style
 
 class bcolors:
     HEADER = '\033[95m'
@@ -59,7 +62,8 @@ class InputManager(HelpMe):
         self.sorter = FileSorter()
         can_have_a_command = [self.contactbook, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
-        self.actions["change_language"] = {'class':'Default', 
+        self.actions['default'] = {}
+        self.actions['default']["change_language"] = {'class':'Default', 
                                            'description':{
                                                'en':"Sets the programm's language",
                                                'uk':"Встановлює мову програми."}, 
@@ -69,7 +73,7 @@ class InputManager(HelpMe):
                                                                'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",
                                                                'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
         
-        self.actions["change_module"] = {'class':'Default', 
+        self.actions['default']["change_module"] = {'class':'Default', 
                                            'description':{
                                                'en':"Allows you to switch to a different menu",
                                                'uk':"Дозволяє переключитись на інше меню."}, 
@@ -79,12 +83,12 @@ class InputManager(HelpMe):
                                                                'en':f"{bcolors.CYAN} Please, choose the menu",
                                                                'uk':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
         
-        #self.actions["help"] = self.help
-        self.actions["quit"] = quit
-        self.actions["close"] = quit
-        self.actions["exit"] = quit
-        self.actions["leave"] = quit
+        self.actions['default']["quit"] = quit
+        self.actions['default']["close"] = quit
+        self.actions['default']["exit"] = quit
+        self.actions['default']["leave"] = quit
 
+        self.current_module_commands = []
         self.module_chosen = None
         self.language = None
         self.languages = {'0':'en','1':'uk'}
@@ -96,8 +100,10 @@ class InputManager(HelpMe):
     def set_language(self,lang):
         if lang in self.languages:
             self.language = self.languages[lang]
+            self.contactbook.language = self.languages[lang]
+            self.sorter.language = self.languages[lang]
         
-        welcome_phrase = {'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}
+        welcome_phrase = {'en':"Hello! I'm your personal assistant!",'uk':"Привіт! Я ваш персональний помічник."}
         print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
     
     def print_languages(self):
@@ -125,7 +131,13 @@ class InputManager(HelpMe):
     def set_module(self,module_id):
         if module_id in self.help_modules:
             self.module_chosen = module_id
-            self.actions["back"] = {'class':'Default', 
+            for script in self.actions[self.module_chosen].keys():
+                self.current_module_commands.append(script) 
+            for script in self.actions['default'].keys():
+                self.current_module_commands.append(script) 
+
+            self.command_completer = WordCompleter(self.current_module_commands)
+            self.actions['default']["back"] = {'class':'Default', 
                                            'description':{
                                                'en':"Allows you to switch to a different menu",
                                                'uk':"Дозволяє переключитись на інше меню."}, 
@@ -135,8 +147,9 @@ class InputManager(HelpMe):
             print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
 
     def reset_module(self):
+            self.current_module_commands = []
             self.module_chosen = None
-            del self.actions["back"] 
+            del self.actions['default']["back"] 
     
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
@@ -149,8 +162,11 @@ class InputManager(HelpMe):
         for item in can_have_a_command:
             if hasattr(item, 'method_table') and item.method_table != {}:
                 filler_ids += 1
+                actions_dict[str(can_have_a_command.index(item))] = {}
                 for com_name,parameters in item.method_table.items():
-                    actions_dict[com_name] = parameters
+                    if com_name != '__localization_insert':
+                        actions_dict[str(can_have_a_command.index(item))][com_name] = parameters
+                    
                     if 'description' in parameters.keys():
                         conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager', self.sorter:'Sorter'}
                         if not str(filler_ids) in self.help_modules:
@@ -166,9 +182,6 @@ class InputManager(HelpMe):
     
 # pip install prompt_toolkit
     def main(self):
-        from prompt_toolkit import prompt
-        from prompt_toolkit.completion import WordCompleter
-        from prompt_toolkit.styles import Style
 
         input_phrase = {
             'part_1':{
@@ -178,10 +191,6 @@ class InputManager(HelpMe):
                 'en':"If you decide to exit the program, enter '",
                 'uk':"Якщо захочете вийти з програми, напишіть '"}}
 
-        comm_list = []
-        for k in self.actions.keys():
-            comm_list.append(k)
-        command_completer = WordCompleter(comm_list)
         while True:
             command = ''
             if self.language != None:
@@ -204,7 +213,7 @@ class InputManager(HelpMe):
                     message = [
                         ('class:part_1', input_phrase['part_1'][self.language]),
                     ]
-                    command = prompt(message, completer=command_completer, style=style).strip().lower()
+                    command = prompt(message, completer=self.command_completer, style=style).strip().lower()
                 elif not self.module_chosen:
                     command = 'change_module'
             else:
@@ -225,12 +234,18 @@ class InputManager(HelpMe):
             # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
             # чекаючи на інпут.
-            if command in self.actions.keys():
-                if type(self.actions[command]) != dict:
-                    selected_action = self.actions[command]
+            category = ''
+            if self.module_chosen:
+                if (command in self.actions[self.module_chosen].keys()):
+                    category = self.module_chosen
+            if (command in self.actions['default'].keys()):
+                category = 'default'
+            if category:
+                if type(self.actions[category][command]) != dict:
+                    selected_action = self.actions[category][command]
                     selected_action()
                 else:
-                    for key,value in self.actions[command]['methods'].items():
+                    for key,value in self.actions[category][command]['methods'].items():
                         if value == {}:
                             key()
                         else:
