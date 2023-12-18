@@ -102,6 +102,7 @@ class InputManager(HelpMe):
             self.language = self.languages[lang]
             self.contactbook.language = self.languages[lang]
             self.sorter.language = self.languages[lang]
+            self.notepad.language = self.languages[lang]
         
         welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
         print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
