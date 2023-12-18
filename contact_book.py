@@ -34,7 +34,6 @@ class ContactBook(): #UserDict
                                     'en':"contact manager", 
                                     'uk':"менеджер контактів та записів"}},
                             'create':{
-                                'class':'contact', 
                                 'description':{
                                     'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
                                     'uk':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
