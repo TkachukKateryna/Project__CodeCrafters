@@ -38,23 +38,28 @@ class ContactBook(): #UserDict
                                     'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
                                     'ua':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
                                 'methods':{
-                                    self.add_contact:{
+                                    self.add_name:{
                                         'name':{
                                             'en':f"{self.opnng_en}name{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}ім'я{self.non_obligatory}"},
+                                            'ua':f"{self.opnng}ім'я{self.non_obligatory}"}},
+                                    self.add_phone:{
                                         'phone':{
                                             'en':f"{self.opnng_en}phone number{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}номер телефону{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}номер телефону{self.non_obligatory}"}},
+                                    self.add_birthday:{
                                         'birthday':{
                                             'en':f"{self.opnng_en}birthday{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}день народження контакта{self.non_obligatory}"}},
+                                    self.add_email:{
                                         'email':{
                                             'en':f"{self.opnng_en}email{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}},
+                                    self.add_address:{
                                         'address':{
                                             'en':f"{self.opnng_en}address{self.non_obligatory_en}",
                                             'ua':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
-
+  
+        
     def test_printer(self,*args):
         print(args)
 
@@ -126,29 +131,63 @@ class ContactBook(): #UserDict
     def save_changes(self):
         self.update_file("ed")
 
-    def add_contact(self,name,phone,birthday,email,address):
+    def add_name(self,name):
         new_record = RecordManager()
         if self.dialogue_check(name):
             new_record.add_name(name)
-        if self.dialogue_check(phone):
-            new_record.add_phone(phone)
-        if self.dialogue_check(birthday):
-            new_record.add_birthday(birthday)
-        if self.dialogue_check(email):
-            new_record.add_email(email)
-        if self.dialogue_check(address):
-            new_record.add_address(address)
+            self.id_assign(mode="add",record=new_record)
+            #self.update_file(mode="add",r_id=self.generated_ids)
+            return True
 
-        self.id_assign(mode="add",record=new_record)
-        self.update_file(mode="add",r_id=self.generated_ids)
+        return 'Name_error_message!'
+
+    def add_phone(self,phone):
+        record = self.data[self.ongoing]
+        if self.dialogue_check(phone):
+            try:
+                record.add_phone(phone)
+            except ValueError:
+                return 'Phone_error_message!'
+
+        return True
+
+    def add_birthday(self,birthday):
+        record = self.data[self.ongoing]
+        if self.dialogue_check(birthday):
+            try:
+                record.add_birthday(birthday)
+            except ValueError:
+                return 'Birthday_error_message!'
+
+        return True
+
+    def add_email(self,email):
+        record = self.data[self.ongoing]
+        if self.dialogue_check(email):
+            try:
+                record.add_email(email)
+            except ValueError:
+                return 'Email_error_message!'
+
+        return True
+
+    def add_address(self,address):
+        record = self.data[self.ongoing]
+        if self.dialogue_check(address):
+            try:
+                record.add_address(address)
+            except ValueError:
+                return 'Address_error_message!'
+
         local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
                  'part_2':{'en':"phone numbers",'ua':"номерами телефу"},
                  'part_3':{'en':"birthday",'ua':"днем народження"},
                  'part_4':{'en':"email",'ua':"електронною поштою"},
                  'part_5':{'en':"address",'ua':"адресою"}}
-        string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {new_record.name}; {local['part_2'][self.language]}: {new_record.phones}; {local['part_3'][self.language]}: {new_record.birthday}; {local['part_4'][self.language]}: {new_record.email}; {local['part_5'][self.language]}: {new_record.address}"
+        string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
         print(string)
-    
+        return True
+
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
             return True
@@ -158,9 +197,11 @@ class ContactBook(): #UserDict
         if mode == "add":
             if len(self.priority_ids) > 0:
                 self.data[self.priority_ids[0]] = record
+                self.ongoing = self.priority_ids[0]
                 del self.priority_ids[0]
             else:
                 self.data[self.record_cnt] = record
+                self.ongoing = self.record_cnt
                 self.record_cnt += 1
         elif mode == "del":
             for k,v in self.data.items():
