@@ -1,7 +1,6 @@
 from contact_book import ContactBook
 import notes_manager
 from sorting import FileSorter
-#import prompt_toolkit
 
 class bcolors:
     HEADER = '\033[95m'
@@ -23,7 +22,7 @@ class HelpMe:
         help_phrase = {'part_1':{'en':". To see the list of commands for ",'uk':". Щоб подивитись список команд для "},
                        'part_2':{'en':", enter in the console '",'uk':", введіть у консоль '"},
                        'part_3':{'en':"The assistant has the next functions: ",'uk':"Помічник має такі функції: "},
-                       'part_4':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"},
+                       'part_4':{'en':"If you want to quit the program, enter '",'uk':"Якщо хочете вийти з програми, напишіть '"},
                        'part_5':{'en':"Please, choose the section number: ",'uk':"Будь ласка, оберіть номер розділу: "},
                        'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "}}
         func_str = ''
@@ -34,15 +33,15 @@ class HelpMe:
 
         func_str = func_str[:len(func_str)-2]
 
-        general_info = f"{bcolors.GREEN}{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
+        general_info = f"{bcolors.GREEN}{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'."
         print(general_info)
         while True:
             answer = input(f"{bcolors.CYAN}{help_phrase['part_5'][self.language]}{bcolors.GREEN}").strip().lower()
             if answer in self.help_modules.keys():
                 string = f"{'_' * 80}\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
-                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'.\n{'_' * 80}"
+                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_4'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'.\n{'_' * 80}"
                 print(string)
-            elif answer == "back":
+            #elif answer == "back":
                 break
 
 
@@ -146,8 +145,7 @@ class InputManager(HelpMe):
                 self.language = 'en'
             
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
-                # commands for contact book: 
-                # help(input - action_type(sorting/contact_book'etc). If None or undefined input - show general tips, i.e. a list of modules, their general description, how to use 'help' properly), 
+                # commands for contact book:  
                 # contact_edit(input - record_name. Ask which element of a record the user desires to change, give a list of options. After succssessfully editing chosen field, return to the question. To stop editing, user must write 'done' in console), 
                 # contact_find(input - any_contact_related_data), 
                 # contact_show_all(), 
@@ -175,7 +173,7 @@ class InputManager(HelpMe):
                             arguments_list = []
                             for k,v in value.items():
                                 while True:
-                                    command = input(v[self.language] + ':   ')
+                                    command = input(v[self.language] + f':   {bcolors.RED}')
                                     if command != '':
                                         arguments_list.append(command)
                                         break
