@@ -63,7 +63,7 @@ class InputManager(HelpMe):
         can_have_a_command = [self.contactbook, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
         self.actions['default'] = {}
-        self.actions['default']["change_language"] = {'class':'Default', 
+        self.actions['default']["change_language"] = { 
                                            'description':{
                                                'en':"Sets the programm's language",
                                                'uk':"Встановлює мову програми."}, 
@@ -73,7 +73,7 @@ class InputManager(HelpMe):
                                                                'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",
                                                                'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
         
-        self.actions['default']["change_module"] = {'class':'Default', 
+        self.actions['default']["change_module"] = {
                                            'description':{
                                                'en':"Allows you to switch to a different menu",
                                                'uk':"Дозволяє переключитись на інше меню."}, 
@@ -137,7 +137,7 @@ class InputManager(HelpMe):
                 self.current_module_commands.append(script) 
 
             self.command_completer = WordCompleter(self.current_module_commands)
-            self.actions['default']["back"] = {'class':'Default', 
+            self.actions['default']["back"] = {
                                            'description':{
                                                'en':"Allows you to switch to a different menu",
                                                'uk':"Дозволяє переключитись на інше меню."}, 
@@ -155,7 +155,7 @@ class InputManager(HelpMe):
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
     # структура нового списку actions: 
-    #{'console_command_name':{'class':'class_name', 'description':'description_text', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
+    #{'console_command_name':{'description':'description_text', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
     def action_filler(self, can_have_a_command):
         actions_dict = {}
         filler_ids = -1
