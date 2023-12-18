@@ -60,7 +60,25 @@ class InputManager(HelpMe):
         self.sorter = FileSorter()
         can_have_a_command = [self.contactbook, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
-        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
+        self.actions["change_language"] = {'class':'Default', 
+                                           'description':{
+                                               'en':"Sets the programm's language",
+                                               'uk':"Встановлює мову програми."}, 
+                                            'methods':{self.print_languages:{},
+                                                       self.set_language:{
+                                                           'lang':{
+                                                               'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",
+                                                               'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
+        
+        self.actions["change_module"] = {'class':'Default', 
+                                           'description':{
+                                               'en':"Allows you to switch to a different menu",
+                                               'uk':"Дозволяє переключитись на інше меню."}, 
+                                            'methods':{self.print_modules:{},
+                                                       self.set_module:{
+                                                           'module_id':{
+                                                               'en':f"{bcolors.CYAN} Please, choose the menu",
+                                                               'uk':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
         
         self.actions["help"] = self.help
         self.actions["quit"] = quit
@@ -68,7 +86,7 @@ class InputManager(HelpMe):
         self.actions["exit"] = quit
         self.actions["leave"] = quit
 
-        self.abort = False
+        self.module_chosen = None
         self.language = None
         self.languages = {'0':'en','1':'uk'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -79,13 +97,40 @@ class InputManager(HelpMe):
     def set_language(self,lang):
         if lang in self.languages:
             self.language = self.languages[lang]
+        
+        welcome_phrase = {'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}
+        print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
     
     def print_languages(self):
         string = f"{bcolors.GREEN}Список доступних мов:  {bcolors.RED}/{bcolors.GREEN}   Languages available:\n"
         string += '\n'.join(f'{bcolors.RED}{key}{bcolors.GREEN}. {value}' for key, value in self.languages_local.items()) + '\n'
         print(string)
+    
+    def print_modules(self):
+        local = {'part_0':{
+                    'en':"Available menus",
+                    'uk':"Можна перейти у такі меню"},
+                'part_1':{
+                    'en':"To choose the",
+                    'uk':"Щоб обрати меню"},
+                'part_2':{
+                    'en':"menu, enter '",
+                    'uk':"напишіть '"},
+                'part_3':{
+                    'en':"' in the console.",
+                    'uk':"' у консоль."}}
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[key]['localization']['name'][self.language]}{bcolors.GREEN} {local['part_2'][self.language]}{bcolors.RED}{key}{bcolors.GREEN}{local['part_3'][self.language]}" for key,value in self.help_modules.items()) + '\n'
+        print(string)
 
-
+    def set_module(self,module_id):
+        if module_id in self.help_modules:
+            self.module_chosen = module_id
+        else:
+            error_phrase = {'en':"Wrong module number. Please, try again!",'uk':"Неправильний номер модуля. Спробуйте ще раз!"}
+            print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
+        
+    
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
@@ -118,7 +163,7 @@ class InputManager(HelpMe):
         from prompt_toolkit.completion import WordCompleter
         from prompt_toolkit.styles import Style
 
-        input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "},'part_3':{'en':"If you decide to exit the program, enter '",'uk':"Якщо захочете вийти з програми, напишіть '"}}
+        input_phrase = {'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "},'part_3':{'en':"If you decide to exit the program, enter '",'uk':"Якщо захочете вийти з програми, напишіть '"}}
         comm_list = []
         for k in self.actions.keys():
             comm_list.append(k)
@@ -126,21 +171,24 @@ class InputManager(HelpMe):
         while True:
             command = ''
             if self.language != None:
-                print(f"{bcolors.GREEN}{input_phrase['part_0'][self.language]}")
-                style = Style.from_dict({
-                    '':          'fg:ansigreen',
+                if self.module_chosen:
+                    #print(f"{bcolors.GREEN}{input_phrase['part_0'][self.language]}")
+                    style = Style.from_dict({
+                        '':          'fg:ansigreen',
 
-                    'part_1': 'fg:ansicyan',
-                    'part_11': 'fg:ansired',
-                    'part_2': 'fg:ansicyan',
-                })
+                        'part_1': 'fg:ansicyan',
+                        'part_11': 'fg:ansired',
+                        'part_2': 'fg:ansicyan',
+                    })
 
-                message = [
-                    ('class:part_1', input_phrase['part_1'][self.language]),
-                    ('class:part_11',       'help'),
-                    ('class:part_2',     input_phrase['part_2'][self.language]),
-                ]
-                command = prompt(message, completer=command_completer, style=style).strip().lower()
+                    message = [
+                        ('class:part_1', input_phrase['part_1'][self.language]),
+                        ('class:part_11',       'help'),
+                        ('class:part_2',     input_phrase['part_2'][self.language]),
+                    ]
+                    command = prompt(message, completer=command_completer, style=style).strip().lower()
+                elif not self.module_chosen:
+                    command = 'change_module'
             else:
                 command = 'change_language'
                 self.language = 'en'
@@ -171,7 +219,7 @@ class InputManager(HelpMe):
                             print(f"{bcolors.GREEN}{input_phrase['part_3'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'\n")
                             arguments_list = []
                             for k,v in value.items():
-                                while not self.abort:
+                                while True:
                                     command = input(v[self.language] + f':   {bcolors.RED}')
                                     if command == 'leave':
                                         self.say_goodbye()
