@@ -1,13 +1,28 @@
 import pickle
 
+class bcolors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD_RED = '\033[1m\033[91m'
+    DEFAULT = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 class Note:
     def __init__(self, title, text, tags=None):
         self.title = title # Заголовок нотатки
         self.text = text # Текст нашої нотатки
         self.tags = tags or [] # Теги нашої нотатки (необов'язково)
 
+
     def __str__(self):
         return f"'{self.text}'" # Використовуємо для повернення текстових представлень об'єктів
+
 
 class NoteFile:
     def __init__(self, file_name):
@@ -71,25 +86,25 @@ class NoteFile:
                 found_notes.append(note)
 
         if found_notes:
-            print(f"\n\033[32mFound {len(found_notes)} note(s) with title '{title}':\033[0m\n")
+            print(f"{bcolors.GREEN}\nFound {len(found_notes)} note(s) with title '{title}':{bcolors.DEFAULT}\n")
             for i, note in enumerate(found_notes):
-                print(f"{i + 1}. {note.title}") # Для зручності користувача нумеруємо нотатки з 1, а не з 0, як індекси.
-                print(f"Selected note text: {note.text}")
+                print(f"{bcolors.RED}{i + 1}.{bcolors.DEFAULT} {note.title}") # Для зручності користувача нумеруємо нотатки з 1, а не з 0, як індекси.
+                print(f"{bcolors.GREEN}Selected note text:{bcolors.DEFAULT} {note.text}")
                 print()
             selected_note = None # В цю змінну буде збережена обрана користувачем нотатка
             while selected_note is None:
                 if len(found_notes) > 1: # Виконуємо блок, якщо вказаний заголовок є більше ніж у одної нотатки
-                    choice = input("Enter the number of the note you want to select: ")
+                    choice = input(f"{bcolors.CYAN}Enter the number of the note you want to select:{bcolors.GREEN} ")
                     try:
                         index = int(choice) - 1 # Переводимо ввід користувача в int і зменшуємо значення на 1, щоб отримати індекс в found_notes
                         selected_note = found_notes[index] # Якщо в found_notes є елемент з цим індексом, то обрана нотатка буде присвоєна змінній
                     except (ValueError, IndexError):
-                        print("\033[1m\033[91mInvalid choice. Please try again.\033[0m")
+                        print(f"{bcolors.BOLD_RED}Invalid choice. Please try again!{bcolors.DEFAULT}")
                 else: 
                     selected_note = found_notes[0]
             return selected_note
         else:
-            print(f"\033[1m\033[91mNo notes found with title '{title}'!\033[0m")
+            print(f"{bcolors.GREEN}No notes found with title {bcolors.RED}'{title}'!")
             return
 
 
@@ -97,108 +112,125 @@ file_name = "notes.bin" # Назва файлу для збереження но
 note_file = NoteFile(file_name) # Створення об'єкту класу NoteFile
 
 while True:
-    print("\nAvailable operations:\n")
-    print("1. Create a new note")
-    print("2. Find a note by text")
-    print("3. Edit note text")
-    print("4. Delete a note")
-    print("5. Add tags/keywords to a note")
-    print("6. Find notes by tags/keywords")
-    print("7. Sort notes by tags/keywords")
-    print("8. Exit")
+    print(f"\n{bcolors.CYAN}Available operations:\n")
+    print(f"{bcolors.RED}1. {bcolors.GREEN}Create a new note")
+    print(f"{bcolors.RED}2. {bcolors.GREEN}Find a note by text")
+    print(f"{bcolors.RED}3. {bcolors.GREEN}Edit note text")
+    print(f"{bcolors.RED}4. {bcolors.GREEN}Delete a note")
+    print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
+    print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
+    print(f"{bcolors.RED}7. {bcolors.GREEN}Sort notes by tags/keywords")
+    print(f"{bcolors.RED}8. {bcolors.GREEN}Exit")
 
-    print("-" * 50)
-    choice = input("Enter the number of the desired operation: ")
+    print(f"{bcolors.BOLD}-{bcolors.DEFAULT}" * 50)
+
+    choice = input(f"{bcolors.CYAN}Enter the number of the desired operation:{bcolors.GREEN} ")
     
     if choice == "1":
-        title = input("Enter the note title: ").strip()
+        title = input(f"{bcolors.CYAN}Enter the note title:{bcolors.GREEN} ").strip()
         if title:
-            text = input("Enter the note text: ").strip()
+            text = input(f"{bcolors.CYAN}Enter the note text:{bcolors.GREEN} ").strip()
             if text:
-                tags = input("Enter tags/keywords for the note separated by spaces (optional): ").lower().strip().split()
+                tags = input(f"{bcolors.CYAN}Enter tags/keywords for the note separated by spaces (optional):{bcolors.GREEN} ").lower().strip().split()
                 note = note_file.create_note(title, text, tags)
-                print(f"\033[32mNote with title '{title}' created successfully!\033[0m")
+                print(f"{bcolors.GREEN}Note with title {bcolors.RED}'{title}'{bcolors.GREEN} created successfully!")
             else:
-                print("\033[1m\033[91mText cannot be empty. Please try again!\033[0m")
+                print(f"{bcolors.BOLD_RED}Text cannot be empty. Please try again!")
         else:
-            print("\033[1m\033[91mTitle cannot be empty. Please try again!\033[0m")
+            print(f"{bcolors.BOLD_RED}Title cannot be empty. Please try again!")
 
     elif choice == "2":
-        text = input("Enter the text to search (if space - all notes will be displayed): ")
+        text = input(f"{bcolors.CYAN}Enter the text to search (if space - all notes will be displayed):{bcolors.GREEN} ")
         found_notes = note_file.find_note_by_text(text)
         if found_notes:
-            print(f"\n\033[32mFound notes: {len(found_notes)}:\033[0m\n")
+            print(f"{bcolors.GREEN}\nFound {len(found_notes)} note(s):{bcolors.DEFAULT}\n")
             for note in found_notes:
-                print(f"Title: {note.title}")
-                print(f"Text: {note.text}")
-                print(f"Tags/Keywords: {note.tags}")
+                print(f"{bcolors.YELLOW}Title:{bcolors.DEFAULT} {note.title}")
+                print(f"{bcolors.YELLOW}Text:{bcolors.DEFAULT} {note.text}")
+                print(f"{bcolors.YELLOW}Tags/Keywords:{bcolors.DEFAULT} {note.tags}")
                 print()
         else:
-            print("\033[1m\033[91mNo notes found with that text!\033[0m")
+            print(f"{bcolors.GREEN}No notes found with that text!")
       
     elif choice == "3":
-        title = input("Enter the note title to edit: ")
+        title = input(f"{bcolors.CYAN}Enter the note title to edit:{bcolors.GREEN} ")
         found_note = note_file.find_notes_by_title(title)
         if found_note:
-            question = input("Are you sure you want to edit this note? (y/n): ")
-            if question.lower() == 'y':
-                new_text = input("Enter the new text: ")
-                note_file.edit_note_text(found_note, new_text)
-                print(f"\033[32mNote text with title '{title}' changed to '{new_text}'\033[0m")
-            else:
-                print("Note editing canceled!")
+            while True:
+                question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
+                if question.lower() == 'y':
+                    new_text = input(f"{bcolors.CYAN}Enter the new text:{bcolors.GREEN} ")
+                    note_file.edit_note_text(found_note, new_text)
+                    print(f"{bcolors.GREEN}Note text with title {bcolors.RED}'{title}'{bcolors.GREEN} changed to {bcolors.RED}'{new_text}'")
+                    break
+                elif question.lower() == 'n':
+                    print(f"{bcolors.GREEN}Note editing canceled!")
+                    break
+                else:
+                    print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
 
     elif choice == "4":
-        title = input("Enter the note title to delete: ")
+        title = input(f"{bcolors.CYAN}Enter the note title to delete:{bcolors.GREEN} ")
         found_note = note_file.find_notes_by_title(title)
         if found_note:
-            question = input("Are you sure you want to delete this note? (y/n): ")
-            if question.lower() == 'y':
-                note_file.delete_note(found_note)
-                print(f"\033[32mNote with title '{title}' deleted successfully\033[0m")
-            else:
-                print("Deletion canceled!")
+            while True:
+                question = input(f"{bcolors.CYAN}Are you sure you want to delete this note? (y/n):{bcolors.GREEN} ")
+                if question.lower() == 'y':
+                    note_file.delete_note(found_note)
+                    print(f"{bcolors.GREEN}Note with title {bcolors.RED}'{title}'{bcolors.GREEN} deleted successfully")
+                    break
+                elif question.lower() == 'n':
+                    print(f"{bcolors.GREEN}Deletion canceled!")
+                    break
+                else:
+                    print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
 
     elif choice == "5":
-        title = input("Enter the note title to add tags/keywords to: ") 
+        title = input(f"{bcolors.CYAN}Enter the note title to add tags/keywords to:{bcolors.GREEN} ") 
         found_note = note_file.find_notes_by_title(title)
         if found_note:
-            question = input("Are you sure you want to add tags/keywords to this note? (y/n): ")
-            if question.lower() == 'y':
-                tags = input("Enter tags/keywords to add (separated by spaces): ").split()
-                note_file.add_tags_to_note(found_note, tags)
-                print(f"\033[32mTags/keywords added to the note with title '{title}'!\033[0m")
-            else:
-                print("Tag addition canceled!")
+            while True:
+                question = input(f"{bcolors.CYAN}Are you sure you want to add tags/keywords to this note? (y/n):{bcolors.GREEN} ")
+                if question.lower() == 'y':
+                    tags = input(f"{bcolors.CYAN}Enter tags/keywords to add (separated by spaces):{bcolors.GREEN} ").split()
+                    note_file.add_tags_to_note(found_note, tags)
+                    print(f"{bcolors.GREEN}Tags/keywords added to the note with title {bcolors.RED}'{title}'!")
+                    break
+                elif question.lower() == 'n':
+                    print(f"{bcolors.GREEN}Tag addition canceled!")
+                    break
+                else:
+                    print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
 
     elif choice == "6":
-        tags = input("Enter tags/keywords to search for notes (separated by spaces): ").lower().strip().split()
+        tags = input(f"{bcolors.CYAN}Enter tags/keywords to search for notes (separated by spaces):{bcolors.GREEN} ").lower().strip().split()
         found_notes = note_file.find_notes_by_tags(tags)
         if found_notes:
-            print(f"\n\033[32mFound notes: {len(found_notes)}:\033[0m\n")
+            print(f"{bcolors.GREEN}\nFound {len(found_notes)} note(s):{bcolors.DEFAULT}\n")
             for note in found_notes:
-                print(f"Title: {note.title}")
-                print(f"Text: {note.text}")
-                print(f"Tags/Keywords: {note.tags}")
+                print(f"{bcolors.YELLOW}Title:{bcolors.DEFAULT} {note.title}")
+                print(f"{bcolors.YELLOW}Text:{bcolors.DEFAULT} {note.text}")
+                print(f"{bcolors.YELLOW}Tags/Keywords:{bcolors.DEFAULT} {note.tags}")
                 print()
         else:
-            print("\033[1m\033[91mNo notes found with those tags/keywords!\033[0m")
+            print(f"{bcolors.GREEN}No notes found with those tags/keywords!")
 
     elif choice == "7":
         sorted_notes = note_file.sort_notes_by_tags()
         if sorted_notes:
-            print(f"\n\033[32mSorted notes {len(sorted_notes)}:\033[0m\n")
+            print(f"{bcolors.GREEN}\nSorted {len(sorted_notes)} notes:{bcolors.DEFAULT}\n")
             for note in sorted_notes:
-                print(f"Title: {note.title}")
-                print(f"Text: {note.text}")
-                print(f"Tags/Keywords: {note.tags}")
+                print(f"{bcolors.YELLOW}Title:{bcolors.DEFAULT} {note.title}")
+                print(f"{bcolors.YELLOW}Text:{bcolors.DEFAULT} {note.text}")
+                print(f"{bcolors.YELLOW}Tags/Keywords:{bcolors.DEFAULT} {note.tags}")
                 print()
         else:
-            print("\033[1m\033[91mNo notes found for sorting!\033[0m")
+            print(f"{bcolors.GREEN}No notes found for sorting!")
 
     elif choice == "8":
+        print(f"{bcolors.DEFAULT}")
         break
 
     else:
-        print("\033[1m\033[91mInvalid choice. Please try again!\033[0m")
-    print("-" * 50)
+        print(f"{bcolors.BOLD_RED}Invalid choice. Please try again!")
+    print(f"{bcolors.BOLD}-{bcolors.DEFAULT}" * 50)
