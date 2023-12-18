@@ -41,22 +41,22 @@ class FileSorter:
         self.method_table = {'__localization_insert':{
                                 'name':{
                                     'en':"of the file sorter", 
-                                    'uk':"сортувальника файлів"},
+                                    'ua':"сортувальника файлів"},
                                 'description':{
                                     'en':"files sorter", 
-                                    'uk':"сортувальник файлів"}}, 
+                                    'ua':"сортувальник файлів"}}, 
                             'sort_files':{
                                 'description':{
                                     'en':'Sorts all files according to the specified path (including folders and files inside of them), and moves them to the specified directory.', 
-                                    'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них), та переміщує їх за введеною адресою."}, 
+                                    'ua':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них), та переміщує їх за введеною адресою."}, 
                                 'methods':{
                                     self.starter:{
                                         'input':{
                                             'en':f'Please, enter the path to the folder we will be sorting {path_en} ',
-                                            'uk':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
+                                            'ua':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
                                         'output':{
                                             'en':f'Please, enter the path to the folder, where sorted files will be stored {path_en}',
-                                            'uk':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
+                                            'ua':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
 
     def starter(self, arg1: str, arg2: str):
         path = './empty_folder'
