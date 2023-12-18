@@ -35,8 +35,8 @@ class FileSorter:
         for category,list in self.categories.items():
             for format in list:
                 self.known_formats[format] = category
-        path = (f"наприклад, {bcolors.RED}C:\Users\user_name\Documents\my_folder")
-        path_en = (f"e.g. {bcolors.RED}C:\Users\user_name\Documents\my_folder")
+        path = (fr"наприклад, {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
+        path_en = (fr"e.g. {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
         self.method_table = {'__localization_insert':{
                                 'name':{
                                     'en':"of the file sorter", 
