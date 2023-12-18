@@ -2,6 +2,17 @@
 from pathlib import Path
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    DEFAULT = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class FileSorter:
     def __init__(self):
         self.categories = { 'images':['JPEG', 'JPG', 'PNG', 'SVG'],
@@ -24,9 +35,27 @@ class FileSorter:
         for category,list in self.categories.items():
             for format in list:
                 self.known_formats[format] = category
-
-        self.method_table = {'__localization_insert':{'name':{'en':"of the file sorter", 'uk':"сортувальника файлів"},'description':{'en':"files sorter", 'uk':"сортувальник файлів"}}, 
-                            'sort_files':{'class':'Sorter', 'description':{'en':'Sorts all files according to the specified path (including folders and files inside of them).', 'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них)."}, 'methods':{self.starter:{'input':{'en':'Please, enter the path to the folder we will be sorting','uk':'Введіть, будь ласка, шлях до папки, яку будемо сортувати'},'output':{'en':'Please, enter the path to the folder, where sorted files will be stored','uk':'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли'}}}}}
+        path = (f"наприклад, {bcolors.RED}C:\Users\user_name\Documents\my_folder")
+        path_en = (f"e.g. {bcolors.RED}C:\Users\user_name\Documents\my_folder")
+        self.method_table = {'__localization_insert':{
+                                'name':{
+                                    'en':"of the file sorter", 
+                                    'uk':"сортувальника файлів"},
+                                'description':{
+                                    'en':"files sorter", 
+                                    'uk':"сортувальник файлів"}}, 
+                            'sort_files':{
+                                'class':'Sorter', 
+                                'description':{
+                                    'en':'Sorts all files according to the specified path (including folders and files inside of them), and moves them to the specified directory.', 
+                                    'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них), та переміщує їх за введеною адресою."}, 
+                                'methods':{self.starter:{
+                                    'input':{
+                                        'en':f'Please, enter the path to the folder we will be sorting {path_en} ',
+                                        'uk':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
+                                    'output':{
+                                        'en':f'Please, enter the path to the folder, where sorted files will be stored {path_en}',
+                                        'uk':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
 
     def starter(self, arg1: str, arg2: str):
         path = './empty_folder'
