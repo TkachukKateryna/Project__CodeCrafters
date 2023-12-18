@@ -29,31 +29,31 @@ class ContactBook(): #UserDict
         self.method_table = {'__localization_insert':{
                                 'name':{
                                     'en':"of the contact manager", 
-                                    'uk':"менеджера контактів"},
+                                    'ua':"менеджера контактів"},
                                 'description':{
                                     'en':"contact manager", 
-                                    'uk':"менеджер контактів та записів"}},
+                                    'ua':"менеджер контактів та записів"}},
                             'create':{
                                 'description':{
                                     'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
-                                    'uk':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
+                                    'ua':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
                                 'methods':{
                                     self.add_contact:{
                                         'name':{
                                             'en':f"{self.opnng_en}name{self.non_obligatory_en}",
-                                            'uk':f"{self.opnng}ім'я{self.non_obligatory}"},
+                                            'ua':f"{self.opnng}ім'я{self.non_obligatory}"},
                                         'phone':{
                                             'en':f"{self.opnng_en}phone number{self.non_obligatory_en}",
-                                            'uk':f"{self.opnng}номер телефону{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}номер телефону{self.non_obligatory}"}, 
                                         'birthday':{
                                             'en':f"{self.opnng_en}birthday{self.non_obligatory_en}",
-                                            'uk':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 
                                         'email':{
                                             'en':f"{self.opnng_en}email{self.non_obligatory_en}",
-                                            'uk':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 
+                                            'ua':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 
                                         'address':{
                                             'en':f"{self.opnng_en}address{self.non_obligatory_en}",
-                                            'uk':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
+                                            'ua':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
 
     def test_printer(self,*args):
         print(args)
@@ -141,11 +141,11 @@ class ContactBook(): #UserDict
 
         self.id_assign(mode="add",record=new_record)
         self.update_file(mode="add",r_id=self.generated_ids)
-        local = {'part_1':{'en':"Contact created with name",'uk':"Контакт створено з ім'ям"},
-                 'part_2':{'en':"phone numbers",'uk':"номерами телефу"},
-                 'part_3':{'en':"birthday",'uk':"днем народження"},
-                 'part_4':{'en':"email",'uk':"електронною поштою"},
-                 'part_5':{'en':"address",'uk':"адресою"}}
+        local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
+                 'part_2':{'en':"phone numbers",'ua':"номерами телефу"},
+                 'part_3':{'en':"birthday",'ua':"днем народження"},
+                 'part_4':{'en':"email",'ua':"електронною поштою"},
+                 'part_5':{'en':"address",'ua':"адресою"}}
         string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {new_record.name}; {local['part_2'][self.language]}: {new_record.phones}; {local['part_3'][self.language]}: {new_record.birthday}; {local['part_4'][self.language]}: {new_record.email}; {local['part_5'][self.language]}: {new_record.address}"
         print(string)
     
