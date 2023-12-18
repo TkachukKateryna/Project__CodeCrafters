@@ -25,7 +25,13 @@ class ContactBook(): #UserDict
         self.non_obligatory = f"({bcolors.CYAN} або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
         self.opnng_en = f"Please, enter the "
         self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
-        self.method_table = {'__localization_insert':{'name':{'en':"of the contact manager", 'uk':"менеджера контактів"},'description':{'en':"contact manager", 'uk':"менеджер контактів та записів"}},
+        self.method_table = {'__localization_insert':{
+                                'name':{
+                                    'en':"of the contact manager", 
+                                    'uk':"менеджера контактів"},
+                                'description':{
+                                    'en':"contact manager", 
+                                    'uk':"менеджер контактів та записів"}},
                             'contact_create':{
                                 'class':'contact', 
                                 'description':{
