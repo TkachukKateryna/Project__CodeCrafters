@@ -18,6 +18,7 @@ class Note:
         self.title = title # Заголовок нотатки
         self.text = text # Текст нашої нотатки
         self.tags = tags or [] # Теги нашої нотатки (необов'язково)
+        self.language = None
 
 
     def __str__(self):
