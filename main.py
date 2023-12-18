@@ -41,7 +41,6 @@ class HelpMe:
                 string = f"{'_' * 80}\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
                 string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_4'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'.\n{'_' * 80}"
                 print(string)
-            #elif answer == "back":
                 break
 
 
@@ -172,7 +171,15 @@ class InputManager(HelpMe):
             command = ''
             if self.language != None:
                 if self.module_chosen:
-                    #print(f"{bcolors.GREEN}{input_phrase['part_0'][self.language]}")
+                    local = {'part_1':{'en':"You are in the",'uk':"Ви перейшли у меню"},
+                             'part_2':{'en':" menu. Available comamnds list:",'uk':". Список доступних команд:"},
+                             'part_3':{'en':"return to the main menu",'uk':"повернутися у головне меню"},
+                             'part_4':{'en':"exit the program",'uk':"вихід з програми"},
+                             'part_5':{'en':"extended description of this menus commands",'uk':"розширений опис команд цього меню"}}
+                    string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
+                    string += "\n".join(f"{' ' *3}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{' ' *3}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{' ' *3}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{' ' *3}{bcolors.RED}help{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
+                    print(string)
+        
                     style = Style.from_dict({
                         '':          'fg:ansigreen',
 
