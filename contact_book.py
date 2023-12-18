@@ -1,6 +1,6 @@
 from record_manager import MiscChecks, RecordManager
 #from collections import UserDict
-      
+
 class bcolors:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -21,12 +21,12 @@ class ContactBook(): #UserDict
         self.file = "storage.bin"
         self.update_file("load",0)
 
-        self.opnng = f"Введіть, будь ласка, "
-        self.non_obligatory = f"( або '{bcolors.RED}N{bcolors.GREEN}', якщо бажаєте додати пізніше)"
+        self.opnng = f"{bcolors.CYAN}Введіть, будь ласка, "
+        self.non_obligatory = f"({bcolors.CYAN} або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
         self.opnng_en = f"Please, enter the "
-        self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.GREEN}', if you want to add it later)"
+        self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{'name':{'en':"of the contact manager", 'uk':"менеджера контактів"},'description':{'en':"contact manager", 'uk':"менеджер контактів та записів"}},
-                            'contact_create':{'class':'ContactBook', 'description':{'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",'uk':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 'methods':{self.add_contact:{'name':{'en':f"{self.opnng_en}name{self.non_obligatory_en}",'uk':f"{self.opnng}ім'я{self.non_obligatory}"},'phone':{'en':f"{self.opnng_en}phone number{self.non_obligatory_en}",'uk':f"{self.opnng}номер телефону{self.non_obligatory}"}, 'birthday':{'en':f"{self.opnng_en}birthday{self.non_obligatory_en}",'uk':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 'email':{'en':f"{self.opnng_en}email{self.non_obligatory_en}",'uk':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 'address':{'en':f"{self.opnng_en}address{self.non_obligatory_en}",'uk':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
+                            'contact_create':{'class':'contact', 'description':{'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",'uk':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 'methods':{self.add_contact:{'name':{'en':f"{self.opnng_en}name{self.non_obligatory_en}",'uk':f"{self.opnng}ім'я{self.non_obligatory}"},'phone':{'en':f"{self.opnng_en}phone number{self.non_obligatory_en}",'uk':f"{self.opnng}номер телефону{self.non_obligatory}"}, 'birthday':{'en':f"{self.opnng_en}birthday{self.non_obligatory_en}",'uk':f"{self.opnng}день народження контакта{self.non_obligatory}"}, 'email':{'en':f"{self.opnng_en}email{self.non_obligatory_en}",'uk':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}, 'address':{'en':f"{self.opnng_en}address{self.non_obligatory_en}",'uk':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
 
     def test_printer(self,*args):
         print(args)
@@ -115,7 +115,7 @@ class ContactBook(): #UserDict
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
                         print('Reached the end of file!')
-            #print(self.data)
+            print(self.data)
 
 
     #Saves self.data and some technical variables. Can be used, although everything should be saved automatically. may be used to ensure, that nothing will be lost.
