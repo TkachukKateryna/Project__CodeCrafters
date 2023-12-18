@@ -39,7 +39,7 @@ class ContactBook(): #UserDict
             for rid,record in self.data.items():
                 if rid == record_id:
                     return {'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address}
-    
+            raise ValueError('Record Id not found!')
     
     # Dynamicly adds new records, deletes records, creates file.bin, etc.
     # If mode == add, adding record to file (with correct persistent id). If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
@@ -55,12 +55,7 @@ class ContactBook(): #UserDict
 
         if mode == "add":
             with open(file, 'ab') as storage:
-                st_r_id = self.generated_ids
-                class PersPickler(pickle.Pickler):
-                    def persistent_id(self, obj):
-                        return st_r_id if st_r_id else None
-
-                PersPickler(storage).dump(self.prepare_data("add",record_id=r_id))
+                pickle.dump(self.prepare_data(mode="add",record_id=r_id),storage)
                 self.generated_ids += 1
         elif mode == "del":
             with open(file, 'wb') as storage:
@@ -69,12 +64,8 @@ class ContactBook(): #UserDict
 
                 if len(self.data) > 0:
                     id_generator = 0
-                    class PersPickler(pickle.Pickler):
-                        def persistent_id(self, obj):
-                            return id_generator if id_generator else None
-                    
                     for id,record in self.data.items():
-                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address})
+                        pickle.dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address},storage)
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
@@ -83,31 +74,17 @@ class ContactBook(): #UserDict
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
                     id_generator = 0
-                    class PersPickler(pickle.Pickler):
-                        def persistent_id(self, obj):
-                            """Return a persistent id for the `bar` object only"""
-                            return id_generator if id_generator else None
-                    
                     for id,record in self.data.items():
-                        PersPickler(storage).dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address})
+                        pickle.dump({'Name':record.name,'Phones':record.phones,'Birthday':record.birthday,'Email':record.email,'Address':record.address},storage)
                         id_generator += 1
                     self.generated_ids = id_generator
         elif mode == "load":
             with open(file, 'rb') as storage:
-                class PersUnpickler(pickle.Unpickler):
-                    def persistent_load(self, pers_id):
-                        try:
-                            if int(pers_id) or int(pers_id) == 0:
-                                return pers_id
-                        except TypeError(f'{pers_id} Cant be converted into int!'):
-                            raise pickle.UnpicklingError("Persistent id is not number in string!")
-                
                 if file.stat().st_size != 0:
                     id_generator = 0
                     try:
                         while True:  
-                            record = PersUnpickler(storage).load()
-                            # print(record)
+                            record = pickle.load(storage)
                             self.data[id_generator] = RecordManager()
                             self.data[id_generator].load_data(name=record['Name'],phones=record['Phones'],birthday=record['Birthday'],email=record['Email'],address=record['Address'])
                             id_generator += 1
@@ -115,7 +92,7 @@ class ContactBook(): #UserDict
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
                         print('Reached the end of file!')
-            print(self.data)
+            #print(self.data)
 
 
     #Saves self.data and some technical variables. Can be used, although everything should be saved automatically. may be used to ensure, that nothing will be lost.
@@ -136,8 +113,8 @@ class ContactBook(): #UserDict
             new_record.add_address(address)
 
         self.id_assign(mode="add",record=new_record)
-        self.update_file("add",self.generated_ids)
-        print(new_record)
+        self.update_file(mode="add",r_id=self.generated_ids)
+        #print(new_record)
     
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
