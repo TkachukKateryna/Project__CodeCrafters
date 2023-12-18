@@ -24,6 +24,7 @@ class FileSorter:
         Path('./empty_folder').mkdir(exist_ok=True, parents=True)
         Path('./output_folder').mkdir(exist_ok=True, parents=True)
         self.known_formats = {}
+        self.language = None
         CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
         TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                 "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "u", "ja", "je", "ji", "g")
