@@ -162,7 +162,14 @@ class InputManager(HelpMe):
         from prompt_toolkit.completion import WordCompleter
         from prompt_toolkit.styles import Style
 
-        input_phrase = {'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "},'part_3':{'en':"If you decide to exit the program, enter '",'uk':"Якщо захочете вийти з програми, напишіть '"}}
+        input_phrase = {
+            'part_1':{
+                'en':"Please, enter the command:   ",
+                'uk':"Будь ласка, введіть необхідну команду:   "},
+            'part_3':{
+                'en':"If you decide to exit the program, enter '",
+                'uk':"Якщо захочете вийти з програми, напишіть '"}}
+
         comm_list = []
         for k in self.actions.keys():
             comm_list.append(k)
@@ -177,21 +184,17 @@ class InputManager(HelpMe):
                              'part_4':{'en':"exit the program",'uk':"вихід з програми"},
                              'part_5':{'en':"extended description of this menus commands",'uk':"розширений опис команд цього меню"}}
                     string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
-                    string += "\n".join(f"{' ' *3}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{' ' *3}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{' ' *3}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{' ' *3}{bcolors.RED}help{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
+                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{'  '}{bcolors.RED}help{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
                     print(string)
         
                     style = Style.from_dict({
                         '':          'fg:ansigreen',
 
                         'part_1': 'fg:ansicyan',
-                        'part_11': 'fg:ansired',
-                        'part_2': 'fg:ansicyan',
                     })
 
                     message = [
                         ('class:part_1', input_phrase['part_1'][self.language]),
-                        ('class:part_11',       'help'),
-                        ('class:part_2',     input_phrase['part_2'][self.language]),
                     ]
                     command = prompt(message, completer=command_completer, style=style).strip().lower()
                 elif not self.module_chosen:
