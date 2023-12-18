@@ -22,7 +22,7 @@ class HelpMe:
         help_phrase = {'part_1':{'en':". To see the list of commands for ",'uk':". Щоб подивитись список команд для "},
                        'part_2':{'en':", enter in the console '",'uk':", введіть у консоль '"},
                        'part_3':{'en':"The assistant has the next functions: ",'uk':"Помічник має такі функції: "},
-                       'part_4':{'en':"If you want to quit the program, enter '",'uk':"Якщо хочете вийти з програми, напишіть '"},
+                       'part_4':{'en':"If you want to exit the program, enter '",'uk':"Якщо хочете вийти з програми, напишіть '"},
                        'part_5':{'en':"Please, choose the section number: ",'uk':"Будь ласка, оберіть номер розділу: "},
                        'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "}}
         func_str = ''
@@ -68,6 +68,7 @@ class InputManager(HelpMe):
         self.actions["exit"] = quit
         self.actions["leave"] = quit
 
+        self.abort = False
         self.language = None
         self.languages = {'0':'en','1':'uk'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -117,7 +118,7 @@ class InputManager(HelpMe):
         from prompt_toolkit.completion import WordCompleter
         from prompt_toolkit.styles import Style
 
-        input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
+        input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "},'part_3':{'en':"If you decide to exit the program, enter '",'uk':"Якщо захочете вийти з програми, напишіть '"}}
         comm_list = []
         for k in self.actions.keys():
             comm_list.append(k)
@@ -170,16 +171,22 @@ class InputManager(HelpMe):
                         if value == {}:
                             key()
                         else:
+                            print(f"{bcolors.GREEN}{input_phrase['part_3'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'\n")
                             arguments_list = []
                             for k,v in value.items():
-                                while True:
+                                while not self.abort:
                                     command = input(v[self.language] + f':   {bcolors.RED}')
+                                    if command == 'leave':
+                                        self.say_goodbye()
+                                        return
                                     if command != '':
                                         arguments_list.append(command)
                                         break
                             key(*arguments_list)
                             command = ''
 
+    def say_goodbye(self):
+        print(f'{bcolors.GREEN}Goodbye!')
 
 if __name__ == "__main__":
     manager = InputManager()
