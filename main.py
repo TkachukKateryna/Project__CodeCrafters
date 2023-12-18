@@ -1,6 +1,7 @@
 from contact_book import ContactBook
 import notes_manager
 from sorting import FileSorter
+#import prompt_toolkit
 
 class bcolors:
     HEADER = '\033[95m'
@@ -12,7 +13,7 @@ class bcolors:
     DEFAULT = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
+    
 class HelpMe:
     def help(self):
         # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо). Коли користувач обере тему, видає список команд відповідного класу з self.help_modules
@@ -23,7 +24,7 @@ class HelpMe:
                        'part_2':{'en':", enter in the console '",'uk':", введіть у консоль '"},
                        'part_3':{'en':"The assistant has the next functions: ",'uk':"Помічник має такі функції: "},
                        'part_4':{'en':"If you want to go back to the main menu, enter '",'uk':"Якщо хочете повернутися у головне меню, напишіть '"},
-                       'part_5':{'en':"'Please, choose the section number: ",'uk':"'Будь ласка, оберіть номер розділу: "},
+                       'part_5':{'en':"Please, choose the section number: ",'uk':"Будь ласка, оберіть номер розділу: "},
                        'part_6':{'en':"A list of commands, available for ",'uk':"Список доступних команд для "}}
         func_str = ''
         func_str_p2 = '\n'
@@ -33,7 +34,7 @@ class HelpMe:
 
         func_str = func_str[:len(func_str)-2]
 
-        general_info = f"{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
+        general_info = f"{bcolors.GREEN}{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}back{bcolors.GREEN}'."
         print(general_info)
         while True:
             answer = input(f"{bcolors.CYAN}{help_phrase['part_5'][self.language]}{bcolors.GREEN}").strip().lower()
@@ -60,7 +61,7 @@ class InputManager(HelpMe):
         self.sorter = FileSorter()
         can_have_a_command = [self.contactbook, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
-        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language",'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language"}}}}
+        self.actions["change_language"] = {'class':'Default', 'description':{'en':"Sets the programm's language",'uk':"Встановлює мову програми."}, 'methods':{self.print_languages:{},self.set_language:{'lang':{'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",'uk':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
         
         self.actions["help"] = self.help
         self.actions["quit"] = quit
@@ -68,7 +69,6 @@ class InputManager(HelpMe):
         self.actions["exit"] = quit
         self.actions["leave"] = quit
 
-        self.input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
         self.language = None
         self.languages = {'0':'en','1':'uk'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -111,13 +111,36 @@ class InputManager(HelpMe):
                             self.help_modules[str(filler_ids)]['localization']['name'] = parameters['name']
 
         return actions_dict
-
+    
+# pip install prompt_toolkit
     def main(self):
+        from prompt_toolkit import prompt
+        from prompt_toolkit.completion import WordCompleter
+        from prompt_toolkit.styles import Style
+
+        input_phrase = {'part_0':{'en':"Hello! I'm your personal assistant! How can I help?",'uk':"Привіт! Я ваш персональний помічник. Чим я можу вам допомогти?"}, 'part_1':{'en':"Please, enter the command, or the key word '",'uk':"Будь ласка, введіть необхідну команду або ключове слово '"},'part_2':{'en':"' to display the list of available commands: ",'uk':"' для відображення списку доступних команд: "}}
+        comm_list = []
+        for k in self.actions.keys():
+            comm_list.append(k)
+        command_completer = WordCompleter(comm_list)
         while True:
             command = ''
             if self.language != None:
-                print(f"{bcolors.GREEN}{self.input_phrase['part_0'][self.language]}")
-                command = input(f"{bcolors.CYAN}{self.input_phrase['part_1'][self.language]}{bcolors.RED}help{bcolors.CYAN}{self.input_phrase['part_2'][self.language]}{bcolors.GREEN}").strip().lower()
+                print(f"{bcolors.GREEN}{input_phrase['part_0'][self.language]}")
+                style = Style.from_dict({
+                    '':          'fg:ansigreen',
+
+                    'part_1': 'fg:ansicyan',
+                    'part_11': 'fg:ansired',
+                    'part_2': 'fg:ansicyan',
+                })
+
+                message = [
+                    ('class:part_1', input_phrase['part_1'][self.language]),
+                    ('class:part_11',       'help'),
+                    ('class:part_2',     input_phrase['part_2'][self.language]),
+                ]
+                command = prompt(message, completer=command_completer, style=style).strip().lower()
             else:
                 command = 'change_language'
                 self.language = 'en'
