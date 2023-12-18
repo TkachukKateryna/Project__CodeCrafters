@@ -79,7 +79,7 @@ class InputManager(HelpMe):
                                                                'en':f"{bcolors.CYAN} Please, choose the menu",
                                                                'uk':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
         
-        self.actions["help"] = self.help
+        #self.actions["help"] = self.help
         self.actions["quit"] = quit
         self.actions["close"] = quit
         self.actions["exit"] = quit
@@ -125,10 +125,18 @@ class InputManager(HelpMe):
     def set_module(self,module_id):
         if module_id in self.help_modules:
             self.module_chosen = module_id
+            self.actions["back"] = {'class':'Default', 
+                                           'description':{
+                                               'en':"Allows you to switch to a different menu",
+                                               'uk':"Дозволяє переключитись на інше меню."}, 
+                                            'methods':{self.reset_module:{}}}
         else:
             error_phrase = {'en':"Wrong module number. Please, try again!",'uk':"Неправильний номер модуля. Спробуйте ще раз!"}
             print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
-        
+
+    def reset_module(self):
+            self.module_chosen = None
+            del self.actions["back"] 
     
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
@@ -184,7 +192,7 @@ class InputManager(HelpMe):
                              'part_4':{'en':"exit the program",'uk':"вихід з програми"},
                              'part_5':{'en':"extended description of this menus commands",'uk':"розширений опис команд цього меню"}}
                     string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
-                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{'  '}{bcolors.RED}help{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
+                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}.\n{'_' * 80}"
                     print(string)
         
                     style = Style.from_dict({
@@ -241,7 +249,8 @@ class InputManager(HelpMe):
                             command = ''
 
     def say_goodbye(self):
-        print(f'{bcolors.GREEN}Goodbye!')
+        local = {'en':"Goodbye!",'uk':"До побачення!"}
+        print(f'{bcolors.GREEN}{local[self.language]}')
 
 if __name__ == "__main__":
     manager = InputManager()
