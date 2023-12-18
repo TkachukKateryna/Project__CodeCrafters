@@ -179,7 +179,7 @@ class ContactBook(): #UserDict
                 return 'Address_error_message!'
 
         local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
-                 'part_2':{'en':"phone numbers",'ua':"номерами телефу"},
+                 'part_2':{'en':"phone numbers",'ua':"номерами телефону"},
                  'part_3':{'en':"birthday",'ua':"днем народження"},
                  'part_4':{'en':"email",'ua':"електронною поштою"},
                  'part_5':{'en':"address",'ua':"адресою"}}
