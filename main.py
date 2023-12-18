@@ -1,5 +1,5 @@
 from contact_book import ContactBook
-import notes_manager
+from notes import NoteFile
 from sorting import FileSorter
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -57,10 +57,10 @@ class InputManager(HelpMe):
         # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класу і "витягнути" з нього оброблену змінну).
             # Upd: або просто записати функцію перевірки у клас RecordManager - від цього, в теорії, ніхто не постраждає.
         self.help_modules = {}
-        self.notepad = "None" #NoteFile()
+        self.notepad = NoteFile()
         self.contactbook = ContactBook()
         self.sorter = FileSorter()
-        can_have_a_command = [self.contactbook, self.sorter]
+        can_have_a_command = [self.contactbook, self.notepad, self.sorter]
         self.actions = self.action_filler(can_have_a_command)
         self.actions['default'] = {}
         self.actions['default']["change_language"] = { 
