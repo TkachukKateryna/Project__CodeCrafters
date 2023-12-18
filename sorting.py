@@ -49,13 +49,14 @@ class FileSorter:
                                 'description':{
                                     'en':'Sorts all files according to the specified path (including folders and files inside of them), and moves them to the specified directory.', 
                                     'uk':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них), та переміщує їх за введеною адресою."}, 
-                                'methods':{self.starter:{
-                                    'input':{
-                                        'en':f'Please, enter the path to the folder we will be sorting {path_en} ',
-                                        'uk':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
-                                    'output':{
-                                        'en':f'Please, enter the path to the folder, where sorted files will be stored {path_en}',
-                                        'uk':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
+                                'methods':{
+                                    self.starter:{
+                                        'input':{
+                                            'en':f'Please, enter the path to the folder we will be sorting {path_en} ',
+                                            'uk':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
+                                        'output':{
+                                            'en':f'Please, enter the path to the folder, where sorted files will be stored {path_en}',
+                                            'uk':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
 
     def starter(self, arg1: str, arg2: str):
         path = './empty_folder'
