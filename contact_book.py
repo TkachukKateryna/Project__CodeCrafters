@@ -16,6 +16,7 @@ class ContactBook(): #UserDict
     def __init__(self):
         self.data = {}
         self.priority_ids = []
+        self.language = None
         self.record_cnt = 0
         self.generated_ids = 0
         self.file = "storage.bin"
@@ -32,7 +33,7 @@ class ContactBook(): #UserDict
                                 'description':{
                                     'en':"contact manager", 
                                     'uk':"менеджер контактів та записів"}},
-                            'contact_create':{
+                            'create':{
                                 'class':'contact', 
                                 'description':{
                                     'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
@@ -141,7 +142,13 @@ class ContactBook(): #UserDict
 
         self.id_assign(mode="add",record=new_record)
         self.update_file(mode="add",r_id=self.generated_ids)
-        #print(new_record)
+        local = {'part_1':{'en':"Contact created with name",'uk':"Контакт створено з ім'ям"},
+                 'part_2':{'en':"phone numbers",'uk':"номерами телефу"},
+                 'part_3':{'en':"birthday",'uk':"днем народження"},
+                 'part_4':{'en':"email",'uk':"електронною поштою"},
+                 'part_5':{'en':"address",'uk':"адресою"}}
+        string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {new_record.name}; {local['part_2'][self.language]}: {new_record.phones}; {local['part_3'][self.language]}: {new_record.birthday}; {local['part_4'][self.language]}: {new_record.email}; {local['part_5'][self.language]}: {new_record.address}"
+        print(string)
     
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
