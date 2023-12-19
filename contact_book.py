@@ -150,8 +150,8 @@ class ContactBook(): #UserDict
         if self.dialogue_check(phone):
             try:
                 record.add_phone(phone)
-            except ValueError:
-                return 'Phone_error_message!'
+            except ValueError as error_text:
+                return error_text
 
         return True
 
@@ -160,8 +160,8 @@ class ContactBook(): #UserDict
         if self.dialogue_check(birthday):
             try:
                 record.add_birthday(birthday)
-            except ValueError:
-                return 'Birthday_error_message!'
+            except ValueError as error_text:
+                return error_text
 
             return True
 
@@ -170,8 +170,8 @@ class ContactBook(): #UserDict
         if self.dialogue_check(email):
             try:
                 record.add_email(email)
-            except ValueError:
-                return 'Email_error_message!'
+            except ValueError as error_text:
+                return error_text
 
             return True
 
@@ -180,8 +180,8 @@ class ContactBook(): #UserDict
         if self.dialogue_check(address):
             try:
                 record.add_address(address)
-            except ValueError:
-                return 'Address_error_message!'
+            except ValueError as error_text:
+                return error_text
 
             local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
                     'part_2':{'en':"phone numbers",'ua':"номерами телефону"},
