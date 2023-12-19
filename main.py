@@ -1,5 +1,5 @@
 from contact_book import ContactBook
-from notes import NoteFile
+#from notes import NoteFile
 from sorting import FileSorter
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
