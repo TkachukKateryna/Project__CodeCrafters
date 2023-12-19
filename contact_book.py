@@ -128,17 +128,22 @@ class ContactBook(): #UserDict
 
 
     #Saves self.data and some technical variables. Can be used, although everything should be saved automatically. may be used to ensure, that nothing will be lost.
-    def save_changes(self):
-        self.update_file("ed")
+    #def save_changes(self):
+        #self.update_file("ed")
 
     def add_name(self,name):
         new_record = RecordManager()
+        new_record.language = self.language
         if self.dialogue_check(name):
-            new_record.add_name(name)
+            try:
+                new_record.add_name(name)
+            except ValueError as error_text:
+                return error_text
+            
             self.id_assign(mode="add",record=new_record)
             return True
 
-        return 'Name_error_message!'
+        
 
     def add_phone(self,phone):
         record = self.data[self.ongoing]
@@ -158,7 +163,7 @@ class ContactBook(): #UserDict
             except ValueError:
                 return 'Birthday_error_message!'
 
-        return True
+            return True
 
     def add_email(self,email):
         record = self.data[self.ongoing]
@@ -168,7 +173,7 @@ class ContactBook(): #UserDict
             except ValueError:
                 return 'Email_error_message!'
 
-        return True
+            return True
 
     def add_address(self,address):
         record = self.data[self.ongoing]
@@ -178,16 +183,16 @@ class ContactBook(): #UserDict
             except ValueError:
                 return 'Address_error_message!'
 
-        local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
-                 'part_2':{'en':"phone numbers",'ua':"номерами телефону"},
-                 'part_3':{'en':"birthday",'ua':"днем народження"},
-                 'part_4':{'en':"email",'ua':"електронною поштою"},
-                 'part_5':{'en':"address",'ua':"адресою"}}
-        string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
-        print(string)
-        self.update_file(mode="add",r_id=self.generated_ids)
-        self.ongoing = None
-        return True
+            local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
+                    'part_2':{'en':"phone numbers",'ua':"номерами телефону"},
+                    'part_3':{'en':"birthday",'ua':"днем народження"},
+                    'part_4':{'en':"email",'ua':"електронною поштою"},
+                    'part_5':{'en':"address",'ua':"адресою"}}
+            string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
+            print(string)
+            self.update_file(mode="add",r_id=self.generated_ids)
+            self.ongoing = None
+            return True
 
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
