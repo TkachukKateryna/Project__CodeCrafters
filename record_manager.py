@@ -2,13 +2,15 @@
 class MiscChecks:
     def month_check(self,month:str):
         if len(month) > 2:
-            raise ValueError("Wrong month format. Should only contain two symbols.")
+            error_text = {'en':"Wrong month format. Should be exactly two characters.",'ua':"Некоректний формат місяця: має складатись рівно з двох символів."}
+            raise ValueError(error_text[self.language])
         if month[:1] == "0":
             month = month[:1]
         if int(month) <= 12:
             return True
         else:
-            raise ValueError("Wrong month format. There can't be more than 12 of them. Correct format: MM-DD-YYYY")
+            error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР."}
+            raise ValueError(error_text[self.language])
 
     def p_check(self,phone:str):
         from re import search
@@ -17,7 +19,8 @@ class MiscChecks:
         if len(phone) == 10 and search(r'\d{10}', phone) != None:
             return phone
         else:
-            raise ValueError("Incorrect phone number. Must be exactly 10 characters, digits only.")
+            error_text = {'en':"Incorrect phone number. Must be exactly 10 characters, digits only.",'ua':"Некорректний номер телефону. Має складатись виключно з цифр, і цифр має бути 10. Не більше і не менше."}
+            raise ValueError(error_text[self.language])
 
     def birthday_check(self,birthday):
         from re import search
@@ -34,7 +37,8 @@ class MiscChecks:
                 tmp = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return tmp
         else:
-            raise ValueError("Wrong birthday format. The correct format would be: MM-DD-YYYY")
+            error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР."}
+            raise ValueError(error_text[self.language])
         
     def email_check(self,email):
         from re import search
@@ -44,7 +48,8 @@ class MiscChecks:
         elif (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
             return email
         else:
-            raise ValueError("Wrong email format. The correct format would be: text@text.text")
+            error_text = {'en':"Wrong email format. The correct format would be: text@text.text",'ua':"Некоректний формат електронної пошти. Правильний формат: текст@текст.текст"}
+            raise ValueError(error_text[self.language])
         
     def has_phone(self,phone:str):
         for i in self.phones:
@@ -57,6 +62,7 @@ class MiscChecks:
 # У самому класі зберігається лише функціонал запису/зміни/видалення. Все інше наслідується від MiscChecks.
 class RecordManager(MiscChecks):
     def __init__(self):
+        self.language = None
         self.phones = []
         self.name = "Unnamed contact"
         self.birthday = None
@@ -70,12 +76,10 @@ class RecordManager(MiscChecks):
         if type(self.p_check(phone)) == str:
             phone = self.p_check(phone)
             self.phones.append(phone)
-            #print(f"Added number {phone} to the record (named '{self.name}')!")
 
     def add_birthday(self,birthday):
         if self.birthday_check(birthday):
             self.birthday = self.birthday_check(birthday)
-            #print(f"Added birthday {birthday} to the record (named '{self.name}')!")
 
     def add_name(self,name:str):
         self.name = name
@@ -83,7 +87,6 @@ class RecordManager(MiscChecks):
     def add_email(self,email:str):
         if self.email_check(email):
             self.email = email
-            #print(f"Added email {email} to the record (named '{self.name}')!")
 
     def add_address(self,address:str):
         self.address = address
@@ -95,7 +98,8 @@ class RecordManager(MiscChecks):
                 self.phones.append(new_phone)
                 return
         
-        raise ValueError("Phone not found!")
+        error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
+        raise ValueError(error_text[self.language])
     
     def edit_birthday(self,new_birthday:str):
         if self.birthday != None:
@@ -103,15 +107,17 @@ class RecordManager(MiscChecks):
                 self.birthday = self.birthday_check(new_birthday)
                 return
         
-        raise ValueError("Birthday is not set yet!")
+        error_text = {'en':"Birthday is not set in this record. Please, use the function for adding birthday instead.",'ua':"День народження у записі відсутній. Будь ласка, скористайтеся функцією додавання дня народження!"}
+        raise ValueError(error_text[self.language])
             
     def edit_email(self,new_email:str):
         if self.email != None:
             if type(self.email_check(new_email)) == str:
                 self.email = new_email
                 return
-        
-        raise ValueError("Email is not set yet!")
+
+        error_text = {'en':"Email is not set in this record. Please, use the function for adding email instead.",'ua':"Електронна пошта у записі відсутня. Будь ласка, скористайтеся функцією додавання дня електронної пошти!"}
+        raise ValueError(error_text[self.language])
         
     def edit_name(self,name:str):
         self.name = name
@@ -124,7 +130,8 @@ class RecordManager(MiscChecks):
             self.phones.remove(phone)
             return
         
-        raise ValueError("Phone not found!")
+        error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
+        raise ValueError(error_text[self.language])
     
     def remove_birthday(self):
         self.birthday = None
