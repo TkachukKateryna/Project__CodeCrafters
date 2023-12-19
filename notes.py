@@ -153,7 +153,7 @@ class NoteFile:
                                     }},
                             'edit_tags':{
                                 'description':{
-                                    'en':"Edits the the tags of a note.",
+                                    'en':"Edits the tags of a note.",
                                     'ua':"Редагує теги нотатки."}, 
                                 'methods':{
                                     self.print_notes:{},
@@ -170,6 +170,18 @@ class NoteFile:
                                         'new_text':{
                                             'en':f"{self.opnng_en}the new text",
                                             'ua':f"{self.opnng}новий текст"}},
+                                    }},
+                            'remove':{
+                                'description':{
+                                    'en':"Edits the note.",
+                                    'ua':"Видаляє нотатку."}, 
+                                'methods':{
+                                    self.print_notes:{},
+                                    self.choose_note_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}a note you are going to delete",
+                                            'ua':f"{self.opnng}нотатку, яку збираєтесь видалити"}},
+                                    self.remove_note_finish:{},
                                     }},
                             'find_by_text':{
                                 'description':{
@@ -354,24 +366,14 @@ class NoteFile:
         self.ongoing = None
         print(done_text[self.language])
 
+    def remove_note_finish(self):
+        self.update_file(mode="del", r_id=int(self.ongoing))
+        self.ongoing = None
   
-  
 
-#     elif choice == "3":
-#             while True:
-#                 question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
-#                 if question.lower() == 'y':
-#                     new_text = input(f"{bcolors.CYAN}Enter the new text:{bcolors.GREEN} ")
-#                     note_file.edit_note_text(found_note, new_text)
-#                     print(f"{bcolors.GREEN}Note text with title {bcolors.RED}'{title}'{bcolors.GREEN} changed to {bcolors.RED}'{new_text}'")
-#                     break
-#                 elif question.lower() == 'n':
-#                     print(f"{bcolors.GREEN}Note editing canceled!")
-#                     break
-#                 else:
-#                     print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
-
-
+#     print(f"{bcolors.RED}4. {bcolors.GREEN}Delete a note")
+#     print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
+#     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
       
     def id_assign(self,mode:str,record:Note):
         if mode == "add":
@@ -426,7 +428,7 @@ class NoteFile:
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
-                    print("ERROR!\nNo such record exists!")
+                    print("Note list is empty!")
         elif mode == "ed":
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
@@ -507,12 +509,7 @@ class NoteFile:
 
 
 # while True:
-#     print(f"{bcolors.RED}3. {bcolors.GREEN}Edit note text")
-#     print(f"{bcolors.RED}4. {bcolors.GREEN}Delete a note")
-#     print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
-#     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
 #     print(f"{bcolors.RED}7. {bcolors.GREEN}Sort notes by tags/keywords")
-#     print(f"{bcolors.RED}8. {bcolors.GREEN}Exit")
 
 #     print(f"{bcolors.BOLD}-{bcolors.DEFAULT}" * 50)
 
