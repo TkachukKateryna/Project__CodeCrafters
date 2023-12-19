@@ -207,8 +207,7 @@ class NoteFile:
                                         'attr_id':{
                                             'en':f"{self.opnng_en}note you are going to delete",
                                             'ua':f"{self.opnng}нотатку, яку збираєтесь видалити"}},
-                                    self.remove_note_finish:{},
-                                    }},
+                                    self.remove_note_finish:{}}},
                             'remove_tag':{
                                 'description':{
                                     'en':"Deletes one of the tags of the chosen note.",
