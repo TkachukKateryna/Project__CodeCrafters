@@ -28,16 +28,22 @@ class NoteChecks:
         #     raise ValueError(error_text[self.language])
         return text
 
-    def tag_check_and_set(self,tag):
-        if tag.lower() == "stop":
-            return True
-        if tag != '':
+    def tag_check_and_set(self,mode,tag,new_tag=None):
+        if tag == '':
+            error_text = {'en':"Wrong tag format: the tag cannot be empty.",'ua':"Некоректний формат тегу: тег не може бути порожнім."}
+            raise ValueError(error_text[self.language])
+        elif mode == 'add':
+            if tag.lower() == "stop":
+                return True
             self.tags.append(tag)
             error_text = {'en':f"{bcolors.GREEN}Tag added. if you want to add another one, enter it in the console. When you are done, just enter '{bcolors.RED}stop{bcolors.GREEN}' in the console.",'ua':f"{bcolors.GREEN}Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '{bcolors.RED}stop{bcolors.GREEN}' у консоль"}
             raise ValueError(error_text[self.language])
-        else:
-            error_text = {'en':"Wrong title format: the title cannot be empty.",'ua':"Некоректний формат заголовку: заголовок не може бути порожнім."}
-            raise ValueError(error_text[self.language])
+        elif mode == 'ed':
+            print(self.tags)
+            #ind = self.tags.index(tag)
+            self.tags[tag] = new_tag
+            error_text = {'en':f"{bcolors.GREEN}Tag changed.",'ua':f"{bcolors.GREEN}Тег відредаговано."}
+            print(error_text[self.language])
 
     def find_the_text(self, text):
         if self.text.find(text.lower()) != -1:
@@ -71,7 +77,7 @@ class Note(NoteChecks):
             
     def add_tags(self,tag):
         try:
-            self.tag_check_and_set(tag)
+            self.tag_check_and_set(mode='add', tag=tag)
             return
         except ValueError as error_text:
             raise ValueError(error_text)
@@ -127,8 +133,8 @@ class NoteFile:
                                             'ua':f"{self.opnng}тег{self.non_obligatory}"}}}},
                             'edit':{
                                 'description':{
-                                    'en':"Edits the title, the text or the tegs of a note.",
-                                    'ua':"Редагує заголовок, текст або теги нотатки."}, 
+                                    'en':"Edits the title, or the text of a note.",
+                                    'ua':"Редагує заголовок, або текст нотатки."}, 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
@@ -141,6 +147,26 @@ class NoteFile:
                                             'en':f"{self.opnng_en}what you are going to edit",
                                             'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
                                     self.edit_note:{
+                                        'new_text':{
+                                            'en':f"{self.opnng_en}the new text",
+                                            'ua':f"{self.opnng}новий текст"}},
+                                    }},
+                            'edit_tags':{
+                                'description':{
+                                    'en':"Edits the the tags of a note.",
+                                    'ua':"Редагує теги нотатки."}, 
+                                'methods':{
+                                    self.print_notes:{},
+                                    self.choose_note_from_the_list:{
+                                        'note_id':{
+                                            'en':f"{self.opnng_en}number of a note you want to edit",
+                                            'ua':f"{self.opnng}номер нотатки, яку ви хочете відредагувати"}},
+                                    self.print_note_tags:{},
+                                    self.choose_note_tag:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}what you are going to edit",
+                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                    self.edit_tags:{
                                         'new_text':{
                                             'en':f"{self.opnng_en}the new text",
                                             'ua':f"{self.opnng}новий текст"}},
@@ -212,7 +238,7 @@ class NoteFile:
     def print_notes(self):
         local = {'part_0':{
                     'en':"Saved notes list:",
-                    'ua':"Наразі збережені такі нотатки:"},
+                    'ua':"Наразі збережені такі нотатки"},
                 'part_1':{
                     'en':"Title",
                     'ua':"Заголовок"},
@@ -231,7 +257,7 @@ class NoteFile:
     
     def print_note_attributes(self):
         local = {'part_0':{
-                    'en':"Choose, which note you are going to edit",
+                    'en':"Choose, what you are going to edit",
                     'ua':"Оберіть, що ви хочете редагувати"},
                 'part_1':{
                     'en':"Title",
@@ -245,7 +271,7 @@ class NoteFile:
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}: {self.data[self.ongoing].title}\n"
         string += f"{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}: {self.data[self.ongoing].text}\n"
-        string += f"{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}: {self.data[self.ongoing].tags}\n"
+        #string += f"{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}: {self.data[self.ongoing].tags}\n"
         print(string)
 
     def choose_note_from_the_list(self, note_id):
@@ -257,7 +283,7 @@ class NoteFile:
             
     def choose_note_attribute(self, field_id):
         try:
-            if int(field_id) < 3:
+            if int(field_id) < 2:
                 self.field_id = int(field_id)
             else:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
@@ -282,7 +308,7 @@ class NoteFile:
                 return str(error_text)
         elif self.field_id == 2:
             try:
-                self.data[self.ongoing].add_tags(new_text)
+                self.data[self.ongoing].edit_tag(new_text)
             except ValueError as error_text:
                 return str(error_text)
         
@@ -291,19 +317,45 @@ class NoteFile:
         self.ongoing = None
         print(done_text[self.language])
 
+    def print_note_tags(self):
+        local = {'part_0':{
+                    'en':"Choose, which tag you are going to edit",
+                    'ua':"Оберіть, який тег ви хочете редагувати"}}
+        note = self.data[self.ongoing]
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        
+        string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
+        print(string)
 
+    def choose_note_tag(self, field_id):
+        note = self.data[self.ongoing]
+        try:
+            if int(field_id) <= len(note.tags):
+                self.field_id = int(field_id)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        
+    def edit_tags(self, new_text):
+        note = self.data[self.ongoing]
+        note.language = self.language
+        local = {'en':"Tag", 'ua':"Тег"}
+        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        try:
+            note.tag_check_and_set(mode='ed', tag=self.field_id, new_tag=new_text)
+        except ValueError as error_text:
+            return str(error_text)
+        
+        self.update_file(mode="ed")
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
 
-
-    def add_tags(self,tags):
-        new_note = self.data[self.ongoing]
-        if self.dialogue_check(tags):
-            try:
-                new_note.add_tags(tags)
-            except ValueError as error_text:
-                return str(error_text)
-            
-            self.ongoing = None
-            return True
+  
+  
 
 #     elif choice == "3":
 #             while True:
