@@ -139,7 +139,8 @@ class NoteFile:
                                     self.add_tags:{
                                         'address':{
                                             'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}тег{self.non_obligatory}"}}}},
+                                            'ua':f"{self.opnng}тег{self.non_obligatory}"}},
+                                    self.add_note_finisher:{}}},
                             'edit':{
                                 'description':{
                                     'en':"Edits the title, or the text of a note.",
@@ -179,6 +180,22 @@ class NoteFile:
                                         'new_text':{
                                             'en':f"{self.opnng_en}new tag",
                                             'ua':f"{self.opnng}новий тег"}},
+                                    }},
+                            'add_tag':{
+                                'description':{
+                                    'en':"Add a new tag to the note.",
+                                    'ua':"Додає новий тег до нотатки."}, 
+                                'methods':{
+                                    self.print_notes:{},
+                                    self.choose_note_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}note, the tags of which you are going to edit",
+                                            'ua':f"{self.opnng}нотатку, теги якої ви збираєтесь редагувати"}},
+                                    self.add_tags:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}tag, which you are going to add",
+                                            'ua':f"{self.opnng}тег, який ви хочете додати"}},
+                                    self.add_tag_finish:{},
                                     }},
                             'remove':{
                                 'description':{
@@ -238,6 +255,7 @@ class NoteFile:
 
     def add_text(self,text):
         new_note = self.data[self.ongoing]
+        new_note.language = self.language
         if self.dialogue_check(text):
             try:
                 new_note.add_text(text)
@@ -248,15 +266,19 @@ class NoteFile:
 
     def add_tags(self,tags):
         new_note = self.data[self.ongoing]
+        new_note.language = self.language
         if self.dialogue_check(tags):
             try:
                 new_note.add_tags(tags)
+                return True
             except ValueError as error_text:
                 return str(error_text)
             
+
+    def add_note_finisher(self):
             self.update_file(mode="add",r_id=self.generated_ids)
             self.ongoing = None
-            return True
+
 
     def find_by_text(self,text):
         note_id_list = []
@@ -395,6 +417,10 @@ class NoteFile:
         self.update_file(mode="del", r_id=int(self.ongoing))
         self.ongoing = None
   
+    def add_tag_finish(self):
+        self.field_id = None
+        self.ongoing = None
+  
     def remove_tag_finish(self):
         note = self.data[self.ongoing]
         note.language = self.language
@@ -410,8 +436,7 @@ class NoteFile:
         print(done_text[self.language])
   
 
-#     print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
-#     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
+#TODO     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
       
     def id_assign(self,mode:str,record:Note):
         if mode == "add":
