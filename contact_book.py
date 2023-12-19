@@ -23,9 +23,9 @@ class ContactBook(): #UserDict
         self.update_file("load",0)
 
         self.opnng = f"{bcolors.CYAN}Введіть, будь ласка, "
-        self.non_obligatory = f"({bcolors.CYAN} або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
-        self.opnng_en = f"Please, enter the "
-        self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
+        self.non_obligatory = f"{bcolors.CYAN}( або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
+        self.opnng_en = f"{bcolors.CYAN}Please, enter the "
+        self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{
                                 'name':{
                                     'en':"of the contact manager", 
@@ -138,7 +138,7 @@ class ContactBook(): #UserDict
             try:
                 new_record.add_name(name)
             except ValueError as error_text:
-                return error_text
+                return str(error_text)
             
             self.id_assign(mode="add",record=new_record)
             return True
@@ -151,7 +151,7 @@ class ContactBook(): #UserDict
             try:
                 record.add_phone(phone)
             except ValueError as error_text:
-                return error_text
+                return str(error_text)
 
         return True
 
@@ -161,7 +161,7 @@ class ContactBook(): #UserDict
             try:
                 record.add_birthday(birthday)
             except ValueError as error_text:
-                return error_text
+                return str(error_text)
 
             return True
 
@@ -171,7 +171,7 @@ class ContactBook(): #UserDict
             try:
                 record.add_email(email)
             except ValueError as error_text:
-                return error_text
+                return str(error_text)
 
             return True
 
@@ -181,7 +181,7 @@ class ContactBook(): #UserDict
             try:
                 record.add_address(address)
             except ValueError as error_text:
-                return error_text
+                return str(error_text)
 
             local = {'part_1':{'en':"Contact created with name",'ua':"Контакт створено з ім'ям"},
                     'part_2':{'en':"phone numbers",'ua':"номерами телефону"},
