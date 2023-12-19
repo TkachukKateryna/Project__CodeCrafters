@@ -132,17 +132,17 @@ class InputManager(HelpMe):
     def set_module(self,module_id):
         if module_id in self.help_modules:
             self.module_chosen = module_id
+            self.actions['default']["back"] = {
+                                           'description':{
+                                               'en':"Allows you to switch to a different menu",
+                                               'ua':"Дозволяє переключитись на інше меню."}, 
+                                            'methods':{self.reset_module:{}}}
             for script in self.actions[self.module_chosen].keys():
                 self.current_module_commands.append(script) 
             for script in self.actions['default'].keys():
                 self.current_module_commands.append(script) 
 
             self.command_completer = WordCompleter(self.current_module_commands)
-            self.actions['default']["back"] = {
-                                           'description':{
-                                               'en':"Allows you to switch to a different menu",
-                                               'ua':"Дозволяє переключитись на інше меню."}, 
-                                            'methods':{self.reset_module:{}}}
         else:
             error_phrase = {'en':"Wrong module number. Please, try again!",'ua':"Неправильний номер модуля. Спробуйте ще раз!"}
             print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
