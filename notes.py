@@ -39,6 +39,11 @@ class NoteChecks:
             error_text = {'en':"Wrong title format: the title cannot be empty.",'ua':"Некоректний формат заголовку: заголовок не може бути порожнім."}
             raise ValueError(error_text[self.language])
 
+    def find_the_text(self, text):
+        if self.text.find(text.lower()):
+            return True
+        return False
+
 class Note(NoteChecks):
     def __init__(self):
         self.title = "Unnamed note" # Заголовок нотатки
@@ -76,7 +81,8 @@ class Note(NoteChecks):
         self.tags = tags
 
     def __str__(self):
-        return f"'{self.text}'" # Використовуємо для повернення текстових представлень об'єктів
+        string = {'en':f"Note found with title {self.title}; tags {self.tags}; text {self.text}",'ua':f"Нотатку знайдено з заголовком {self.title}; тегами {self.tags}; текстом {self.text}"}
+        return string[self.language]
 
 
 class NoteFile:
@@ -118,7 +124,17 @@ class NoteFile:
                                     self.add_tags:{
                                         'address':{
                                             'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}тег{self.non_obligatory}"}}}}}
+                                            'ua':f"{self.opnng}тег{self.non_obligatory}"}}}},
+                            'find_by_text':{
+                                'description':{
+                                    'en':"Looks for the entered text in the notes. Returns the list of matches.",
+                                    'ua':"Шукає запис, у якому присутній введений текст. Повертає список записів, де текст було знайдено."}, 
+                                'methods':{
+                                    self.find_by_text:{
+                                        'text':{
+                                            'en':f"{self.opnng_en}text you want to find",
+                                            'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}}}
+
 
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
@@ -159,7 +175,20 @@ class NoteFile:
             self.ongoing = None
             return True
 
+    def find_by_text(self,text):
+        note_id_list = []
+        for note_id,class_instance in self.data.items():
+            if class_instance.find_the_text(text):
+                note_id_list.append(note_id)
+        if len(note_id_list) > 0:
+            for note_id in note_id_list:
+                print(self.data[note_id])
+        else:
+            error_text = {'en':"No note with such text found!",'ua':"За заданим текстом жодного запису не знайдено!"}
+            print(error_text[self.language])
+            
 
+      
     def id_assign(self,mode:str,record:Note):
         if mode == "add":
             if len(self.priority_ids) > 0:
@@ -256,13 +285,6 @@ class NoteFile:
     #     self.save_notes() # Збереження нотаток у файл
     #     return note
 
-    # def find_note_by_text(self, text):
-    #     found_notes = []
-    #     for note in self.notes:
-    #         if text.lower() in note.text.lower(): # Переводимо текст пошуку і нотатки до нижнього регістру
-    #             found_notes.append(note)
-    #     return found_notes
-
     # def edit_note_text(self, note_title, new_text):
     #     note_title.text = new_text # Заміна тексту нотатки
     #     self.save_notes()
@@ -335,32 +357,6 @@ class NoteFile:
 
 #     choice = input(f"{bcolors.CYAN}Enter the number of the desired operation:{bcolors.GREEN} ")
     
-#     if choice == "1":
-#         title = input(f"{bcolors.CYAN}Enter the note title:{bcolors.GREEN} ").strip()
-#         if title:
-#             text = input(f"{bcolors.CYAN}Enter the note text:{bcolors.GREEN} ").strip()
-#             if text:
-#                 tags = input(f"{bcolors.CYAN}Enter tags/keywords for the note separated by spaces (optional):{bcolors.GREEN} ").lower().strip().split()
-#                 note = note_file.create_note(title, text, tags)
-#                 print(f"{bcolors.GREEN}Note with title {bcolors.RED}'{title}'{bcolors.GREEN} created successfully!")
-#             else:
-#                 print(f"{bcolors.BOLD_RED}Text cannot be empty. Please try again!")
-#         else:
-#             print(f"{bcolors.BOLD_RED}Title cannot be empty. Please try again!")
-
-#     elif choice == "2":
-#         text = input(f"{bcolors.CYAN}Enter the text to search (if space - all notes will be displayed):{bcolors.GREEN} ")
-#         found_notes = note_file.find_note_by_text(text)
-#         if found_notes:
-#             print(f"{bcolors.GREEN}\nFound {len(found_notes)} note(s):{bcolors.DEFAULT}\n")
-#             for note in found_notes:
-#                 print(f"{bcolors.YELLOW}Title:{bcolors.DEFAULT} {note.title}")
-#                 print(f"{bcolors.YELLOW}Text:{bcolors.DEFAULT} {note.text}")
-#                 print(f"{bcolors.YELLOW}Tags/Keywords:{bcolors.DEFAULT} {note.tags}")
-#                 print()
-#         else:
-#             print(f"{bcolors.GREEN}No notes found with that text!")
-      
 #     elif choice == "3":
 #         title = input(f"{bcolors.CYAN}Enter the note title to edit:{bcolors.GREEN} ")
 #         found_note = note_file.find_notes_by_title(title)
