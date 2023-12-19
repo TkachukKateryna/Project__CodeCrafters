@@ -130,15 +130,21 @@ class NoteFile:
                                     'en':"Edits the title, the text or the tegs of a note.",
                                     'ua':"Редагує заголовок, текст або теги нотатки."}, 
                                 'methods':{
-                                    self.print_notes:{
-                                        #'name':{
-                                            #'en':f"{self.opnng_en}title{self.non_obligatory_en}",
-                                            #'ua':f"{self.opnng}заголовок{self.non_obligatory}"}},
-                                    #self.add_tags:{
-                                        #'address':{
-                                            #'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
-                                            #'ua':f"{self.opnng}тег{self.non_obligatory}"}
-                                        }}},
+                                    self.print_notes:{},
+                                    self.choose_note_from_the_list:{
+                                        'note_id':{
+                                            'en':f"{self.opnng_en}number of a note you want to edit",
+                                            'ua':f"{self.opnng}номер нотатки, яку ви хочете відредагувати"}},
+                                    self.print_note_attributes:{},
+                                    self.choose_note_attribute:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}what you are going to edit",
+                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                    self.edit_note:{
+                                        'new_text':{
+                                            'en':f"{self.opnng_en}the new text",
+                                            'ua':f"{self.opnng}новий текст"}},
+                                    }},
                             'find_by_text':{
                                 'description':{
                                     'en':"Looks for the entered text in the notes. Returns the list of matches.",
@@ -222,12 +228,84 @@ class NoteFile:
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items()) + f"\n{bcolors.RED}{local['part_4'][self.language]}{bcolors.GREEN}\n"
         print(string)
+    
+    def print_note_attributes(self):
+        local = {'part_0':{
+                    'en':"Choose, which note you are going to edit",
+                    'ua':"Оберіть, що ви хочете редагувати"},
+                'part_1':{
+                    'en':"Title",
+                    'ua':"Заголовок"},
+                'part_2':{
+                    'en':"Text",
+                    'ua':"Текст"},
+                'part_3':{
+                    'en':"Tags",
+                    'ua':"Теги"}}
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}: {self.data[self.ongoing].title}\n"
+        string += f"{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}: {self.data[self.ongoing].text}\n"
+        string += f"{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}: {self.data[self.ongoing].tags}\n"
+        print(string)
 
+    def choose_note_from_the_list(self, note_id):
+        if int(note_id) in self.data.keys():
+            self.ongoing = int(note_id)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
+            return error_text[self.language]
             
+    def choose_note_attribute(self, field_id):
+        try:
+            if int(field_id) < 3:
+                self.field_id = int(field_id)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        
+    def edit_note(self, new_text):
+        self.data[self.ongoing].language = self.language
+        tmp = [{'en':"Title", 'ua':"Заголовок"},{'en':"Text", 'ua':"Текст"},{'en':"Tags", 'ua':"Теги"}]
+        done_text = {'en':f"{bcolors.GREEN}{tmp[self.field_id][self.language]} edited.",'ua':f"{bcolors.YELLOW}{tmp[self.field_id][self.language]} відредагований.{bcolors.GREEN}"}
+        if self.field_id == 0:
+            try:
+                self.data[self.ongoing].add_title(new_text)
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 1:
+            try:
+                self.data[self.ongoing].add_text(new_text)
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 2:
+            try:
+                self.data[self.ongoing].add_tags(new_text)
+            except ValueError as error_text:
+                return str(error_text)
+        
+        self.update_file(mode="ed")
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
+
+
+
+
+    def add_tags(self,tags):
+        new_note = self.data[self.ongoing]
+        if self.dialogue_check(tags):
+            try:
+                new_note.add_tags(tags)
+            except ValueError as error_text:
+                return str(error_text)
+            
+            self.ongoing = None
+            return True
+
 #     elif choice == "3":
-#         title = input(f"{bcolors.CYAN}Enter the note title to edit:{bcolors.GREEN} ")
-#         found_note = note_file.find_notes_by_title(title)
-#         if found_note:
 #             while True:
 #                 question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
 #                 if question.lower() == 'y':
