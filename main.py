@@ -57,10 +57,10 @@ class InputManager(HelpMe):
         # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класу і "витягнути" з нього оброблену змінну).
             # Upd: або просто записати функцію перевірки у клас RecordManager - від цього, в теорії, ніхто не постраждає.
         self.help_modules = {}
-        self.notepad = NoteFile()
+        self.notepad = "None" #NoteFile()
         self.contactbook = ContactBook()
         self.sorter = FileSorter()
-        can_have_a_command = [self.contactbook, self.notepad, self.sorter]
+        can_have_a_command = [self.contactbook, self.sorter] #, self.notepad
         self.actions = self.action_filler(can_have_a_command)
         self.actions['default'] = {}
         self.actions['default']["change_language"] = { 
@@ -102,7 +102,7 @@ class InputManager(HelpMe):
             self.language = self.languages[lang]
             self.contactbook.language = self.languages[lang]
             self.sorter.language = self.languages[lang]
-            self.notepad.language = self.languages[lang]
+            #self.notepad.language = self.languages[lang]
         
         welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
         print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
