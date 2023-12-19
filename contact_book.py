@@ -1,4 +1,5 @@
 from record_manager import MiscChecks, RecordManager
+from datetime import datetime
 #from collections import UserDict
 
 class bcolors:
@@ -57,11 +58,49 @@ class ContactBook(): #UserDict
                                     self.add_address:{
                                         'address':{
                                             'en':f"{self.opnng_en}address{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}}}
+                                            'ua':f"{self.opnng}адресу контакта{self.non_obligatory}"}}}},
+                            'check_birthdays':{
+                                'description':{
+                                    'en':"Displays a list of contacts, who have a birthday in the specified perioud.",
+                                    'ua':"Виводить список іменинників на обраний користувачем період."}, 
+                                'methods':{
+                                    self.contacts_upcoming_birthday:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}number of days",
+                                            'ua':f"{self.opnng}кількість днів"}}}}}
   
         
-    def test_printer(self,*args):
-        print(args)
+    def contacts_upcoming_birthday(self, numb):
+        while True:
+            try:
+                days_ahead = int(numb)
+                break
+            except ValueError:
+                if numb.lower() == 'n':
+                    return
+                print("Неправильний формат кількості днів. Спробуйте ще раз.")
+                numb = input()
+        today = datetime.now()
+        upcoming_birthdays = []
+        for record_id, record in self.data.items():
+            if record.birthday is not None:
+                dob = datetime.strptime(record.birthday, '%m-%d-%Y')
+                current_year_birthday = datetime(today.year, dob.month, dob.day)
+                if current_year_birthday >= today:
+                    days_until_birthday = (current_year_birthday - today).days
+                    if days_until_birthday <= days_ahead:
+                        upcoming_birthdays.append((record.name, record.birthday))
+                else:
+                    next_birthday = datetime(today.year + 1, dob.month, dob.day)
+                    days_until_birthday = (next_birthday - today).days
+                    if days_until_birthday <= days_ahead:
+                        upcoming_birthdays.append((record.name, record.birthday))
+        if upcoming_birthdays:
+            print(f"Контакти у яких день народження протягом наступних {days_ahead} днів від сьогоднішньої дати:")
+            for name, birthday in upcoming_birthdays:
+                print(f"{name} - {birthday}")
+        else:
+            print(f"Немає контактів у яких день народження протягом наступних {days_ahead} днів від сьогоднішньої дати.")
 
     # Prepares self.data[id] to be saved.
     # Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
