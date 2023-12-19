@@ -39,11 +39,20 @@ class NoteChecks:
             error_text = {'en':f"{bcolors.GREEN}Tag added. if you want to add another one, enter it in the console. When you are done, just enter '{bcolors.RED}stop{bcolors.GREEN}' in the console.",'ua':f"{bcolors.GREEN}Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '{bcolors.RED}stop{bcolors.GREEN}' у консоль"}
             raise ValueError(error_text[self.language])
         elif mode == 'ed':
-            print(self.tags)
-            #ind = self.tags.index(tag)
             self.tags[tag] = new_tag
             error_text = {'en':f"{bcolors.GREEN}Tag changed.",'ua':f"{bcolors.GREEN}Тег відредаговано."}
             print(error_text[self.language])
+        elif mode == 'del':
+            error_text = {}
+            try:
+            #if tag in self.tags:
+                del self.tags[tag]
+                error_text = {'en':f"{bcolors.GREEN}Tag removed.",'ua':f"{bcolors.GREEN}Тег видалено."}
+                print(error_text[self.language])
+            except:
+                error_text = {'en':f"{bcolors.GREEN}No tag with such name!",'ua':f"{bcolors.GREEN}Такого тегу не існує!"}
+                raise ValueError(error_text[self.language])
+            
 
     def find_the_text(self, text):
         if self.text.find(text.lower()) != -1:
@@ -159,30 +168,46 @@ class NoteFile:
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
                                         'note_id':{
-                                            'en':f"{self.opnng_en}number of a note you want to edit",
-                                            'ua':f"{self.opnng}номер нотатки, яку ви хочете відредагувати"}},
+                                            'en':f"{self.opnng_en}number of a note, which has the tag you want to edit",
+                                            'ua':f"{self.opnng}номер нотатки, тег якої ви хочете відредагувати"}},
                                     self.print_note_tags:{},
                                     self.choose_note_tag:{
                                         'attr_id':{
-                                            'en':f"{self.opnng_en}what you are going to edit",
-                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                            'en':f"{self.opnng_en}tag you are going to edit",
+                                            'ua':f"{self.opnng}тег, який ви збираєтесь редагувати"}},
                                     self.edit_tags:{
                                         'new_text':{
-                                            'en':f"{self.opnng_en}the new text",
-                                            'ua':f"{self.opnng}новий текст"}},
+                                            'en':f"{self.opnng_en}new tag",
+                                            'ua':f"{self.opnng}новий тег"}},
                                     }},
                             'remove':{
                                 'description':{
-                                    'en':"Edits the note.",
+                                    'en':"Deletes the note.",
                                     'ua':"Видаляє нотатку."}, 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
                                         'attr_id':{
-                                            'en':f"{self.opnng_en}a note you are going to delete",
+                                            'en':f"{self.opnng_en}note you are going to delete",
                                             'ua':f"{self.opnng}нотатку, яку збираєтесь видалити"}},
                                     self.remove_note_finish:{},
                                     }},
+                            'remove_tag':{
+                                'description':{
+                                    'en':"Deletes one of the tags of the chosen note.",
+                                    'ua':"Видаляє один з тегів обраної нотатки."}, 
+                                'methods':{
+                                    self.print_notes:{},
+                                    self.choose_note_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}note, where the tag is",
+                                            'ua':f"{self.opnng}нотатку, де знаходиться тег"}},
+                                    self.print_note_tags:{},
+                                    self.choose_note_tag:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}the tag you are going to delete",
+                                            'ua':f"{self.opnng}тег, який ви збираєтеся видалити"}},
+                                    self.remove_tag_finish:{}}},
                             'find_by_text':{
                                 'description':{
                                     'en':"Looks for the entered text in the notes. Returns the list of matches.",
@@ -370,8 +395,21 @@ class NoteFile:
         self.update_file(mode="del", r_id=int(self.ongoing))
         self.ongoing = None
   
+    def remove_tag_finish(self):
+        note = self.data[self.ongoing]
+        note.language = self.language
+        local = {'en':"Tag", 'ua':"Тег"}
+        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        try:
+            note.tag_check_and_set(mode='del', tag=self.field_id)
+        except ValueError as error_text:
+            return str(error_text)
+        
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
+  
 
-#     print(f"{bcolors.RED}4. {bcolors.GREEN}Delete a note")
 #     print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
 #     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
       
