@@ -96,7 +96,6 @@ class NoteFile:
         self.file = "note_storage.bin"
         
         self.update_file("load",0)
-        #print(self.data)
 
         self.opnng = f"{bcolors.CYAN}Введіть, будь ласка, "
         self.non_obligatory = f"{bcolors.CYAN}( або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
@@ -126,6 +125,20 @@ class NoteFile:
                                         'address':{
                                             'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
                                             'ua':f"{self.opnng}тег{self.non_obligatory}"}}}},
+                            'edit':{
+                                'description':{
+                                    'en':"Edits the title, the text or the tegs of a note.",
+                                    'ua':"Редагує заголовок, текст або теги нотатки."}, 
+                                'methods':{
+                                    self.print_notes:{
+                                        #'name':{
+                                            #'en':f"{self.opnng_en}title{self.non_obligatory_en}",
+                                            #'ua':f"{self.opnng}заголовок{self.non_obligatory}"}},
+                                    #self.add_tags:{
+                                        #'address':{
+                                            #'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
+                                            #'ua':f"{self.opnng}тег{self.non_obligatory}"}
+                                        }}},
                             'find_by_text':{
                                 'description':{
                                     'en':"Looks for the entered text in the notes. Returns the list of matches.",
@@ -189,7 +202,45 @@ class NoteFile:
         else:
             error_text = {'en':"No note with such text found!",'ua':"За заданим текстом жодного запису не знайдено!"}
             print(error_text[self.language])
+          
+    def print_notes(self):
+        local = {'part_0':{
+                    'en':"Saved notes list:",
+                    'ua':"Наразі збережені такі нотатки:"},
+                'part_1':{
+                    'en':"Title",
+                    'ua':"Заголовок"},
+                'part_2':{
+                    'en':"Text",
+                    'ua':"Текст"},
+                'part_3':{
+                    'en':"Tags",
+                    'ua':"Теги"},
+                'part_4':{
+                    'en':"To choose the note, enter it's respective number in a console",
+                    'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items()) + f"\n{bcolors.RED}{local['part_4'][self.language]}{bcolors.GREEN}\n"
+        print(string)
+
             
+#     elif choice == "3":
+#         title = input(f"{bcolors.CYAN}Enter the note title to edit:{bcolors.GREEN} ")
+#         found_note = note_file.find_notes_by_title(title)
+#         if found_note:
+#             while True:
+#                 question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
+#                 if question.lower() == 'y':
+#                     new_text = input(f"{bcolors.CYAN}Enter the new text:{bcolors.GREEN} ")
+#                     note_file.edit_note_text(found_note, new_text)
+#                     print(f"{bcolors.GREEN}Note text with title {bcolors.RED}'{title}'{bcolors.GREEN} changed to {bcolors.RED}'{new_text}'")
+#                     break
+#                 elif question.lower() == 'n':
+#                     print(f"{bcolors.GREEN}Note editing canceled!")
+#                     break
+#                 else:
+#                     print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
+
 
       
     def id_assign(self,mode:str,record:Note):
@@ -270,23 +321,6 @@ class NoteFile:
                         print('Reached the end of file!')
             #print(self.data)
 
-    # def load_notes(self):
-    #     try:
-    #         with open(self.file_name, 'rb') as file:
-    #             notes = pickle.load(file) # Завантаження нотаток з файлу за допомогою pickle
-    #     except FileNotFoundError:
-    #         notes = [] # Якщо файл не знайдено, створюємо порожній список
-    #     return notes
-
-    # def save_notes(self):
-    #     with open(self.file_name, 'wb') as file:
-    #         pickle.dump(self.notes, file) # Збереження нотаток у файл за допомогою pickle
-
-    # def create_note(self, title, text, tags=None):
-    #     note = Note(title, text, tags) # Створення нової нотатки
-    #     self.notes.append(note) # Додавання нотатки до списку
-    #     self.save_notes() # Збереження нотаток у файл
-    #     return note
 
     # def edit_note_text(self, note_title, new_text):
     #     note_title.text = new_text # Заміна тексту нотатки
@@ -342,13 +376,7 @@ class NoteFile:
     #         return
 
 
-# file_name = "notes.bin" # Назва файлу для збереження нотаток
-# note_file = NoteFile(file_name) # Створення об'єкту класу NoteFile
-
 # while True:
-#     print(f"\n{bcolors.CYAN}Available operations:\n")
-#     print(f"{bcolors.RED}1. {bcolors.GREEN}Create a new note")
-#     print(f"{bcolors.RED}2. {bcolors.GREEN}Find a note by text")
 #     print(f"{bcolors.RED}3. {bcolors.GREEN}Edit note text")
 #     print(f"{bcolors.RED}4. {bcolors.GREEN}Delete a note")
 #     print(f"{bcolors.RED}5. {bcolors.GREEN}Add tags/keywords to a note")
@@ -360,23 +388,6 @@ class NoteFile:
 
 #     choice = input(f"{bcolors.CYAN}Enter the number of the desired operation:{bcolors.GREEN} ")
     
-#     elif choice == "3":
-#         title = input(f"{bcolors.CYAN}Enter the note title to edit:{bcolors.GREEN} ")
-#         found_note = note_file.find_notes_by_title(title)
-#         if found_note:
-#             while True:
-#                 question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
-#                 if question.lower() == 'y':
-#                     new_text = input(f"{bcolors.CYAN}Enter the new text:{bcolors.GREEN} ")
-#                     note_file.edit_note_text(found_note, new_text)
-#                     print(f"{bcolors.GREEN}Note text with title {bcolors.RED}'{title}'{bcolors.GREEN} changed to {bcolors.RED}'{new_text}'")
-#                     break
-#                 elif question.lower() == 'n':
-#                     print(f"{bcolors.GREEN}Note editing canceled!")
-#                     break
-#                 else:
-#                     print(f"{bcolors.BOLD_RED}Wrong input. Try again!{bcolors.DEFAULT}")
-
 #     elif choice == "4":
 #         title = input(f"{bcolors.CYAN}Enter the note title to delete:{bcolors.GREEN} ")
 #         found_note = note_file.find_notes_by_title(title)
