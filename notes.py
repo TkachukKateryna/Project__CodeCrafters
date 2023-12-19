@@ -18,7 +18,6 @@ class Note:
         self.title = title # Заголовок нотатки
         self.text = text # Текст нашої нотатки
         self.tags = tags or [] # Теги нашої нотатки (необов'язково)
-        self.language = None
 
 
     def __str__(self):
@@ -29,6 +28,72 @@ class NoteFile:
     def __init__(self, file_name):
         self.file_name = file_name # Ім'я файлу для збереження нотаток
         self.notes = self.load_notes() # Завантаження нотаток з файлу
+        self.opnng = f"{bcolors.CYAN}Введіть, будь ласка, "
+        self.non_obligatory = f"({bcolors.CYAN} або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
+        self.opnng_en = f"Please, enter the "
+        self.non_obligatory_en = f"( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
+        self.method_table = {'__localization_insert':{
+                                'name':{
+                                    'en':"of the notes manager", 
+                                    'ua':"менеджера записів"},
+                                'description':{
+                                    'en':"notes manager", 
+                                    'ua':"менеджер записів"},
+                                    },
+
+                                'create_note':{
+                                    'class':'note',
+                                    'description':{
+                                        'en':"Adds a new record to the note book. You can add Title, text, tags.",
+                                        'ua':"Додає новий запис до записної книги. Можна додати заголовок, текст нотатки та теги."}, 
+                                    'methods':{
+                                        self.create_note:{
+                                            'title':{
+                                                'en':f"{self.opnng_en}title",
+                                                'ua':f"{self.opnng}заголовок"},
+                                            'text':{
+                                                'en':f"{self.opnng_en}text",
+                                                'ua':f"{self.opnng}текст нотатки"}, 
+                                            'tag':{
+                                                'en':f"{self.opnng_en}tags{self.non_obligatory_en}", 
+                                                'ua':f"{self.opnng}тег або ключові слова{self.non_obligatory}"}
+                                            },
+                                        }
+                                    },
+                                'find_note_by_text':{
+                                    'class':'note',
+                                    'description':{
+                                        'en':"Find an existing record in the notes book. You can write the text to find specific note or just press enter to see all notes.",
+                                        'ua':"Шукає відповідну нотатку по заданому тексту або просто натисніть Ввід для отримання списку всіх існуючих нотатків."}, 
+                                    'methods':{
+                                        self.find_note_by_text:{
+                                            'text':{
+                                                'en':f"{self.opnng_en}text",
+                                                'ua':f"{self.opnng}текст нотатки"}
+                                            },
+                                        }
+                                    },
+                                'find_notes_by_tags':{
+                                    'class':'note',
+                                    'description':{
+                                        'en':"Find an existing record in the notes book. You can write the text to find specific note or just press enter to see all notes.",
+                                        'ua':"Шукає відповідну нотатку по заданому тексту або просто натисніть Ввід для отримання списку всіх існуючих нотатків."}, 
+                                    'methods':{
+                                        self.find_notes_by_tags:{
+                                            'tag':{
+                                                'en':f"{self.opnng_en}tag",
+                                                'ua':f"{self.opnng}тег нотатки"}
+                                            },
+                                        }
+                                    },
+                                'edit_note_text':{
+                                    'class':'note',
+                                    'description':{
+                                        'en':"Edit an existing record in the notes book. Can find the needed note and change text.",
+                                        'ua':"Шукає задану нотатку та замінює текст."
+                                    }
+                                }
+        }
 
     def load_notes(self):
         try:
@@ -159,7 +224,7 @@ while True:
         if found_note:
             while True:
                 question = input(f"{bcolors.CYAN}Are you sure you want to edit this note? (y/n):{bcolors.GREEN} ")
-                if question.lower() == 'y':
+                if question.lower() == 'y':    
                     new_text = input(f"{bcolors.CYAN}Enter the new text:{bcolors.GREEN} ")
                     note_file.edit_note_text(found_note, new_text)
                     print(f"{bcolors.GREEN}Note text with title {bcolors.RED}'{title}'{bcolors.GREEN} changed to {bcolors.RED}'{new_text}'")
