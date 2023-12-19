@@ -70,8 +70,8 @@ class InputManager(HelpMe):
                                             'methods':{self.print_languages:{},
                                                        self.set_language:{
                                                            'lang':{
-                                                               'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}",
-                                                               'ua':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language{bcolors.GREEN}"}}}}
+                                                               'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language",
+                                                               'ua':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language"}}}}
         
         self.actions['default']["change_module"] = {
                                            'description':{
