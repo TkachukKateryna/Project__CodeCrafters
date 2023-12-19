@@ -25,9 +25,7 @@ class MiscChecks:
     def birthday_check(self,birthday):
         from re import search
         # Format: MM-DD-YYYY
-        if birthday == None:
-            return None
-        elif (search(r'\d{2}\D\d{2}\D\d{4}', birthday) != None and len(birthday) == 10):
+        if (search(r'\d{2}\D\d{2}\D\d{4}', birthday) != None and len(birthday) == 10):
             tmp = birthday[0:2]
             if self.month_check(tmp):
                 return birthday
@@ -43,9 +41,7 @@ class MiscChecks:
     def email_check(self,email):
         from re import search
         # Format: text@text.text
-        if email == None:
-            return None
-        elif (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
+        if (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
             return email
         else:
             error_text = {'en':"Wrong email format. The correct format would be: text@text.text",'ua':"Некоректний формат електронної пошти. Правильний формат: текст@текст.текст"}
@@ -73,48 +69,61 @@ class RecordManager(MiscChecks):
         return f"Record name: {self.name}, Birthday: {self.birthday}, phones: {'; '.join(p for p in self.phones)}"
 
     def add_phone(self,phone):
-        if type(self.p_check(phone)) == str:
+        try:
             phone = self.p_check(phone)
             self.phones.append(phone)
+        except ValueError as error_text:
+            raise ValueError(error_text)
 
     def add_birthday(self,birthday):
-        if self.birthday_check(birthday):
+        try:
             self.birthday = self.birthday_check(birthday)
-
+        except ValueError as error_text:
+            raise ValueError(error_text)
+            
     def add_name(self,name:str):
         self.name = name
 
     def add_email(self,email:str):
-        if self.email_check(email):
-            self.email = email
+        try:
+            self.email = self.email_check(email)
+        except ValueError as error_text:
+            raise ValueError(error_text)
 
     def add_address(self,address:str):
         self.address = address
 
     def edit_phone(self,phone:str,new_phone:str):
         if self.has_phone(phone):
-            if type(self.p_check(new_phone)) == str:
-                self.phones.remove(phone)
-                self.phones.append(new_phone)
-                return
-        
+            try:
+                if type(self.p_check(new_phone)) == str:
+                    self.phones.remove(phone)
+                    self.phones.append(new_phone)
+                    return
+            except ValueError as error_text_2:
+                raise ValueError(error_text_2)
+            
         error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
         raise ValueError(error_text[self.language])
     
     def edit_birthday(self,new_birthday:str):
         if self.birthday != None:
-            if type(self.birthday_check(new_birthday)) == str:
+            try:
                 self.birthday = self.birthday_check(new_birthday)
                 return
+            except ValueError as error_text:
+                raise ValueError(error_text)
         
         error_text = {'en':"Birthday is not set in this record. Please, use the function for adding birthday instead.",'ua':"День народження у записі відсутній. Будь ласка, скористайтеся функцією додавання дня народження!"}
         raise ValueError(error_text[self.language])
             
     def edit_email(self,new_email:str):
         if self.email != None:
-            if type(self.email_check(new_email)) == str:
-                self.email = new_email
+            try:
+                self.email = self.email_check(new_email)
                 return
+            except ValueError as error_text:
+                raise ValueError(error_text)
 
         error_text = {'en':"Email is not set in this record. Please, use the function for adding email instead.",'ua':"Електронна пошта у записі відсутня. Будь ласка, скористайтеся функцією додавання дня електронної пошти!"}
         raise ValueError(error_text[self.language])
