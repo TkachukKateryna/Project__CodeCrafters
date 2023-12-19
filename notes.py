@@ -40,9 +40,10 @@ class NoteChecks:
             raise ValueError(error_text[self.language])
 
     def find_the_text(self, text):
-        if self.text.find(text.lower()):
+        if self.text.find(text.lower()) != -1:
             return True
-        return False
+        else:
+            return False
 
 class Note(NoteChecks):
     def __init__(self):
@@ -180,8 +181,10 @@ class NoteFile:
         for note_id,class_instance in self.data.items():
             if class_instance.find_the_text(text):
                 note_id_list.append(note_id)
+        
         if len(note_id_list) > 0:
             for note_id in note_id_list:
+                self.data[note_id].language = self.language
                 print(self.data[note_id])
         else:
             error_text = {'en':"No note with such text found!",'ua':"За заданим текстом жодного запису не знайдено!"}
