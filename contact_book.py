@@ -71,7 +71,7 @@ class ContactBook(): #UserDict
                             'search':{
                                 'description':{
                                     'en':"Searches for contacts in the contact book by name.",
-                                    'ua':"Здійснює пошук контактів у книзі контактів за ім*ям."}, 
+                                    'ua':"Здійснює пошук контактів у книзі контактів за ім'ям."}, 
                                 'methods':{
                                     self.search_contact:{
                                         'name':{
@@ -79,32 +79,32 @@ class ContactBook(): #UserDict
                                             'ua':f"{self.opnng}ім'я"}}}},
                             'edit':{
                                 'description':{
-                                    'en':"Edits information about individual contacts.",
-                                    'ua':"Редагує інформацію щодо окремих контактів."}, 
+                                    'en':"Edits the contact's data (except for the phone numbers).",
+                                    'ua':"Редагує дані контакта (окрім номерів телефона)."}, 
                                 'methods':{
                                     self.print_contacts:{},
                                     self.choose_contact_from_the_list:{
                                         'contact_id':{
-                                            'en':f"{self.opnng_en}number of a contact you want to edit",
+                                            'en':f"{self.opnng_en}number of the contact you want to edit",
                                             'ua':f"{self.opnng}номер контакту, який ви хочете відредагувати"}},
                                     self.print_contact_attributes:{},
                                     self.choose_contact_attribute:{
                                         'attr_id':{
-                                            'en':f"{self.opnng_en}what you are going to edit",
-                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                            'en':f"{self.opnng_en}number of a field you are going to edit",
+                                            'ua':f"{self.opnng}номер поля, яке будете редагувати"}},
                                     self.edit_contact:{
                                         'new_information':{
-                                            'en':f"{self.opnng_en}the new information",
+                                            'en':f"{self.opnng_en}new information",
                                             'ua':f"{self.opnng}нову інформацію"}}}},
                             'edit_phones':{
                                 'description':{
-                                    'en':"Edits contact phone numbers.",
+                                    'en':"Edits the phone numbers of a contact.",
                                     'ua':"Редагує телефони контакта."}, 
                                 'methods':{
                                     self.print_contacts:{},
                                     self.choose_contact_from_the_list:{
                                         'contact_id':{
-                                            'en':f"{self.opnng_en}number of a contact you want to edit",
+                                            'en':f"{self.opnng_en}number of the contact you want to edit",
                                             'ua':f"{self.opnng}номер контакту, який ви хочете відредагувати"}},
                                     self.print_contact_phones:{},
                                     self.choose_contact_phone:{
@@ -117,7 +117,7 @@ class ContactBook(): #UserDict
                                             'ua':f"{self.opnng}новий телефон"}}}},
                             'add_phone':{
                                 'description':{
-                                    'en':"Add a new phone to the contact.",
+                                    'en':"Adds a new phone number to the contact.",
                                     'ua':"Додає новий телефон до контакта."}, 
                                 'methods':{
                                     self.print_contacts:{},
@@ -134,7 +134,7 @@ class ContactBook(): #UserDict
                             'show_all':{
                                 'description':{
                                     'en':"Displays all contacts available in the contact book.",
-                                    'ua':"Виводить всі контакти наявні в контактній книзі."}, 
+                                    'ua':"Виводить всі контакти, які є в книзі."}, 
                                 'methods':{
                                     self.show_all_contact:{}}},
                             'remove':{
