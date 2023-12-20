@@ -1,4 +1,5 @@
 import pickle
+from re import search
 
 class bcolors:
     HEADER = '\033[95m'
@@ -55,8 +56,27 @@ class NoteChecks:
             
 
     def find_the_text(self, text):
-        if self.text.find(text.lower()) != -1:
+        if self.text.lower().find(text.lower()) != -1:
             return True
+        else:
+            return False
+
+    def find_in_title(self, text):
+        if self.title.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.title.lower()).span()
+        else:
+            return False
+
+    def find_in_text(self, text):
+        if self.text.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.text.lower()).span()
+        else:
+            return False
+
+    def find_in_tags(self, text):
+        tags = "; ".join(f"{tag}" for tag in self.tags)
+        if tags.lower().find(text.lower()) != -1:
+            return search(text.lower(),tags.lower()).span()
         else:
             return False
 
@@ -197,6 +217,20 @@ class NoteFile:
                                             'ua':f"{self.opnng}тег, який ви хочете додати"}},
                                     self.add_tag_finish:{},
                                     }},
+                            'find':{
+                                'description':{
+                                    'en':"Looks for a specified text in the notes.",
+                                    'ua':"Шукає введений текст у нотатках."}, 
+                                'methods':{
+                                    self.print_find_modes:{},
+                                    self.choose_find_mode:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}search mode number",
+                                            'ua':f"{self.opnng}номер режиму пошуку"}},
+                                    self.find_hub:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}text you want to find",
+                                            'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}},
                             'remove':{
                                 'description':{
                                     'en':"Deletes the note.",
@@ -434,9 +468,86 @@ class NoteFile:
         self.ongoing = None
         print(done_text[self.language])
   
+    def print_find_modes(self):
+        local = {'part_0':{
+                    'en':"Choose, where you want to look for the text",
+                    'ua':"Оберіть, де ви хочете шукати текст"},
+                'part_1':{
+                    'en':"In the titles",
+                    'ua':"У заголовках"},
+                'part_2':{
+                    'en':"In the text",
+                    'ua':"У тексті"},
+                'part_3':{
+                    'en':"In the tags",
+                    'ua':"У тегах"},
+                'part_4':{
+                    'en':"Everywhere",
+                    'ua':"Всюди."}}
+        
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}\n{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}\n{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}\n{bcolors.RED}3{bcolors.GREEN}. {local['part_4'][self.language]}\n"
+        print(string)
 
-#TODO     print(f"{bcolors.RED}6. {bcolors.GREEN}Find notes by tags/keywords")
-      
+    def choose_find_mode(self, field_id):
+        try:
+            if int(field_id) <= 3:
+                self.field_id = int(field_id)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        
+    def find_hub(self, text):
+        from re import search
+        checker = False
+        string = ""
+        local = {'Failure':{'en':f"Specified text not found",'ua':f"Вказаний текст не знайдено"},'Intro':{'en':f"Specified text found in the next notes",'ua':f"Вказаний текст знайдено у наступних нотатках"},'Title':{'en':f"Title",'ua':f"Заголовок"},'Text':{'en':f"text",'ua':f"текст"},'Tags':{'en':f"tags",'ua':f"теги"}}
+        success = f"{local['Intro'][self.language]}:\n"
+        failure = f"{local['Failure'][self.language]}!"
+        if self.field_id == 0:
+            for note_id,class_instance in self.data.items():
+                if class_instance.find_in_title(text):
+                    checker = True
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.RED}{class_instance.title[class_instance.find_in_title(text)[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_text}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};"
+        elif self.field_id == 1:
+            for note_id,class_instance in self.data.items():
+                if class_instance.find_in_text(text):
+                    checker = True
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:search(text,class_instance.text).span()[0]]}{bcolors.RED}{class_instance.text[search(text,class_instance.text).span()[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};"
+        elif self.field_id == 2:
+            for note_id,class_instance in self.data.items():
+                if class_instance.find_in_tags(text):
+                    checker = True
+                    tags = "; ".join(f"{tag}" for tag in class_instance.tags)
+                    highlighted_tags = f"{bcolors.GREEN}{tags[:search(text,tags).span()[0]]}{bcolors.RED}{tags[search(text,tags).span()[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {highlighted_tags}; {local['Text'][self.language]}: {class_instance.text};"
+        elif self.field_id == 3:
+            for note_id,class_instance in self.data.items():
+                if class_instance.find_in_title(text):
+                    checker = True
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.RED}{class_instance.title[class_instance.find_in_title(text)[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_text}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};"
+                elif class_instance.find_in_text(text):
+                    checker = True
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.RED}{class_instance.text[class_instance.find_in_text(text)[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};"
+                elif class_instance.find_in_tags(text):
+                    checker = True
+                    tags = "; ".join(f"{tag}" for tag in class_instance.tags)
+                    highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_tags(text)[0]]}{bcolors.RED}{tags[class_instance.find_in_tags(text)[0]:]}{bcolors.GREEN}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {highlighted_tags}; {local['Text'][self.language]}: {class_instance.text};"
+
+        if checker:
+            print(f"{success}{string}")
+        else:
+            print(f"{failure}")
+
+    
     def id_assign(self,mode:str,record:Note):
         if mode == "add":
             if len(self.priority_ids) > 0:
