@@ -344,9 +344,13 @@ class NoteFile:
 
     def choose_note_from_the_list(self, note_id):
         if len(self.data) > 0:
-            if int(note_id) in self.data.keys():
-                self.ongoing = int(note_id)
-            else:
+            try:
+                if int(note_id) in self.data.keys():
+                    self.ongoing = int(note_id)
+                else:
+                    error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
+                    return error_text[self.language]
+            except ValueError:
                 error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
         else:
