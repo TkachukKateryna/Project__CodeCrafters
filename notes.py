@@ -350,11 +350,11 @@ class NoteFile:
     def choose_note_from_the_list(self, note_id):
         if len(self.data) > 0:
             try:
-                if int(note_id) in self.data.keys():
-                    self.ongoing = int(note_id)
+                note_id = self.input_to_id(note_id)
+                if type(note_id) == int and note_id in self.data.keys():
+                    self.ongoing = note_id
                 else:
-                    error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
-                    return error_text[self.language]
+                    return note_id
             except ValueError:
                 error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
@@ -368,7 +368,7 @@ class NoteFile:
             if type(new_field_id) == int and new_field_id < 2:
                 self.field_id = new_field_id
             else:
-                return new_field_id
+                return str(new_field_id)
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
@@ -497,17 +497,16 @@ class NoteFile:
 
     def choose_find_mode(self, field_id):
         try:
-            if int(field_id) <= 3:
-                self.field_id = int(field_id)
+            field_id = self.input_to_id(field_id)
+            if type(field_id) == int and field_id <= 3:
+                self.field_id = field_id
             else:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                 return field_id
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
         
     def find_hub(self, text):
-        from re import search
         checker = False
         string = ""
         local = {'Failure':{'en':f"Specified text not found",'ua':f"Вказаний текст не знайдено"},'Intro':{'en':f"Specified text found in the next notes",'ua':f"Вказаний текст знайдено у наступних нотатках"},'Title':{'en':f"Title",'ua':f"Заголовок"},'Text':{'en':f"text",'ua':f"текст"},'Tags':{'en':f"tags",'ua':f"теги"}}
