@@ -39,6 +39,7 @@ class ContactBook(): #UserDict
                                     'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
                                     'ua':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
                                 'methods':{
+                                    self.contact_create:{},
                                     self.add_name:{
                                         'name':{
                                             'en':f"{self.opnng_en}name{self.non_obligatory_en}",
@@ -260,6 +261,11 @@ class ContactBook(): #UserDict
                         self.record_cnt = id_generator
                         print('Reached the end of file!')
             #print(self.data)
+
+    def contact_create(self):
+        new_record = RecordManager()
+        new_record.language = self.language
+        self.id_assign(mode="add",record=new_record)
 
     def add_name(self,name):
         new_record = RecordManager()
