@@ -36,8 +36,8 @@ class FileSorter:
         for category,list in self.categories.items():
             for format in list:
                 self.known_formats[format] = category
-        path = (fr"наприклад, {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
-        path_en = (fr"e.g. {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
+        path = (fr" Наприклад: {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
+        path_en = (fr"E.g. {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
         self.method_table = {'__localization_insert':{
                                 'name':{
                                     'en':"file sorter", 
@@ -52,23 +52,25 @@ class FileSorter:
                                 'methods':{
                                     self.starter:{
                                         'input':{
-                                            'en':f'Please, enter the path to the folder we will be sorting {path_en} ',
-                                            'ua':f'Введіть, будь ласка, шлях до папки, яку будемо сортувати {path}'},
+                                            'en':f'{bcolors.GREEN}Please, enter the path to the folder we will be sorting. {path_en}',
+                                            'ua':f'{bcolors.GREEN}Введіть, будь ласка, шлях до папки, яку будемо сортувати. {path}'},
                                         'output':{
-                                            'en':f'Please, enter the path to the folder, where sorted files will be stored {path_en}',
-                                            'ua':f'Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
+                                            'en':f'{bcolors.GREEN}Please, enter the path to the folder, where sorted files will be stored {path_en}',
+                                            'ua':f'{bcolors.GREEN}Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
 
     def starter(self, arg1: str, arg2: str):
         path = './empty_folder'
         try:
             path = Path(arg1)
         except:
-            raise ValueError(f"{arg1} is not a valid path!")
+            error_text = {'en':f"{bcolors.YELLOW}{arg1} is not a valid path!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}{arg1} не є коректним шляхом!{bcolors.GREEN}"}
+            return error_text[self.language]
         output = './output_folder'
         try:
             output = Path(arg2)
         except:
-            raise ValueError(f"{arg2} is not a valid path!")
+            error_text = {'en':f"{bcolors.YELLOW}{arg2} is not a valid path!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}{arg2} не є коректним шляхом!{bcolors.GREEN}"}
+            return error_text[self.language]
         self.real_sorter(path, output)
 
     def real_sorter(self, path: Path, output: Path):
