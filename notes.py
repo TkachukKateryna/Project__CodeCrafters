@@ -1,4 +1,3 @@
-import pickle
 from re import search
 
 class bcolors:
