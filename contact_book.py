@@ -275,7 +275,7 @@ class ContactBook(): #UserDict
         self.id_assign(mode="add",record=new_record)
 
     def add_name(self,name):
-        record = self.data[self.ongoing]
+        new_record = self.data[self.ongoing]
         new_record.language = self.language
         if self.dialogue_check(name):
             try:
