@@ -90,6 +90,7 @@ class InputManager(HelpMe):
 
         self.current_module_commands = []
         self.module_chosen = None
+        self.silent_restart = None
         self.language = None
         self.languages = {'0':'en','1':'ua'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -197,9 +198,13 @@ class InputManager(HelpMe):
                 'ua':"Якщо захочете вийти з програми, напишіть '"}}
 
         while True:
+            if self.silent_restart:
+                self.silent_restart = None
             command = ''
             if self.language != None:
-                if self.module_chosen:
+                if self.silent_restart:
+                    pass
+                elif self.module_chosen:
                     local = {'part_1':{'en':"You are in the",'ua':"Ви перейшли у меню"},
                              'part_2':{'en':" menu. Available comamnds list:",'ua':". Список доступних команд:"},
                              'part_3':{'en':"Return to the main menu",'ua':"Повернутися у головне меню"},
@@ -250,13 +255,19 @@ class InputManager(HelpMe):
                     selected_action()
                 else:
                     for key,value in self.actions[category][command]['methods'].items():
+                        if self.silent_restart:
+                            break
                         if value == {}:
                             key()
                         else:
                             arguments_list = []
                             result = ' '
                             while type(result) == str:
+                                if self.silent_restart:
+                                    break
                                 for k,v in value.items():
+                                    if self.silent_restart:
+                                        break
                                     while True:
                                         if not self.language:
                                             self.language = 'en'
@@ -264,16 +275,22 @@ class InputManager(HelpMe):
                                         if command == 'leave':
                                             self.say_goodbye()
                                             return
+                                        if command == 'cancel':
+                                            self.silent_restart = True
+                                            break
                                         if command != '':
                                             arguments_list.append(command)
                                             break
-                                        
-                                result = key(*arguments_list)
-                                if type(result) == str:
-                                    arguments_list = []
-                                    print(result)
-                                command = ''
-                                
+                                if not self.silent_restart:
+                                    result = key(*arguments_list)
+                                    if type(result) == str:
+                                        arguments_list = []
+                                        print(result)
+                                    command = ''
+
+
+
+
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
         print(f'{bcolors.GREEN}{local[self.language]}{bcolors.DEFAULT}')
