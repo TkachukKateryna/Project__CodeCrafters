@@ -395,8 +395,8 @@ class NoteFile:
 
     def print_note_tags(self):
         local = {'part_0':{
-                    'en':"Choose, which tag you are going to edit",
-                    'ua':"Оберіть, який тег ви хочете редагувати"}}
+                    'en':"Choose the tag you need",
+                    'ua':"Оберіть потрібний тег"}}
         note = self.data[self.ongoing]
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         for i in range(len(note.tags)):
