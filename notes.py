@@ -550,12 +550,12 @@ class NoteFile:
                     string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
                 elif class_instance.find_in_text(text):
                     checker = True
-                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[0]:]}"
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[1]:]}"
                     string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};\n"
                 elif class_instance.find_in_tags(text):
                     checker = True
                     tags = "; ".join(f"{tag}" for tag in class_instance.tags)
-                    highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_tags(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_tags(text)[0]:class_instance.find_in_tags(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_tags(text)[0]:]}"
+                    highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_tags(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_tags(text)[0]:class_instance.find_in_tags(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_tags(text)[1]:]}"
                     string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {highlighted_tags}; {local['Text'][self.language]}: {class_instance.text};\n"
 
         if checker:
