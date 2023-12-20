@@ -40,7 +40,7 @@ class FileSorter:
         path_en = (fr"e.g. {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
         self.method_table = {'__localization_insert':{
                                 'name':{
-                                    'en':"of the file sorter", 
+                                    'en':"file sorter", 
                                     'ua':"сортувальника файлів"},
                                 'description':{
                                     'en':"files sorter", 
