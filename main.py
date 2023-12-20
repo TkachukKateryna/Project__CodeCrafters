@@ -80,7 +80,7 @@ class InputManager(HelpMe):
                                             'methods':{self.print_modules:{},
                                                        self.set_module:{
                                                            'module_id':{
-                                                               'en':f"{bcolors.CYAN} Please, choose the menu",
+                                                               'en':f"{bcolors.CYAN}Please, choose the menu",
                                                                'ua':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
         
         # self.actions['default']["quit"] = quit
