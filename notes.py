@@ -494,12 +494,15 @@ class NoteFile:
         local = {'Failure':{'en':f"Specified text not found",'ua':f"Вказаний текст не знайдено"},'Intro':{'en':f"Specified text found in the next notes",'ua':f"Вказаний текст знайдено у наступних нотатках"},'Title':{'en':f"Title",'ua':f"Заголовок"},'Text':{'en':f"text",'ua':f"текст"},'Tags':{'en':f"tags",'ua':f"теги"}}
         success = f"{local['Intro'][self.language]}:\n"
         failure = f"{local['Failure'][self.language]}!"
+        highlighted_title = ''
+        highlighted_text = ''
+        highlighted_tags = ''
         if self.field_id == 0:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_title(text):
                     checker = True
-                    highlighted_text = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_text}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    highlighted_title = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
         elif self.field_id == 1:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_text(text):
@@ -517,8 +520,8 @@ class NoteFile:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_title(text):
                     checker = True
-                    highlighted_text = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_text}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    highlighted_title = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
                 elif class_instance.find_in_text(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[0]:]}"
