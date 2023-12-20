@@ -351,10 +351,10 @@ class NoteFile:
         if len(self.data) > 0:
             try:
                 note_id = self.input_to_id(note_id)
-                if type(note_id) == int and note_id in self.data.keys():
+                if (type(note_id) == int) and (note_id in self.data.keys()):
                     self.ongoing = note_id
                 else:
-                    return note_id
+                    return str(note_id)
             except ValueError:
                 error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
@@ -430,8 +430,8 @@ class NoteFile:
             new_field_id = self.input_to_id(field_id)
             if type(new_field_id) == int and new_field_id <= len(note.tags):
                 self.field_id = new_field_id
-            elif type(new_field_id) == str:
-                return new_field_id
+            else:
+                return str(new_field_id)
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
@@ -501,7 +501,7 @@ class NoteFile:
             if type(field_id) == int and field_id <= 3:
                 self.field_id = field_id
             else:
-                 return field_id
+                 return str(field_id)
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
