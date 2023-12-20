@@ -177,7 +177,7 @@ class NoteFile:
                                             'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
                                     self.edit_note:{
                                         'new_text':{
-                                            'en':f"{self.opnng_en}the new text",
+                                            'en':f"{self.opnng_en}new text",
                                             'ua':f"{self.opnng}новий текст"}},
                                     }},
                             'edit_tags':{
@@ -310,7 +310,7 @@ class NoteFile:
 
     def print_notes(self):
         local = {'part_0':{
-                    'en':"Saved notes list:",
+                    'en':"Saved notes list",
                     'ua':"Наразі збережені такі нотатки"},
                 'part_1':{
                     'en':"Title",
@@ -405,7 +405,7 @@ class NoteFile:
         note = self.data[self.ongoing]
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         for i in range(len(note.tags)):
-            string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}"
+            string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
             #string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
         print(string)
 
