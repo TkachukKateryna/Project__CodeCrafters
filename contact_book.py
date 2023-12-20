@@ -29,7 +29,7 @@ class ContactBook(): #UserDict
         self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{
                                 'name':{
-                                    'en':"of the contact manager", 
+                                    'en':"contact manager", 
                                     'ua':"менеджера контактів"},
                                 'description':{
                                     'en':"contact manager", 
