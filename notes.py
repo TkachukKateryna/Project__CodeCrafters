@@ -137,7 +137,7 @@ class NoteFile:
         self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{
                                 'name':{
-                                    'en':"of the note manager", 
+                                    'en':"note manager", 
                                     'ua':"менеджера нотаток"},
                                 'description':{
                                     'en':"note manager", 
@@ -399,7 +399,7 @@ class NoteFile:
                     'ua':"Оберіть, який тег ви хочете редагувати"}}
         note = self.data[self.ongoing]
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        for i in range(len(note.tags) + 1):
+        for i in range(len(note.tags)):
             string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}"
             #string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
         print(string)
