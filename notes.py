@@ -256,16 +256,7 @@ class NoteFile:
                                         'attr_id':{
                                             'en':f"{self.opnng_en}the tag you are going to delete",
                                             'ua':f"{self.opnng}тег, який ви збираєтеся видалити"}},
-                                    self.remove_tag_finish:{}}},
-                            'find_by_text':{
-                                'description':{
-                                    'en':"Looks for the entered text in the notes. Returns the list of matches.",
-                                    'ua':"Шукає запис, у якому присутній введений текст. Повертає список записів, де текст було знайдено."}, 
-                                'methods':{
-                                    self.find_by_text:{
-                                        'text':{
-                                            'en':f"{self.opnng_en}text you want to find",
-                                            'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}}}
+                                    self.remove_tag_finish:{}}}}
 
 
     def dialogue_check(self,variable):
@@ -312,20 +303,6 @@ class NoteFile:
             self.ongoing = None
 
 
-    def find_by_text(self,text):
-        note_id_list = []
-        for note_id,class_instance in self.data.items():
-            if class_instance.find_the_text(text):
-                note_id_list.append(note_id)
-        
-        if len(note_id_list) > 0:
-            for note_id in note_id_list:
-                self.data[note_id].language = self.language
-                print(self.data[note_id])
-        else:
-            error_text = {'en':"No note with such text found!",'ua':"За заданим текстом жодного запису не знайдено!"}
-            print(error_text[self.language])
-          
     def print_notes(self):
         local = {'part_0':{
                     'en':"Saved notes list:",
