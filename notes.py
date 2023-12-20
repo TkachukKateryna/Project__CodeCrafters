@@ -448,6 +448,8 @@ class NoteFile:
 
     def remove_note_finish(self):
         self.update_file(mode="del", r_id=int(self.ongoing))
+        done_text = {'en':f"{bcolors.YELLOW}Note removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатка видалена.{bcolors.GREEN}"}
+        print(done_text[self.language])
         self.ongoing = None
   
     def add_tag_finish(self):
@@ -458,8 +460,7 @@ class NoteFile:
     def remove_tag_finish(self):
         note = self.data[self.ongoing]
         note.language = self.language
-        local = {'en':"Tag", 'ua':"Тег"}
-        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        done_text = {'en':f"{bcolors.YELLOW}Tag edited.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Тег відредагований.{bcolors.GREEN}"}
         try:
             note.tag_check_and_set(mode='del', tag=self.field_id)
         except ValueError as error_text:
