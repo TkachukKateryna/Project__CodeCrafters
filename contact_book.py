@@ -29,14 +29,14 @@ class ContactBook(): #UserDict
         self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{
                                 'name':{
-                                    'en':"contact manager", 
+                                    'en':"of the contact manager", 
                                     'ua':"менеджера контактів"},
                                 'description':{
                                     'en':"contact manager", 
                                     'ua':"менеджер контактів та записів"}},
                             'create':{
                                 'description':{
-                                    'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an email - either when creating a record, or later.",
+                                    'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
                                     'ua':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
                                 'methods':{
                                     self.add_name:{
@@ -67,7 +67,103 @@ class ContactBook(): #UserDict
                                     self.contacts_upcoming_birthday:{
                                         'attr_id':{
                                             'en':f"{self.opnng_en}number of days",
-                                            'ua':f"{self.opnng}кількість днів"}}}}}
+                                            'ua':f"{self.opnng}кількість днів"}}}},
+                            'search':{
+                                'description':{
+                                    'en':"Searches for contacts in the contact book by name.",
+                                    'ua':"Здійснює пошук контактів у книзі контактів за ім*ям."}, 
+                                'methods':{
+                                    self.search_contact:{
+                                        'name':{
+                                            'en':f"{self.opnng_en}name",
+                                            'ua':f"{self.opnng}ім'я"}}}},
+                            'edit':{
+                                'description':{
+                                    'en':"Edits information about individual contacts.",
+                                    'ua':"Редагує інформацію щодо окремих контактів."}, 
+                                'methods':{
+                                    self.print_contacts:{},
+                                    self.choose_contact_from_the_list:{
+                                        'contact_id':{
+                                            'en':f"{self.opnng_en}number of a contact you want to edit",
+                                            'ua':f"{self.opnng}номер контакту, який ви хочете відредагувати"}},
+                                    self.print_contact_attributes:{},
+                                    self.choose_contact_attribute:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}what you are going to edit",
+                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                    self.edit_contact:{
+                                        'new_information':{
+                                            'en':f"{self.opnng_en}the new information",
+                                            'ua':f"{self.opnng}нову інформацію"}}}},
+                            'edit_phones':{
+                                'description':{
+                                    'en':"Edits contact phone numbers.",
+                                    'ua':"Редагує телефони контакта."}, 
+                                'methods':{
+                                    self.print_contacts:{},
+                                    self.choose_contact_from_the_list:{
+                                        'contact_id':{
+                                            'en':f"{self.opnng_en}number of a contact you want to edit",
+                                            'ua':f"{self.opnng}номер контакту, який ви хочете відредагувати"}},
+                                    self.print_contact_phones:{},
+                                    self.choose_contact_phone:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}phone you are going to edit",
+                                            'ua':f"{self.opnng}телефон, який ви збираєтесь редагувати"}},
+                                    self.edit_phones:{
+                                        'new_phone':{
+                                            'en':f"{self.opnng_en}new phone",
+                                            'ua':f"{self.opnng}новий телефон"}}}},
+                            'add_phone':{
+                                'description':{
+                                    'en':"Add a new phone to the contact.",
+                                    'ua':"Додає новий телефон до контакта."}, 
+                                'methods':{
+                                    self.print_contacts:{},
+                                    self.choose_contact_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}contact, the phones of which you are going to edit",
+                                            'ua':f"{self.opnng}контакт, телефони якої ви збираєтесь редагувати"}},
+                                    self.add_phone:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}phone, which you are going to add",
+                                            'ua':f"{self.opnng}телефон, який ви хочете додати"}},
+                                    self.add_contact_finish:{},
+                                    }},
+                            'show_all':{
+                                'description':{
+                                    'en':"Displays all contacts available in the contact book.",
+                                    'ua':"Виводить всі контакти наявні в контактній книзі."}, 
+                                'methods':{
+                                    self.show_all_contact:{}}},
+                            'remove':{
+                                'description':{
+                                    'en':"Deletes the contact.",
+                                    'ua':"Видаляє контакт."}, 
+                                'methods':{
+                                    self.print_contacts:{},
+                                    self.choose_contact_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}contact you are going to delete",
+                                            'ua':f"{self.opnng}контакт, який збираєтесь видалити"}},
+                                    self.remove_contact_finish:{}}},
+                            'remove_phone':{
+                                'description':{
+                                    'en':"Deletes one of the phones of the chosen contact.",
+                                    'ua':"Видаляє один з телефонів обраного контакту."}, 
+                                'methods':{
+                                    self.print_contacts:{},
+                                    self.choose_contact_from_the_list:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}contact, where the phone is",
+                                            'ua':f"{self.opnng}контакт, в якому знаходиться телефон"}},
+                                    self.print_contact_phones:{},
+                                    self.choose_contact_phone:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}the phone you are going to delete",
+                                            'ua':f"{self.opnng}телефон, який ви збираєтеся видалити"}},
+                                    self.remove_phone_finish:{}}}}
   
         
     def contacts_upcoming_birthday(self, numb):
@@ -165,11 +261,6 @@ class ContactBook(): #UserDict
                         print('Reached the end of file!')
             #print(self.data)
 
-
-    #Saves self.data and some technical variables. Can be used, although everything should be saved automatically. may be used to ensure, that nothing will be lost.
-    #def save_changes(self):
-        #self.update_file("ed")
-
     def add_name(self,name):
         new_record = RecordManager()
         new_record.language = self.language
@@ -181,8 +272,6 @@ class ContactBook(): #UserDict
             
             self.id_assign(mode="add",record=new_record)
             return True
-
-        
 
     def add_phone(self,phone):
         record = self.data[self.ongoing]
@@ -232,6 +321,174 @@ class ContactBook(): #UserDict
             self.update_file(mode="add",r_id=self.generated_ids)
             self.ongoing = None
             return True
+
+    def search_contact(self, name):
+        count = 0
+        result = []
+        for id, record in self.data.items():
+            count +=1
+            if name.lower() == record.name.lower():
+                local = {'part_1':{'en':"Contact name",'ua':"Ім'я контакту"},
+                    'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
+                    'part_3':{'en':"birthday",'ua':"день народження"},
+                    'part_4':{'en':"email",'ua':"електронна пошта"},
+                    'part_5':{'en':"address",'ua':"адреса"}}
+                result.append(f"{id}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}") 
+        print('\n'.join(map(str, result)))
+        if count == len(self.data) and result == []:
+            print(record.search_contact(name)[self.language])
+
+    def show_all_contact(self):
+        result = []
+        for id, record in self.data.items():
+            local = {'part_1':{'en':"Contact name",'ua':"Ім'я контакту"},
+                    'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
+                    'part_3':{'en':"birthday",'ua':"день народження"},
+                    'part_4':{'en':"email",'ua':"електронна пошта"},
+                    'part_5':{'en':"address",'ua':"адреса"}}
+            row = f"{id+1}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}" 
+            result.append(row)
+        print('\n'.join(map(str, result))) 
+
+    def print_contacts(self):
+        local = {'part_0':{'en':"Saved contacts list:", 'ua':"Наразі збережені такі контакти"},
+                'part_1':{'en':"Contact name", 'ua':"Ім'я контакту"},
+                'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
+                'part_3':{'en':"birthday",'ua':"день народження"},
+                'part_4':{'en':"email",'ua':"електронна пошта"},
+                'part_5':{'en':"address",'ua':"адреса"},
+                'part_6':{'en':"To choose the contact, enter it's respective number in a console", 'ua':"Щоб обрати контакт, введіть у консоль його номер у списку"},}
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {'; '.join(f'{phone}' for phone in record.phones)}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address};" for key, record in self.data.items()) + f"\n{bcolors.RED}{local['part_6'][self.language]}{bcolors.GREEN}\n"
+        print(string)
+
+    def choose_contact_from_the_list(self, contact_id):
+        if int(contact_id) in self.data.keys():
+            self.ongoing = int(contact_id)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}There is no contact with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Контакту з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
+            return error_text[self.language]
+        
+    def print_contact_attributes(self):
+        local = {'part_0':{'en':"Choose, what you are going to edit",'ua':"Оберіть, що ви хочете редагувати"},
+                'part_1':{'en':"Contact name", 'ua':"Ім'я контакту"},
+                'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
+                'part_3':{'en':"birthday",'ua':"день народження"},
+                'part_4':{'en':"email",'ua':"електронну пошту"},
+                'part_5':{'en':"address",'ua':"адресу"}}
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}: {self.data[self.ongoing].name}\n"
+        string += f"{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}: {self.data[self.ongoing].phones}\n"
+        string += f"{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}: {self.data[self.ongoing].birthday}\n"
+        string += f"{bcolors.RED}3{bcolors.GREEN}. {local['part_4'][self.language]}: {self.data[self.ongoing].email}\n"
+        string += f"{bcolors.RED}4{bcolors.GREEN}. {local['part_5'][self.language]}: {self.data[self.ongoing].address}\n"
+        print(string)
+
+    def choose_contact_attribute(self, field_id):
+        try:
+            if int(field_id) < 5:
+                self.field_id = int(field_id)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+    
+    def edit_contact(self, new_info):
+        self.data[self.ongoing].language = self.language 
+        tmp = [{'en':"Name", 'ua':"Iм'я"},{'en':"Phones", 'ua':"Телефони"},{'en':"Birthday", 'ua':"День народження"}, {'en':"Email", 'ua':"Електронну пошту"}, {'en':"Address", 'ua':"Адресу"}]
+        done_text = {'en':f"{bcolors.GREEN}{tmp[self.field_id][self.language]} edited.",'ua':f"{bcolors.YELLOW}{tmp[self.field_id][self.language]} відредаговано.{bcolors.GREEN}"}
+        if self.field_id == 0:
+            try:
+                self.data[self.ongoing].edit_name(new_info) 
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 1:
+            try:
+                self.data[self.ongoing].edit_phone(new_phone=new_info) # не працює
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 2:
+            try:
+                self.data[self.ongoing].edit_birthday(new_info)
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 3:
+            try:
+                self.data[self.ongoing].edit_email(new_info)
+            except ValueError as error_text:
+                return str(error_text)
+        elif self.field_id == 4:
+            try:
+                self.data[self.ongoing].edit_address(new_info)
+            except ValueError as error_text:
+                return str(error_text)
+
+        self.update_file(mode="ed")
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
+
+    def print_contact_phones(self):
+        record = RecordManager()
+        local = {'part_0':{
+                    'en':"Select the phone you want to edit",
+                    'ua':"Оберіть, який телефон ви хочете редагувати"}}
+        record = self.data[self.ongoing]
+        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+        
+        string += '\n'.join(f"{bcolors.RED}{record.phones.index(key)}{bcolors.GREEN}. {key}" for key in record.phones)
+        print(string)
+
+    def choose_contact_phone(self, field_id):
+        record = self.data[self.ongoing]
+        try:
+            if int(field_id) <= len(record.phones):
+                self.field_id = int(field_id)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except:
+                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+                return error_text[self.language]
+        
+    def edit_phones(self, new_text):
+        record = self.data[self.ongoing]
+        record.language = self.language
+        local = {'en':"Phone", 'ua':"Телефон"}
+        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        try:
+           record.phone_check_and_set(mode='ed', phone=self.field_id, new_phone=new_text)
+        except ValueError as error_text:
+            return str(error_text)
+        
+        self.update_file(mode="ed")
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
+
+    def add_contact_finish(self):
+        self.update_file(mode="add",r_id=self.generated_ids)
+        self.ongoing = None
+
+    def remove_contact_finish(self):
+        self.update_file(mode="del", r_id=int(self.ongoing))
+        self.ongoing = None
+
+    def remove_phone_finish(self):
+        record = self.data[self.ongoing]
+        record.language = self.language
+        local = {'en':"Phone", 'ua':"Телефон"}
+        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        try:
+            record.phone_check_and_set(mode='del', phone=self.field_id)
+        except ValueError as error_text:
+            return str(error_text)
+        
+        self.field_id = None
+        self.ongoing = None
+        print(done_text[self.language])
 
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
