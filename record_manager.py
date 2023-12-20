@@ -153,7 +153,35 @@ class RecordManager(MiscChecks):
 
     def remove_address(self):
         self.address = None
-
+        
+    def search_contact(self, name):
+        error_text = {'en':f"No contact found with name: {name}.",'ua':f"Не знайдено жодного контакту з іменем: {name}."}
+        return error_text
+        
+    def phone_check_and_set(self,mode,phone,new_phone=None):
+        if phone == '':
+            error_text = {'en':"Wrong phone format: the phone cannot be empty.",'ua':"Некоректний формат телефону: телефон не може бути порожнім."}
+            raise ValueError(error_text[self.language])
+        elif mode == 'add':
+            if phone.lower() == "stop":
+                return True
+            self.phones.append(phone)
+            error_text = {'en':"Phone added. if you want to add another one, enter it in the console. When you are done, just enter 'stop' in the console.",'ua':f"Телефон додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть 'stop' у консоль"}
+            raise ValueError(error_text[self.language])
+        elif mode == 'ed':
+            self.phones[phone] = new_phone
+            error_text = {'en':"Phone changed.",'ua':"Телефон відредаговано."}
+            print(error_text[self.language])
+        elif mode == 'del':
+            error_text = {}
+            try:
+                del self.phones[phone]
+                error_text = {'en':"Phone removed.",'ua':"Телефон видалено."}
+                print(error_text[self.language])
+            except:
+                error_text = {'en':"No phone with such name!",'ua':"Такого телефону не існує!"}
+                raise ValueError(error_text[self.language])
+            
     def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
         self.name = name
