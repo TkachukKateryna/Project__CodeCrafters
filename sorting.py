@@ -48,7 +48,7 @@ class FileSorter:
                             'sort_files':{
                                 'description':{
                                     'en':'Sorts all files according to the specified path (including folders and files inside of them), and moves them to the specified directory.', 
-                                    'ua':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них), та переміщує їх за введеною адресою."}, 
+                                    'ua':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них) та переміщує їх за введеною адресою."}, 
                                 'methods':{
                                     self.starter:{
                                         'input':{
