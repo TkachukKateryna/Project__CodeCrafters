@@ -70,26 +70,26 @@ class ContactBook(): #UserDict
                                         'attr_id':{
                                             'en':f"{self.opnng_en}number of days",
                                             'ua':f"{self.opnng}кількість днів"}}}},
-                            'edit':{
-                                'description':{
-                                    'en':"Edits the name/birthday/email/address of a contact.",
-                                    'ua':"Редагує ім'я/день народження/електронну пошту/адресу контакта."}, 
-                                'methods':{
-                                    self.print_contacts:{},
-                                    self.choose_contact_from_the_list:{
-                                        'note_id':{
-                                            'en':f"{self.opnng_en}number of a contact you want to edit",
-                                            'ua':f"{self.opnng}номер контакта, який ви хочете відредагувати"}},
-                                    self.print_contact_attributes:{},
-                                    self.choose_contact_attribute:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}what you are going to edit",
-                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
-                                    self.edit_contact:{
-                                        'new_text':{
-                                            'en':f"{self.opnng_en}new text",
-                                            'ua':f"{self.opnng}новий текст"}},
-                                    }},
+                            # 'edit':{
+                            #     'description':{
+                            #         'en':"Edits the name/birthday/email/address of a contact.",
+                            #         'ua':"Редагує ім'я/день народження/електронну пошту/адресу контакта."}, 
+                            #     'methods':{
+                            #         self.print_contacts:{},
+                            #         self.choose_contact_from_the_list:{
+                            #             'note_id':{
+                            #                 'en':f"{self.opnng_en}number of a contact you want to edit",
+                            #                 'ua':f"{self.opnng}номер контакта, який ви хочете відредагувати"}},
+                            #         self.print_contact_attributes:{},
+                            #         self.choose_contact_attribute:{
+                            #             'attr_id':{
+                            #                 'en':f"{self.opnng_en}what you are going to edit",
+                            #                 'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                            #         self.edit_contact:{
+                            #             'new_text':{
+                            #                 'en':f"{self.opnng_en}new text",
+                            #                 'ua':f"{self.opnng}новий текст"}},
+                                    #}},
                             'edit_phone':{
                                 'description':{
                                     'en':"Edits the phone number of a contact.",
