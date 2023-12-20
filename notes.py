@@ -40,8 +40,8 @@ class NoteChecks:
             raise ValueError(error_text[self.language])
         elif mode == 'ed':
             self.tags[tag] = new_tag
-            error_text = {'en':f"{bcolors.GREEN}Tag changed.",'ua':f"{bcolors.GREEN}Тег відредаговано."}
-            print(error_text[self.language])
+            #error_text = {'en':f"{bcolors.GREEN}Tag changed.",'ua':f"{bcolors.GREEN}Тег відредаговано."}
+            #print(error_text[self.language])
         elif mode == 'del':
             error_text = {}
             try:
