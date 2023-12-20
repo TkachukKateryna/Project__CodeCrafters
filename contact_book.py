@@ -29,14 +29,14 @@ class ContactBook(): #UserDict
         self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
         self.method_table = {'__localization_insert':{
                                 'name':{
-                                    'en':"of the contact manager", 
+                                    'en':"contact manager", 
                                     'ua':"менеджера контактів"},
                                 'description':{
                                     'en':"contact manager", 
                                     'ua':"менеджер контактів та записів"}},
                             'create':{
                                 'description':{
-                                    'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an an email - either when creating a record, or later.",
+                                    'en':"Adds a new record to the contact book. You can add a name, a phone, a birthday, an address, an email - either when creating a record, or later.",
                                     'ua':"Додає новий запис до книги контактів. Можна додати ім'я, телефони, день народження, адресу та email одразу, а можна й пізніше."}, 
                                 'methods':{
                                     self.add_name:{
