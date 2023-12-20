@@ -45,9 +45,8 @@ class NoteChecks:
         elif mode == 'del':
             error_text = {}
             try:
-            #if tag in self.tags:
                 del self.tags[tag]
-                error_text = {'en':f"{bcolors.GREEN}Tag removed.",'ua':f"{bcolors.GREEN}Тег видалено."}
+                error_text = {'en':f"{bcolors.YELLOW}Tag removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Тег видалено.{bcolors.GREEN}"}
                 print(error_text[self.language])
             except:
                 error_text = {'en':f"{bcolors.GREEN}No tag with such name!",'ua':f"{bcolors.GREEN}Такого тегу не існує!"}
@@ -264,8 +263,14 @@ class NoteFile:
             return True
         return False
 
-    def add_title(self,title):
+    def note_create(self):
         new_note = Note()
+        new_note.language = self.language
+        self.id_assign(mode="add",record=new_note)
+
+
+    def add_title(self,title):
+        new_note = self.data[self.ongoing]
         new_note.language = self.language
         if self.dialogue_check(title):
             try:
@@ -273,7 +278,6 @@ class NoteFile:
             except ValueError as error_text:
                 return str(error_text)
             
-            self.id_assign(mode="add",record=new_note)
             return True
 
     def add_text(self,text):
@@ -460,7 +464,6 @@ class NoteFile:
     def remove_tag_finish(self):
         note = self.data[self.ongoing]
         note.language = self.language
-        done_text = {'en':f"{bcolors.YELLOW}Tag edited.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Тег відредагований.{bcolors.GREEN}"}
         try:
             note.tag_check_and_set(mode='del', tag=self.field_id)
         except ValueError as error_text:
@@ -469,7 +472,6 @@ class NoteFile:
         self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
-        print(done_text[self.language])
   
     def print_find_modes(self):
         local = {'part_0':{
