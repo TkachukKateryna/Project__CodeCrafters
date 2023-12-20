@@ -398,8 +398,9 @@ class NoteFile:
                     'ua':"Оберіть, який тег ви хочете редагувати"}}
         note = self.data[self.ongoing]
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        
-        string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
+        for i in range(len(note.tags) + 1):
+            string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}"
+            #string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
         print(string)
 
     def choose_note_tag(self, field_id):
@@ -456,16 +457,16 @@ class NoteFile:
                     'en':"Choose, where you want to look for the text",
                     'ua':"Оберіть, де ви хочете шукати текст"},
                 'part_1':{
-                    'en':"In the titles",
-                    'ua':"У заголовках"},
+                    'en':"In the titles.",
+                    'ua':"У заголовках."},
                 'part_2':{
-                    'en':"In the text",
-                    'ua':"У тексті"},
+                    'en':"In the text.",
+                    'ua':"У тексті."},
                 'part_3':{
-                    'en':"In the tags",
-                    'ua':"У тегах"},
+                    'en':"In the tags.",
+                    'ua':"У тегах."},
                 'part_4':{
-                    'en':"Everywhere",
+                    'en':"Everywhere.",
                     'ua':"Всюди."}}
         
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
