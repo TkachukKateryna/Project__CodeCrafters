@@ -598,7 +598,7 @@ class NoteFile:
         file = Path(self.file)
         if not file.exists():
             with open(file, 'wb') as storage:
-                print("No data to load! Creating new file!")
+                #print("No data to load! Creating new file!")
                 return
 
         if mode == "add":
