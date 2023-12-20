@@ -145,7 +145,8 @@ class NoteFile:
                                 'description':{
                                     'en':"Adds a new record to the note book. You can add a title, text, tags - either when creating a record, or later.",
                                     'ua':"Додає новий запис до книги нотаток. Можна додати заголовок, текст та теги одразу, а можна й пізніше."}, 
-                                'methods':{
+                                'methods':{ 
+                                    self.note_create:{},
                                     self.add_title:{
                                         'name':{
                                             'en':f"{self.opnng_en}title{self.non_obligatory_en}",
