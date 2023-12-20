@@ -275,7 +275,7 @@ class ContactBook(): #UserDict
         self.id_assign(mode="add",record=new_record)
 
     def add_name(self,name):
-        new_record = RecordManager()
+        record = self.data[self.ongoing]
         new_record.language = self.language
         if self.dialogue_check(name):
             try:
@@ -283,14 +283,13 @@ class ContactBook(): #UserDict
             except ValueError as error_text:
                 return str(error_text)
             
-            self.id_assign(mode="add",record=new_record)
             return True
 
     def add_phone(self,phone):
         record = self.data[self.ongoing]
         if self.dialogue_check(phone):
             try:
-                record.phone_check_and_set(mode='add', phone=self.phone)
+                record.phone_check_and_set(mode='add', phone=phone)
             except ValueError as error_text:
                 return str(error_text)
 
