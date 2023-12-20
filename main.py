@@ -137,6 +137,7 @@ class InputManager(HelpMe):
                                                'en':"Allows you to switch to a different menu",
                                                'ua':"Дозволяє переключитись на інше меню."}, 
                                             'methods':{self.reset_module:{}}}
+            self.current_module_commands = []
             for script in self.actions[self.module_chosen].keys():
                 self.current_module_commands.append(script) 
             for script in self.actions['default'].keys():
@@ -206,7 +207,7 @@ class InputManager(HelpMe):
                     print(string)
         
                     style = Style.from_dict({
-                        '':          'fg:ansigreen',
+                        '': 'fg:ansigreen',
 
                         'part_1': 'fg:ansicyan',
                     })
@@ -268,7 +269,7 @@ class InputManager(HelpMe):
                                     arguments_list = []
                                     print(result)
                                 command = ''
-
+                                
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
         print(f'{bcolors.GREEN}{local[self.language]}')
