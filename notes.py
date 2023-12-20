@@ -208,8 +208,8 @@ class NoteFile:
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
                                         'attr_id':{
-                                            'en':f"{self.opnng_en}note, the tags of which you are going to edit",
-                                            'ua':f"{self.opnng}нотатку, теги якої ви збираєтесь редагувати"}},
+                                            'en':f"{self.opnng_en}number of the note, which you are going to edit",
+                                            'ua':f"{self.opnng}номер нотатки, теги якої ви збираєтесь редагувати"}},
                                     self.add_tags:{
                                         'attr_id':{
                                             'en':f"{self.opnng_en}tag, which you are going to add",
