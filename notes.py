@@ -584,7 +584,8 @@ class NoteFile:
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
-                    print("Note list is empty!")
+                    error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
+                    print(error_text[self.language])
         elif mode == "ed":
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
@@ -606,5 +607,5 @@ class NoteFile:
                     except EOFError:
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
-                        print('Reached the end of file!')
+                        #print('Reached the end of file!')
             #print(self.data)
