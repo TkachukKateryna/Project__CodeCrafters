@@ -356,6 +356,7 @@ class NoteFile:
         else:
             error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
             return error_text[self.language]
+
     def choose_note_attribute(self, field_id):
         try:
             if int(field_id) < 2:
@@ -435,6 +436,7 @@ class NoteFile:
         self.ongoing = None
   
     def add_tag_finish(self):
+        self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
   
@@ -448,6 +450,7 @@ class NoteFile:
         except ValueError as error_text:
             return str(error_text)
         
+        self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
         print(done_text[self.language])
