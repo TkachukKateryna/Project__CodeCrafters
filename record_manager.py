@@ -169,7 +169,11 @@ class RecordManager(MiscChecks):
         return error_text
         
     def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
-        self.phones = phones
+        id_generator = 0
+        for do_not_use,phone in phones.items(): #rearranging phone ids, just like with contactbook records.
+            self.phones[id_generator] = phone
+            id_generator += 1
+
         self.name = name
         self.birthday = birthday
         self.email = email
