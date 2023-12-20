@@ -48,8 +48,8 @@ class MiscChecks:
             raise ValueError(error_text[self.language])
         
     def has_phone(self,phone:str):
-        for i in self.phones:
-            if i.value == phone:
+        for i in self.phones.values():
+            if i == phone:
                 return True
            
         return False 
@@ -59,7 +59,7 @@ class MiscChecks:
 class RecordManager(MiscChecks):
     def __init__(self):
         self.language = None
-        self.phones = []
+        self.phones = {}
         self.name = "Unnamed contact"
         self.birthday = None
         self.email = None
@@ -67,13 +67,6 @@ class RecordManager(MiscChecks):
 
     def __str__(self):
         return f"Record name: {self.name}, Birthday: {self.birthday}, phones: {'; '.join(p for p in self.phones)}"
-
-    def add_phone(self,phone):
-        try:
-            phone = self.p_check(phone)
-            self.phones.append(phone)
-        except ValueError as error_text:
-            raise ValueError(error_text)
 
     def add_birthday(self,birthday):
         try:
@@ -93,19 +86,6 @@ class RecordManager(MiscChecks):
     def add_address(self,address:str):
         self.address = address
 
-    def edit_phone(self,phone:str,new_phone:str):
-        if self.has_phone(phone):
-            try:
-                if type(self.p_check(new_phone)) == str:
-                    self.phones.remove(phone)
-                    self.phones.append(new_phone)
-                    return
-            except ValueError as error_text_2:
-                raise ValueError(error_text_2)
-            
-        error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
-        raise ValueError(error_text[self.language])
-    
     def edit_birthday(self,new_birthday:str):
         if self.birthday != None:
             try:
@@ -133,15 +113,45 @@ class RecordManager(MiscChecks):
 
     def edit_address(self,address:str):
         self.address = address
-
-    def remove_phone(self,phone:str):
-        if self.has_phone(phone):
-            self.phones.remove(phone)
-            return
-        
-        error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
-        raise ValueError(error_text[self.language])
     
+    def phone_check_and_set(self,mode,phone,new_phone=None):
+        if mode == 'add':
+            if phone.lower() == "stop":
+                return True
+            try:
+                phone = self.p_check(phone)
+                self.phones[len(self.phones)] = phone
+                error_text = {'en':"Phone added. if you want to add another one, enter it in the console. When you are done, just enter 'stop' in the console.",'ua':f"Телефон додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть 'stop' у консоль"}
+                raise ValueError(error_text[self.language])
+            except ValueError as error_text:
+                raise ValueError(error_text)
+        elif mode == 'ed':
+            if self.has_phone(phone):
+                try:
+                    if type(self.p_check(new_phone)) == str:
+                        for phone_id,phone_number in self.phones.items():
+                            if phone_number == phone:
+                                self.phones[phone_id] = new_phone
+                                error_text = {'en':"Phone changed.",'ua':"Телефон відредаговано."}
+                                print(error_text[self.language])
+                                return
+                except ValueError as error_text_2:
+                    raise ValueError(error_text_2)
+                
+            error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
+            raise ValueError(error_text[self.language])
+        elif mode == 'del':
+            if self.has_phone(phone):
+                for phone_id,phone_number in self.phones.items():
+                    if phone_number == phone:
+                        del self.phones[phone_id]
+                        error_text = {'en':"Phone removed.",'ua':"Телефон видалено."}
+                        print(error_text[self.language])
+                        return
+            
+            error_text = {'en':"Haven't found this phone number in the chosen contact!",'ua':"Цей телефон у обраному контакті не знайдено!"}
+            raise ValueError(error_text[self.language])
+            
     def remove_birthday(self):
         self.birthday = None
     
@@ -158,30 +168,6 @@ class RecordManager(MiscChecks):
         error_text = {'en':f"No contact found with name: {name}.",'ua':f"Не знайдено жодного контакту з іменем: {name}."}
         return error_text
         
-    def phone_check_and_set(self,mode,phone,new_phone=None):
-        if phone == '':
-            error_text = {'en':"Wrong phone format: the phone cannot be empty.",'ua':"Некоректний формат телефону: телефон не може бути порожнім."}
-            raise ValueError(error_text[self.language])
-        elif mode == 'add':
-            if phone.lower() == "stop":
-                return True
-            self.phones.append(phone)
-            error_text = {'en':"Phone added. if you want to add another one, enter it in the console. When you are done, just enter 'stop' in the console.",'ua':f"Телефон додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть 'stop' у консоль"}
-            raise ValueError(error_text[self.language])
-        elif mode == 'ed':
-            self.phones[phone] = new_phone
-            error_text = {'en':"Phone changed.",'ua':"Телефон відредаговано."}
-            print(error_text[self.language])
-        elif mode == 'del':
-            error_text = {}
-            try:
-                del self.phones[phone]
-                error_text = {'en':"Phone removed.",'ua':"Телефон видалено."}
-                print(error_text[self.language])
-            except:
-                error_text = {'en':"No phone with such name!",'ua':"Такого телефону не існує!"}
-                raise ValueError(error_text[self.language])
-            
     def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
         self.phones = phones
         self.name = name
