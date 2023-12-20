@@ -272,7 +272,7 @@ class InputManager(HelpMe):
                                 
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
-        print(f'{bcolors.GREEN}{local[self.language]}')
+        print(f'{bcolors.GREEN}{local[self.language]}{bcolors.DEFAULT}')
 
 if __name__ == "__main__":
     manager = InputManager()
