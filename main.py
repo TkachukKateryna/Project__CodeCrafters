@@ -103,6 +103,9 @@ class InputManager(HelpMe):
             self.contactbook.language = self.languages[lang]
             self.sorter.language = self.languages[lang]
             self.notepad.language = self.languages[lang]
+        else:
+            self.language = None
+            return f"{bcolors.GREEN}Некоректний id. Будь ласка, спробуйте ще раз! {bcolors.RED}/{bcolors.GREEN} Wrong id. Please, try again!"
         
         welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
         print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
@@ -220,7 +223,6 @@ class InputManager(HelpMe):
                     command = 'change_module'
             else:
                 command = 'change_language'
-                self.language = 'en'
             
                 # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
                 # commands for contact book:  
@@ -256,6 +258,8 @@ class InputManager(HelpMe):
                             while type(result) == str:
                                 for k,v in value.items():
                                     while True:
+                                        if not self.language:
+                                            self.language = 'en'
                                         command = input(v[self.language] + f':   {bcolors.RED}')
                                         if command == 'leave':
                                             self.say_goodbye()
