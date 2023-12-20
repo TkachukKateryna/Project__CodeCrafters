@@ -199,7 +199,7 @@ class InputManager(HelpMe):
                     local = {'part_1':{'en':"You are in the",'ua':"Ви перейшли у меню"},
                              'part_2':{'en':" menu. Available comamnds list:",'ua':". Список доступних команд:"},
                              'part_3':{'en':"return to the main menu",'ua':"повернутися у головне меню"},
-                             'part_4':{'en':"exit the program",'ua':"вихід з програми"},
+                             'part_4':{'en':"exit the program",'ua':"Вийти з програми"},
                              'part_5':{'en':"extended description of this menus commands",'ua':"розширений опис команд цього меню"}}
                     string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
                     string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}.\n{'_' * 80}"
