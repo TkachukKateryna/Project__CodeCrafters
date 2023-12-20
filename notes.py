@@ -359,11 +359,11 @@ class NoteFile:
 
     def choose_note_attribute(self, field_id):
         try:
-            if int(field_id) < 2:
-                self.field_id = int(field_id)
+            new_field_id = self.input_to_id(field_id)
+            if type(new_field_id) == int and new_field_id < 2:
+                self.field_id = new_field_id
             else:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return new_field_id
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
@@ -404,14 +404,29 @@ class NoteFile:
             #string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
         print(string)
 
+    def input_to_id(self, text):
+        new_line = text
+        if new_line.find(" "):
+            map = {' ':''}
+            new_line = new_line.translate(map)
+        try:
+            if int(new_line) >= 0:
+                return int(new_line)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}An id cannot be a negative number!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Id не може бути від'ємним числом!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except ValueError:
+            error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+            return error_text[self.language]
+
     def choose_note_tag(self, field_id):
         note = self.data[self.ongoing]
         try:
-            if int(field_id) <= len(note.tags):
-                self.field_id = int(field_id)
-            else:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+            new_field_id = self.input_to_id(field_id)
+            if type(new_field_id) == int and new_field_id <= len(note.tags):
+                self.field_id = new_field_id
+            elif type(new_field_id) == str:
+                return new_field_id
         except:
                 error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
                 return error_text[self.language]
