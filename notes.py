@@ -141,7 +141,7 @@ class NoteFile:
                                     'ua':"менеджера нотаток"},
                                 'description':{
                                     'en':"note manager", 
-                                    'ua':"менеджер натотак"}},
+                                    'ua':"менеджер нотаток"}},
                             'create':{
                                 'description':{
                                     'en':"Adds a new record to the note book. You can add a title, text, tags - either when creating a record, or later.",
