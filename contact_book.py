@@ -473,7 +473,7 @@ class ContactBook():
         local = {'en':"Phone", 'ua':"Телефон"}
         done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
         try:
-            note.phone_check_and_set(mode='del', phone=self.field_id, new_phone=new_text)
+            note.phone_check_and_set(mode='del', phone=self.data[note].phones[self.field_id], new_phone=new_text)
         except ValueError as error_text:
             return str(error_text)
         
