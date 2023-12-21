@@ -167,10 +167,8 @@ class InputManager(HelpMe):
             del self.actions['default']["back"] 
     
     def input_to_id(self, text):
-        new_line = text
-        if new_line.find(" "):
-            map = {' ':''}
-            new_line = new_line.translate(map)
+        map = {' ':'','\n':'','\t':'','\r':''}
+        new_line = text.translate(map)
         try:
             if int(new_line) >= 0:
                 return int(new_line)
