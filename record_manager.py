@@ -102,9 +102,9 @@ class RecordManager(MiscChecks):
         self.language = None
         self.phones = {}
         self.name = "Unnamed contact"
-        self.birthday = None
-        self.email = None
-        self.address = None
+        self.birthday = "None"
+        self.email = "None"
+        self.address = "None"
 
     def __str__(self):
         return f"Record name: {self.name}, Birthday: {self.birthday}, phones: {'; '.join(p for p in self.phones)}"
@@ -128,7 +128,7 @@ class RecordManager(MiscChecks):
         self.address = address
 
     def edit_birthday(self,new_birthday:str):
-        if self.birthday != None:
+        if self.birthday != "None":
             try:
                 self.birthday = self.birthday_check(new_birthday)
                 return
@@ -139,7 +139,7 @@ class RecordManager(MiscChecks):
         raise ValueError(error_text[self.language])
             
     def edit_email(self,new_email:str):
-        if self.email != None:
+        if self.email != "None":
             try:
                 self.email = self.email_check(new_email)
                 return
@@ -194,16 +194,16 @@ class RecordManager(MiscChecks):
             raise ValueError(error_text[self.language])
             
     def remove_birthday(self):
-        self.birthday = None
+        self.birthday = "None"
     
     def remove_name(self):
         self.name = "Unnamed contact"
 
     def remove_email(self):
-        self.email = None
+        self.email = "None"
 
     def remove_address(self):
-        self.address = None
+        self.address = "None"
         
     def search_contact(self, name):
         error_text = {'en':f"No contact found with name: {name}.",'ua':f"Не знайдено жодного контакту з іменем: {name}."}
