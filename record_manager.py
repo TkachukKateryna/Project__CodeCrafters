@@ -205,10 +205,6 @@ class RecordManager(MiscChecks):
     def remove_address(self):
         self.address = "None"
         
-    def search_contact(self, name):
-        error_text = {'en':f"No contact found with name: {name}.",'ua':f"Не знайдено жодного контакту з іменем: {name}."}
-        return error_text
-        
     def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
         id_generator = 0
         for do_not_use,phone in phones.items(): #rearranging phone ids, just like with contactbook records.
