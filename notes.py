@@ -439,7 +439,7 @@ class NoteFile:
         note = self.data[self.ongoing]
         try:
             field_id = self.input_to_id(field_id)
-            if type(field_id) == int and field_id <= len(note.tags):
+            if type(field_id) == int and field_id < len(note.tags):
                 self.field_id = field_id
             elif type(field_id) == str:
                 return field_id
