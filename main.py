@@ -83,6 +83,7 @@ class InputManager(HelpMe):
         self.current_module_commands = []
         self.module_chosen = None
         self.silent_restart = None
+        self.abort = None
         self.menu_delay = None
         self.language = None
         self.languages = {'0':'en','1':'ua'}
@@ -190,6 +191,8 @@ class InputManager(HelpMe):
                 'ua':"Якщо захочете вийти з програми, напишіть '"}}
 
         while True:
+            if self.abort:
+                self.abort = None
             if self.menu_delay:
                 local = {'en':f"Enter {bcolors.RED}Y{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
                 delay_commands = {'y', 'yes','так', 'т'}
@@ -247,18 +250,20 @@ class InputManager(HelpMe):
                     selected_action()
                 else:
                     for key,value in self.actions[category][command]['methods'].items():
-                        if self.silent_restart:
+                        if self.abort:
                             break
                         if value == {}:
-                            key()
+                            result = key()
+                            if result == 'abort':
+                                self.abort = True
                         else:
                             arguments_list = []
                             result = ' '
                             while type(result) == str:
-                                if self.silent_restart:
+                                if self.abort:
                                     break
                                 for k,v in value.items():
-                                    if self.silent_restart:
+                                    if self.abort:
                                         break
                                     while True:
                                         if not self.language:
@@ -269,6 +274,7 @@ class InputManager(HelpMe):
                                             return
                                         if command == 'cancel':
                                             self.silent_restart = True
+                                            self.abort = True
                                             break
                                         if command != '':
                                             arguments_list.append(command)
@@ -276,6 +282,10 @@ class InputManager(HelpMe):
                                 if not self.silent_restart:
                                     result = key(*arguments_list)
                                     if type(result) == str:
+                                        if result == 'abort':
+                                            self.abort = True
+                                            arguments_list = []
+
                                         arguments_list = []
                                         print(result)
                                 command = ''
