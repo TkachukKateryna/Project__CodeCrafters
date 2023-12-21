@@ -430,11 +430,16 @@ class ContactBook():
         print(done_text[self.language])
 
     def print_contact_phones(self):
-        local = {'en':"Choose the phone number you need", 'ua':"Оберіть потрібний номер телефону"}
-        contact = self.data[self.ongoing]
-        string = f"{bcolors.GREEN}{local[self.language]}:\n"
-        string += "".join(f'{bcolors.RED}{phone_id}{bcolors.GREEN}. {phone_number};\n' for phone_id, phone_number in contact.phones.items())
-        print(string)
+        if len(self.data) > 0:
+            local = {'en':"Choose the phone number you need", 'ua':"Оберіть потрібний номер телефону"}
+            contact = self.data[self.ongoing]
+            string = f"{bcolors.GREEN}{local[self.language]}:\n"
+            string += "".join(f'{bcolors.RED}{phone_id}{bcolors.GREEN}. {phone_number};\n' for phone_id, phone_number in contact.phones.items())
+            print(string)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}The contact has no saved phone numbers!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Контакт не має збережених номерів телефону!{bcolors.GREEN}"}
+            print(error_text[self.language])
+            return 'abort'
 
     def input_to_id(self, text):
         map = {' ':'','\n':'','\t':'','\r':''}
