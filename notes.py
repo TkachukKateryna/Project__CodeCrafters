@@ -327,7 +327,7 @@ class NoteFile:
             string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items()) + f"\n{bcolors.RED}{local['part_4'][self.language]}{bcolors.GREEN}\n"
             print(string)
         else:
-            error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
+            error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
             print(error_text[self.language])
             return 'abort'
     
@@ -406,14 +406,19 @@ class NoteFile:
         print(done_text[self.language])
 
     def print_note_tags(self):
-        local = {'part_0':{
-                    'en':"Choose the tag you need",
-                    'ua':"Оберіть потрібний тег"}}
-        note = self.data[self.ongoing]
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        for i in range(len(note.tags)):
-            string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
-        print(string)
+        if len(self.data) > 0:
+            local = {'part_0':{
+                        'en':"Choose the tag you need",
+                        'ua':"Оберіть потрібний тег"}}
+            note = self.data[self.ongoing]
+            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+            for i in range(len(note.tags)):
+                string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
+            print(string)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}The note has no tags!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатка не має тегів!{bcolors.GREEN}"}
+            print(error_text[self.language])
+            return 'abort'
 
     def input_to_id(self, text):
         new_line = text
