@@ -65,9 +65,10 @@ class MiscChecks:
                 return (BD_DAY - TODAY)
         return "None"
 
-    def email_check(self,email):
+    def email_check(self,email:str):
         # Format: text@text.text
         if (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
+            email = f"{email[:email.rfind('@')]}{email[email.rfind('@'):].lower()}"
             return email
         else:
             error_text = {'en':"Wrong email format. The correct format would be: text@text.text",'ua':"Некоректний формат електронної пошти. Правильний формат: текст@текст.текст"}
