@@ -82,6 +82,8 @@ class MiscChecks:
             from datetime import date,datetime
             TODAY = date.today()
             tmp = self.birthday
+            print(tmp)
+            print((int(tmp[6:]), int(tmp[0:2]), int(tmp[3:5])))
             BD_DAY = datetime(int(tmp[6:]), int(tmp[0:2]), int(tmp[3:5])).date()
             if (BD_DAY.month < TODAY.month) or ((BD_DAY.month == TODAY.month) and (BD_DAY.day < TODAY.day)):
                 BD_DAY = BD_DAY.replace(year = TODAY.year + 1)
