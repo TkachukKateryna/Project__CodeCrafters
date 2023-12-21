@@ -93,17 +93,22 @@ class InputManager(HelpMe):
         print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
 
     def set_language(self,lang):
-        if lang in self.languages:
-            self.language = self.languages[lang]
-            self.contactbook.language = self.languages[lang]
-            self.sorter.language = self.languages[lang]
-            self.notepad.language = self.languages[lang]
-        else:
-            self.language = None
+        try:
+            lang = self.input_to_id(lang)
+            if lang in self.languages:
+                self.language = self.languages[lang]
+                self.contactbook.language = self.languages[lang]
+                self.sorter.language = self.languages[lang]
+                self.notepad.language = self.languages[lang]
+            else:
+                self.language = None
+                return f"{bcolors.GREEN}Некоректний id. Будь ласка, спробуйте ще раз! {bcolors.RED}/{bcolors.GREEN} Wrong id. Please, try again!"
+            
+            welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
+            print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
+        except ValueError:
             return f"{bcolors.GREEN}Некоректний id. Будь ласка, спробуйте ще раз! {bcolors.RED}/{bcolors.GREEN} Wrong id. Please, try again!"
-        
-        welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
-        print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
+
     
     def print_languages(self):
         string = f"{bcolors.GREEN}Список доступних мов:  {bcolors.RED}/{bcolors.GREEN}   Languages available:\n"
@@ -128,31 +133,52 @@ class InputManager(HelpMe):
         print(string)
 
     def set_module(self,module_id):
-        if module_id in self.help_modules:
-            self.module_chosen = module_id
-            self.actions['default']["back"] = {
-                                           'description':{
-                                               'en':"Allows you to switch to a different menu",
-                                               'ua':"Дозволяє переключитись на інше меню."}, 
-                                            'methods':{self.reset_module:{}}}
-            self.current_module_commands = []
-            for script in self.actions[self.module_chosen].keys():
-                self.current_module_commands.append(script) 
-            
-            self.current_module_commands.append("cancel")
-            for script in self.actions['default'].keys():
-                self.current_module_commands.append(script) 
+        try:
+            module_id = self.input_to_id(module_id)
+            if module_id in self.help_modules:
+                self.module_chosen = module_id
+                self.actions['default']["back"] = {
+                                            'description':{
+                                                'en':"Allows you to switch to a different menu",
+                                                'ua':"Дозволяє переключитись на інше меню."}, 
+                                                'methods':{self.reset_module:{}}}
+                self.current_module_commands = []
+                for script in self.actions[self.module_chosen].keys():
+                    self.current_module_commands.append(script) 
+                
+                self.current_module_commands.append("cancel")
+                for script in self.actions['default'].keys():
+                    self.current_module_commands.append(script) 
 
-            self.command_completer = WordCompleter(self.current_module_commands)
-        else:
+                self.command_completer = WordCompleter(self.current_module_commands)
+            else:
+                error_phrase = {'en':"Wrong module number. Please, try again!",'ua':"Неправильний номер модуля. Спробуйте ще раз!"}
+                print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
+        except ValueError:
             error_phrase = {'en':"Wrong module number. Please, try again!",'ua':"Неправильний номер модуля. Спробуйте ще раз!"}
             print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
+
 
     def reset_module(self):
             self.current_module_commands = []
             self.module_chosen = None
             del self.actions['default']["back"] 
     
+    def input_to_id(self, text):
+        new_line = text
+        if new_line.find(" "):
+            map = {' ':''}
+            new_line = new_line.translate(map)
+        try:
+            if int(new_line) >= 0:
+                return int(new_line)
+            else:
+                error_text = {'en':f"{bcolors.YELLOW}An id cannot be a negative number!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Id не може бути від'ємним числом!{bcolors.GREEN}"}
+                return error_text[self.language]
+        except ValueError:
+            error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
+            return error_text[self.language]
+
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
