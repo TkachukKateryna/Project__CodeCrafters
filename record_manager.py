@@ -63,7 +63,7 @@ class MiscChecks:
                 return (BD_DAY)
             else:
                 return (BD_DAY - TODAY)
-        return None
+        return "None"
 
     def email_check(self,email):
         # Format: text@text.text
@@ -189,8 +189,8 @@ class RecordManager(MiscChecks):
                         for phone_id,phone_number in self.phones.items():
                             if phone_number == phone:
                                 self.phones[phone_id] = new_phone
-                                error_text = {'en':"Phone changed.",'ua':"Телефон відредаговано."}
-                                print(error_text[self.language])
+                                #error_text = {'en':"Phone changed.",'ua':"Телефон відредаговано."}
+                                #print(error_text[self.language])
                                 return
                 except ValueError as error_text_2:
                     raise ValueError(error_text_2)
