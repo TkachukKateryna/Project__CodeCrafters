@@ -83,9 +83,6 @@ class InputManager(HelpMe):
                                                                'en':f"{bcolors.CYAN}Please, choose the menu",
                                                                'ua':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
         
-        # self.actions['default']["quit"] = quit
-        # self.actions['default']["close"] = quit
-        # self.actions['default']["exit"] = quit
         self.actions['default']["leave"] = quit
 
         self.current_module_commands = []
