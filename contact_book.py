@@ -595,57 +595,57 @@ class ContactBook(): #UserDict
                 if class_instance.find_in_name(text):
                     checker = True
                     highlighted_title = f"{bcolors.GREEN}{class_instance.name[:class_instance.find_in_name(text)[0]]}{bcolors.YELLOW}{class_instance.name[class_instance.find_in_name(text)[0]:class_instance.find_in_name(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_name(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {highlighted_title}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {highlighted_title}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
         elif self.field_id == 1:
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_birthday(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.birthday[:class_instance.find_in_birthday(text)[0]]}{bcolors.YELLOW}{class_instance.birthday[class_instance.find_in_birthday(text)[0]:class_instance.find_in_birthday(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_birthday(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
         elif self.field_id == 2:
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_email(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.email[:class_instance.find_in_email(text)[0]]}{bcolors.YELLOW}{class_instance.email[class_instance.find_in_email(text)[0]:class_instance.find_in_email(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_email(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {highlighted_text}; {local['Address'][self.language]}: {class_instance.address};\n"
         elif self.field_id == 3:
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_address(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.address[:class_instance.find_in_address(text)[0]]}{bcolors.YELLOW}{class_instance.address[class_instance.find_in_address(text)[0]:class_instance.find_in_address(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_address(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][highlighted_text]}: {class_instance.address};\n"
         elif self.field_id == 4:
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_phones(text):
                     checker = True
                     tags = "; ".join(f"{tag}" for tag in class_instance.phones)
                     highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_phones(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_phones(text)[0]:class_instance.find_in_phones(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_phones(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {highlighted_tags}; {local['Birthday'][self.language]}: {class_instance.birthday};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {highlighted_tags}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
         elif self.field_id == 5:
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_name(text):
                     checker = True
                     highlighted_title = f"{bcolors.GREEN}{class_instance.name[:class_instance.find_in_name(text)[0]]}{bcolors.YELLOW}{class_instance.name[class_instance.find_in_name(text)[0]:class_instance.find_in_name(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_name(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {highlighted_title}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {highlighted_title}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
                 elif class_instance.find_in_birthday(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.birthday[:class_instance.find_in_birthday(text)[0]]}{bcolors.YELLOW}{class_instance.birthday[class_instance.find_in_birthday(text)[0]:class_instance.find_in_birthday(text)[1]]}{bcolors.GREEN}{class_instance.birthday[class_instance.find_in_birthday(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_email(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.email[:class_instance.find_in_email(text)[0]]}{bcolors.YELLOW}{class_instance.email[class_instance.find_in_email(text)[0]:class_instance.find_in_email(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_email(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {highlighted_text}; {local['Address'][self.language]}: {class_instance.address};\n"
             for contact_id,class_instance in self.data.items():
                 if class_instance.find_in_address(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.address[:class_instance.find_in_address(text)[0]]}{bcolors.YELLOW}{class_instance.address[class_instance.find_in_address(text)[0]:class_instance.find_in_address(text)[1]]}{bcolors.GREEN}{class_instance.name[class_instance.find_in_address(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {class_instance.phones}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {highlighted_text};\n"
                 elif class_instance.find_in_phones(text):
                     checker = True
                     tags = "; ".join(f"{tag}" for tag in class_instance.phones)
                     highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_phones(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_phones(text)[0]:class_instance.find_in_phones(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_phones(text)[1]:]}"
-                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {highlighted_tags}; {local['Birthday'][self.language]}: {class_instance.birthday};\n"
+                    string += f"{bcolors.RED}{contact_id}{bcolors.GREEN}. {local['Name'][self.language]}: {class_instance.name}; {local['Phones'][self.language]}: {highlighted_tags}; {local['Birthday'][self.language]}: {class_instance.birthday}; {local['Email'][self.language]}: {class_instance.email}; {local['Address'][self.language]}: {class_instance.address};\n"
 
         if checker:
             print(f"{success}{string}")
