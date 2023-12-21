@@ -275,11 +275,11 @@ class ContactBook(): #UserDict
         self.id_assign(mode="add",record=new_record)
 
     def add_name(self,name):
-        new_record = self.data[self.ongoing]
-        new_record.language = self.language
+        record = self.data[self.ongoing]
+        record.language = self.language
         if self.dialogue_check(name):
             try:
-                new_record.add_name(name)
+                record.add_name(name)
             except ValueError as error_text:
                 return str(error_text)
             
@@ -287,6 +287,7 @@ class ContactBook(): #UserDict
 
     def add_phone(self,phone):
         record = self.data[self.ongoing]
+        record.language = self.language
         if self.dialogue_check(phone):
             try:
                 record.phone_check_and_set(mode='add', phone=phone)
@@ -297,6 +298,7 @@ class ContactBook(): #UserDict
 
     def add_birthday(self,birthday):
         record = self.data[self.ongoing]
+        record.language = self.language
         if self.dialogue_check(birthday):
             try:
                 record.add_birthday(birthday)
@@ -307,6 +309,7 @@ class ContactBook(): #UserDict
 
     def add_email(self,email):
         record = self.data[self.ongoing]
+        record.language = self.language
         if self.dialogue_check(email):
             try:
                 record.add_email(email)
@@ -317,6 +320,7 @@ class ContactBook(): #UserDict
 
     def add_address(self,address):
         record = self.data[self.ongoing]
+        record.language = self.language
         if self.dialogue_check(address):
             try:
                 record.add_address(address)
