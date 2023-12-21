@@ -344,6 +344,7 @@ class ContactBook():
         else:
             error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
             print(error_text[self.language])
+            return 'abort'
 
     def show_contacts(self):
         if len(self.data) > 0:
