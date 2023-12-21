@@ -503,10 +503,12 @@ class ContactBook():
         self.ongoing = None
 
     def remove_contact_phone_finish(self):
+        del self.data[self.ongoing].phones[self.field_id]
         done_text = {'en':f"{bcolors.YELLOW}Phone removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Телефон видалений.{bcolors.GREEN}"}
         print(done_text[self.language])
         self.update_file(mode="ed", r_id=self.ongoing)
         self.ongoing = None
+        self.field_id = None
 
     def add_phone_finish(self):
         self.update_file(mode="ed")
