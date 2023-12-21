@@ -157,7 +157,7 @@ class RecordManager(MiscChecks):
         self.address = "None"
 
     def __str__(self):
-        return f"Record name: {self.name}, Birthday: {self.birthday}, phones: {'; '.join(phone for phone in self.phones.values())}"
+        return f"Record name: {self.name}, birthday: {self.birthday}, phones: {'; '.join(phone for phone in self.phones.values())}"
 
     def add_birthday(self,birthday):
         try:
