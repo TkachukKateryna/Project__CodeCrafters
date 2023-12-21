@@ -83,6 +83,7 @@ class InputManager(HelpMe):
         self.current_module_commands = []
         self.module_chosen = None
         self.silent_restart = None
+        self.menu_delay = None
         self.language = None
         self.languages = {'0':'en','1':'ua'}
         self.languages_local = {'0':'English','1':'Українська'}
@@ -189,6 +190,14 @@ class InputManager(HelpMe):
                 'ua':"Якщо захочете вийти з програми, напишіть '"}}
 
         while True:
+            if self.menu_delay:
+                local = {'en':f"Enter {bcolors.RED}Y{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
+                delay_commands = {'y', 'yes','так', 'т'}
+                while True:
+                    command = input(f"{bcolors.CYAN}{local[self.language]}:   {bcolors.RED}")
+                    if command.lower() in delay_commands:
+                        self.menu_delay = None
+                        break
             if self.silent_restart:
                 self.silent_restart = None
             command = ''
@@ -224,6 +233,9 @@ class InputManager(HelpMe):
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
             # чекаючи на інпут.
             category = ''
+            command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']        
+            if self.module_chosen and not command in command_exceptions:
+                self.menu_delay = True
             if self.module_chosen:
                 if (command in self.actions[self.module_chosen].keys()):
                     category = self.module_chosen
@@ -266,7 +278,7 @@ class InputManager(HelpMe):
                                     if type(result) == str:
                                         arguments_list = []
                                         print(result)
-                                    command = ''
+                                command = ''
 
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
