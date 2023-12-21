@@ -307,24 +307,29 @@ class NoteFile:
 
 
     def print_notes(self):
-        local = {'part_0':{
-                    'en':"Saved notes list",
-                    'ua':"Наразі збережені такі нотатки"},
-                'part_1':{
-                    'en':"Title",
-                    'ua':"Заголовок"},
-                'part_2':{
-                    'en':"Text",
-                    'ua':"Текст"},
-                'part_3':{
-                    'en':"Tags",
-                    'ua':"Теги"},
-                'part_4':{
-                    'en':"To choose the note, enter it's respective number in a console",
-                    'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items()) + f"\n{bcolors.RED}{local['part_4'][self.language]}{bcolors.GREEN}\n"
-        print(string)
+        if len(self.data) > 0:
+            local = {'part_0':{
+                        'en':"Saved notes list",
+                        'ua':"Наразі збережені такі нотатки"},
+                    'part_1':{
+                        'en':"Title",
+                        'ua':"Заголовок"},
+                    'part_2':{
+                        'en':"Text",
+                        'ua':"Текст"},
+                    'part_3':{
+                        'en':"Tags",
+                        'ua':"Теги"},
+                    'part_4':{
+                        'en':"To choose the note, enter it's respective number in a console",
+                        'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
+            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items()) + f"\n{bcolors.RED}{local['part_4'][self.language]}{bcolors.GREEN}\n"
+            print(string)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
+            print(error_text[self.language])
+            return 'abort'
     
     def print_note_attributes(self):
         local = {'part_0':{
