@@ -59,19 +59,26 @@ class FileSorter:
                                             'ua':f'{bcolors.GREEN}Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
 
     def starter(self, arg1: str, arg2: str):
-        path = './empty_folder'
-        try:
-            path = Path(arg1)
-        except:
-            error_text = {'en':f"{bcolors.YELLOW}{arg1} is not a valid path!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}{arg1} не є коректним шляхом!{bcolors.GREEN}"}
+        # Створюємо об'єкт Path для директорії джерела
+        source_path = Path(arg1)
+        # Перевіряємо, чи існує директорія та чи це директорія
+        if not source_path.exists() or not source_path.is_dir():
+            # Повертаємо повідомлення про помилку, якщо директорія недійсна
+            error_text = {'en': f"{bcolors.RED}{arg1} is not a valid folder path! Try again!{bcolors.GREEN}",
+                        'ua': f"{bcolors.RED}{arg1} не є коректним шляхом до папки! Спробуйте ще!{bcolors.GREEN}"}
             return error_text[self.language]
-        output = './output_folder'
-        try:
-            output = Path(arg2)
-        except:
-            error_text = {'en':f"{bcolors.YELLOW}{arg2} is not a valid path!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}{arg2} не є коректним шляхом!{bcolors.GREEN}"}
+
+        # Створюємо об'єкт Path для директорії призначення
+        destination_path = Path(arg2)
+        # Перевіряємо, чи існує директорія та чи це директорія
+        if not destination_path.exists() or not destination_path.is_dir():
+            # Повертаємо повідомлення про помилку, якщо директорія недійсна
+            error_text = {'en': f"{bcolors.RED}{arg2} is not a valid folder path! Try again!{bcolors.GREEN}",
+                        'ua': f"{bcolors.RED}{arg2} не є коректним шляхом до папки! Спробуйте ще!{bcolors.GREEN}"}
             return error_text[self.language]
-        self.real_sorter(path, output)
+
+        # Якщо директорії коректні, викликаємо метод real_sorter з правильними директоріями
+        self.real_sorter(source_path, destination_path)
 
     def real_sorter(self, path: Path, output: Path):
         import shutil
