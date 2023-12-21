@@ -194,7 +194,7 @@ class InputManager(HelpMe):
             if self.abort:
                 self.abort = None
             if self.menu_delay:
-                local = {'en':f"Enter {bcolors.RED}Y{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
+                local = {'en':f"Enter {bcolors.RED}Y/yes{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Т/Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
                 delay_commands = {'y', 'yes','так', 'т'}
                 while True:
                     command = input(f"{bcolors.CYAN}{local[self.language]}:   {bcolors.RED}")
