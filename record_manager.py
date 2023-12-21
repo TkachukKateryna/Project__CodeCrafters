@@ -81,33 +81,38 @@ class MiscChecks:
         return False 
 
     def find_in_name(self, text):
-        if self.name.lower().find(text.lower()) != -1:
-            return search(text.lower(),self.name.lower()).span()
+        text = fr"{text.lower()}"
+        if self.name.lower().find(text) != -1:
+            return search(text,self.name.lower()).span()
         else:
             return False
 
     def find_in_birthday(self, text):
-        if self.birthday.lower().find(text.lower()) != -1:
-            return search(text.lower(),self.birthday.lower()).span()
+        text = fr"{text.lower()}"
+        if self.birthday.lower().find(text) != -1:
+            return search(text,self.birthday.lower()).span()
         else:
             return False
 
     def find_in_email(self, text):
-        if self.email.lower().find(text.lower()) != -1:
-            return search(text.lower(),self.email.lower()).span()
+        text = fr"{text.lower()}"
+        if self.email.lower().find(text) != -1:
+            return search(text,self.email.lower()).span()
         else:
             return False
 
     def find_in_address(self, text):
-        if self.address.lower().find(text.lower()) != -1:
-            return search(text.lower(),self.address.lower()).span()
+        text = fr"{text.lower()}"
+        if self.address.lower().find(text) != -1:
+            return search(text,self.address.lower()).span()
         else:
             return False
 
     def find_in_phones(self, text):
+        text = fr"{text.lower()}"
         phones = "; ".join(f"{phone}" for phone in self.phones.values())
-        if phones.lower().find(text.lower()) != -1:
-            return search(text.lower(),phones.lower()).span()
+        if phones.lower().find(text) != -1:
+            return search(text,phones.lower()).span()
         else:
             return False
 
