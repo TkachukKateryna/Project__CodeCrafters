@@ -45,16 +45,16 @@ class ContactBook():
                                             'ua':f"{self.opnng}ім'я{self.non_obligatory}"}},
                                     self.add_phone:{
                                         'phone':{
-                                            'en':f"{self.opnng_en}phone number{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}номер телефону{self.non_obligatory}"}},
+                                            'en':f"{self.opnng_en}phone number (10 digits){self.non_obligatory_en}",
+                                            'ua':f"{self.opnng}номер телефону (10 цифр){self.non_obligatory}"}},
                                     self.add_birthday:{
                                         'birthday':{
-                                            'en':f"{self.opnng_en}birthday{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}день народження контакта{self.non_obligatory}"}},
+                                            'en':f"{self.opnng_en}birthday (MM-DD-YYYY){self.non_obligatory_en}",
+                                            'ua':f"{self.opnng}день народження контакта (MM-DD-YYYY){self.non_obligatory}"}},
                                     self.add_email:{
                                         'email':{
-                                            'en':f"{self.opnng_en}email{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}електронну пошту контакта{self.non_obligatory}"}},
+                                            'en':f"{self.opnng_en}email(text@text.text){self.non_obligatory_en}",
+                                            'ua':f"{self.opnng}електронну пошту контакта(text@text.text){self.non_obligatory}"}},
                                     self.add_address:{
                                         'address':{
                                             'en':f"{self.opnng_en}address{self.non_obligatory_en}",
@@ -496,7 +496,7 @@ class ContactBook():
                 'part_3':{'en':"birthday",'ua':"днем народження"},
                 'part_4':{'en':"email",'ua':"електронною поштою"},
                 'part_5':{'en':"address",'ua':"адресою"}}
-        string = f"{bcolors.GREEN}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
+        string = f"{bcolors.YELLOW}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
         print(string)
             
         self.update_file(mode="add",r_id=self.generated_ids)
