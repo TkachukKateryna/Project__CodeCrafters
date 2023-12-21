@@ -235,7 +235,7 @@ class InputManager(HelpMe):
                     pass
                 elif self.module_chosen:
                     local = {'part_1':{'en':"You are in the",'ua':"Ви перейшли у меню"},
-                             'part_2':{'en':" menu. Available comamnds list:",'ua':". Список доступних команд:"},
+                             'part_2':{'en':" menu. Available commands list:",'ua':". Список доступних команд:"},
                              'part_3':{'en':"Return to the main menu",'ua':"Повернутися у головне меню"},
                              'part_4':{'en':"Exit the program",'ua':"Вийти з програми"},
                              'part_5':{'en':"Cancels the execution of the current command (e.g. create/edit/sort_files)",'ua':"Скасовує виконання поточної команди (наприклад, create/edit/sort_files)"}}
