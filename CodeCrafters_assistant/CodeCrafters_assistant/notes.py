@@ -540,7 +540,7 @@ class NoteFile:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_text(text):
                     checker = True
-                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_text(text)[1]:]}"
+                    highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[1]:]}"
                     string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};\n"
         elif self.field_id == 2:
             for note_id,class_instance in self.data.items():
