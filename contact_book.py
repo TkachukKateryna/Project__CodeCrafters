@@ -66,7 +66,7 @@ class ContactBook(): #UserDict
                                     'en':"Displays a list of contacts, who have a birthday in the specified perioud.",
                                     'ua':"Виводить список іменинників на обраний користувачем період."}, 
                                 'methods':{
-                                    self.contacts_upcoming_birthday:{
+                                    self.show_upcoming_birthdays:{
                                         'attr_id':{
                                             'en':f"{self.opnng_en}number of days",
                                             'ua':f"{self.opnng}кількість днів"}}}},
@@ -175,7 +175,7 @@ class ContactBook(): #UserDict
                                     self.show_contacts:{}}}}
   
         
-    def contacts_upcoming_birthday(self, day):
+    def show_upcoming_birthdays(self, day):
         days_ahead = 0
         if self.dialogue_check(day):
             try:
@@ -199,13 +199,13 @@ class ContactBook(): #UserDict
                     if days_until_birthday <= days_ahead:
                         upcoming_birthdays.append(record_id)
         if upcoming_birthdays:
-            error_text = {'en':f"{bcolors.GREEN}Contacts, which have a birthday in the next{bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Контакти у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN} днів від сьогоднішньої дати:"}
-            print(error_text[self.lang])
+            error_text = {'en':f"{bcolors.GREEN}Contacts, which have a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Контакти у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN} днів від сьогоднішньої дати:"}
+            print(error_text[self.language])
             for i in upcoming_birthdays:
                 print(f"{self.data[i]}")
         else:
-            error_text = {'en':f"{bcolors.GREEN}No contacts found, with a birthday in the next{bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN}  днів від сьогоднішньої дати."}
-            print(error_text[self.lang])
+            error_text = {'en':f"{bcolors.GREEN}No contacts found, with a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN}  днів від сьогоднішньої дати."}
+            print(error_text[self.language])
 
     # Prepares self.data[id] to be saved.
     # Explanation: operates in one mode: 'add' (requires record id). returns prepared dict with record variables. 
