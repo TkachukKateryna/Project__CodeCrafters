@@ -95,7 +95,8 @@ class InputManager(HelpMe):
     def set_language(self,lang):
         try:
             lang = self.input_to_id(lang)
-            if lang in self.languages:
+            lang = str(lang)
+            if str(lang) in self.languages:
                 self.language = self.languages[lang]
                 self.contactbook.language = self.languages[lang]
                 self.sorter.language = self.languages[lang]
@@ -135,6 +136,7 @@ class InputManager(HelpMe):
     def set_module(self,module_id):
         try:
             module_id = self.input_to_id(module_id)
+            module_id = str(module_id)
             if module_id in self.help_modules:
                 self.module_chosen = module_id
                 self.actions['default']["back"] = {
