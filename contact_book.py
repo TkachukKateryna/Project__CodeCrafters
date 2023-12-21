@@ -126,20 +126,20 @@ class ContactBook(): #UserDict
                                             'ua':f"{self.opnng}номер телефону, який ви хочете додати"}},
                                     self.add_phone_finish:{},
                                     }},
-                            # 'find':{
-                            #     'description':{
-                            #         'en':"Looks for a specified text in the contacts.",
-                            #         'ua':"Шукає введений текст у контактах."}, 
-                            #     'methods':{
-                            #         self.print_find_modes:{},
-                            #         self.choose_find_mode:{
-                            #             'attr_id':{
-                            #                 'en':f"{self.opnng_en}search mode number",
-                            #                 'ua':f"{self.opnng}номер режиму пошуку"}},
-                            #         self.find_hub:{
-                            #             'attr_id':{
-                            #                 'en':f"{self.opnng_en}text you want to find",
-                            #                 'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}},
+                            'find':{
+                                'description':{
+                                    'en':"Looks for a specified text in the contacts.",
+                                    'ua':"Шукає введений текст у контактах."}, 
+                                'methods':{
+                                    self.print_find_modes:{},
+                                    self.choose_find_mode:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}search mode number",
+                                            'ua':f"{self.opnng}номер режиму пошуку"}},
+                                    self.find_hub:{
+                                        'attr_id':{
+                                            'en':f"{self.opnng_en}text you want to find",
+                                            'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}},
                             'remove':{
                                 'description':{
                                     'en':"Deletes the contact.",
