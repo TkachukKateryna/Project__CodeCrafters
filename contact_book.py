@@ -203,7 +203,7 @@ class ContactBook():
             for i in upcoming_birthdays:
                 print(f"{self.data[i]}")
         else:
-            error_text = {'en':f"{bcolors.GREEN}No contacts found, with a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN}  днів від сьогоднішньої дати."}
+            error_text = {'en':f"{bcolors.YELLOW}No contacts found, with a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.YELLOW}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN}  днів від сьогоднішньої дати."}
             print(error_text[self.language])
 
     # Prepares self.data[id] to be saved.
