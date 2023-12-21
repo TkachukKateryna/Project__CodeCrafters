@@ -25,6 +25,17 @@ class MiscChecks:
             error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
+    def year_check(self,year:str):
+        from datetime import date
+        if len(year) > 4:
+            error_text = {'en':"Wrong year format. Should be exactly four characters.",'ua':"Некоректний формат року: має складатись рівно з чотирьох символів."}
+            raise ValueError(error_text[self.language])
+        if int(year) <= date.today().year:
+            return True
+        else:
+            error_text = {'en':"Wrong year format: birthday cannot be in the future. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат року: день народження не може бути у майбутньому. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
+            raise ValueError(error_text[self.language])
+
     def p_check(self,phone:str):
         map = {' ':''}
         phone.translate(map)
@@ -37,14 +48,18 @@ class MiscChecks:
     def birthday_check(self,birthday):
         # Format: MM-DD-YYYY
         if (search(r'\d{2}\D\d{2}\D\d{4}', birthday) != None and len(birthday) == 10):
-            tmp = birthday[0:2]
-            if self.month_check(tmp) and self.day_check(tmp):
+            month = birthday[0:2]
+            day = birthday[3:5]
+            year = birthday[6:10]
+            if self.month_check(month) and self.day_check(day) and self.year_check(year):
                 return birthday
         elif search(r'\d{8}', birthday) != None and len(birthday) == 8:
-            tmp = birthday[0:2]
-            if self.month_check(tmp) and self.day_check(tmp):
-                tmp = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
-                return tmp
+            month = birthday[0:2]
+            day = birthday[2:4]
+            year = birthday[4:8]
+            if self.month_check(month) and self.day_check(day) and self.year_check(year):
+                month = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
+                return month
         else:
             error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY, or MMDDYYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
