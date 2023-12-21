@@ -186,7 +186,7 @@ class ContactBook(): #UserDict
         today = datetime.now()
         upcoming_birthdays = []
         for record_id, record in self.data.items():
-            if record.birthday is not "None":
+            if record.birthday != "None":
                 dob = datetime.strptime(record.birthday, '%m-%d-%Y')
                 current_year_birthday = datetime(today.year, dob.month, dob.day)
                 if current_year_birthday >= today:
