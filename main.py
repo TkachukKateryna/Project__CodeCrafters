@@ -136,6 +136,8 @@ class InputManager(HelpMe):
             self.current_module_commands = []
             for script in self.actions[self.module_chosen].keys():
                 self.current_module_commands.append(script) 
+            
+            self.current_module_commands.append("cancel")
             for script in self.actions['default'].keys():
                 self.current_module_commands.append(script) 
 
@@ -198,9 +200,9 @@ class InputManager(HelpMe):
                              'part_2':{'en':" menu. Available comamnds list:",'ua':". Список доступних команд:"},
                              'part_3':{'en':"Return to the main menu",'ua':"Повернутися у головне меню"},
                              'part_4':{'en':"Exit the program",'ua':"Вийти з програми"},
-                             'part_5':{'en':"extended description of this menus commands",'ua':"розширений опис команд цього меню"}}
+                             'part_5':{'en':"Cancels the execution of the current command (e.g. create/edit/sort_files)",'ua':"Скасовує виконання поточної команди (наприклад, create/edit/sort_files)"}}
                     string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
-                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}.\n{'_' * 80}"
+                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
                     print(string)
         
                     style = Style.from_dict({
