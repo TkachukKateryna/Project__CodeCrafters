@@ -10,7 +10,7 @@ class MiscChecks:
         if int(month) <= 12:
             return True
         else:
-            error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР."}
+            error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
     def day_check(self,day:str):
@@ -22,7 +22,7 @@ class MiscChecks:
         if int(day) <= 31:
             return True
         else:
-            error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР."}
+            error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
     def p_check(self,phone:str):
@@ -46,7 +46,7 @@ class MiscChecks:
                 tmp = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return tmp
         else:
-            error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР."}
+            error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY, or MMDDYYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
         
     def email_check(self,email):
