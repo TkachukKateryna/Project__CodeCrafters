@@ -21,7 +21,6 @@ class HelpMe:
         # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо). Коли користувач обере тему, видає список команд відповідного класу з self.help_modules
         # Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
         # Тільки не забуваємо перевіряти, щоб назви КОНСОЛЬНИХ команд з вашого модулю не співпадали з назвами з інших модулів.
-        # Структура self.help_modules: self.help_modules = {str(index):{'name':'module_name','scripts':{'script1':'descr_text','script2':'descr_text'},'localization':{'name':'text', 'description':'text'}}}
         help_phrase = {'part_1':{'en':". To see the list of commands for ",'ua':". Щоб подивитись список команд для "},
                        'part_2':{'en':", enter in the console '",'ua':", введіть у консоль '"},
                        'part_3':{'en':"The assistant has the next functions: ",'ua':"Помічник має такі функції: "},
@@ -52,10 +51,6 @@ class InputManager(HelpMe):
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
-        # структура збереження даних (не у файлі): {record_id:Record_class_instance}
-        # Record_class_instance зберігає ім'я, Д/Р, телефони, пошти, тощо. Питання тільки в тому, чи треба для усього цього свої окремі класи, чи буде достатньо просто змінних? 
-        # Я вважаю, що змінних вистачить (але якщо треба "під капотом" виконувати різні перевірки, то можна просто використати об'єкт класу і "витягнути" з нього оброблену змінну).
-            # Upd: або просто записати функцію перевірки у клас RecordManager - від цього, в теорії, ніхто не постраждає.
         self.help_modules = {}
         self.notepad = NoteFile()
         self.contactbook = ContactBook()
@@ -157,8 +152,6 @@ class InputManager(HelpMe):
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
-    # структура нового списку actions: 
-    #{'console_command_name':{'description':'description_text', 'methods':{'method1_name':[argument,argument_2],'method2_name':[argument,argument_2]}}}
     def action_filler(self, can_have_a_command):
         actions_dict = {}
         filler_ids = -1
@@ -183,7 +176,6 @@ class InputManager(HelpMe):
 
         return actions_dict
     
-# pip install prompt_toolkit
     def main(self):
 
         input_phrase = {
@@ -225,18 +217,7 @@ class InputManager(HelpMe):
                     command = 'change_module'
             else:
                 command = 'change_language'
-            
-                # TODO: додати функціонал, зазначений нижче, використовуючи нову систему виклику методів.
-                # commands for contact book:  
-                # contact_edit(input - record_name. Ask which element of a record the user desires to change, give a list of options. After succssessfully editing chosen field, return to the question. To stop editing, user must write 'done' in console), 
-                # contact_find(input - any_contact_related_data), 
-                # contact_show_all(), 
-                # remove (input - record name, but removing only by record_id. if multiple found, show all and ask to choose (by assigning temporary index to every element)), 
-                # show_birthdays(input - timedelta{days}) 
-
-                #P.S: all file_format and category key-value pairs must be dislocated to the configs. 
-
-
+ 
             # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
             # чекаючи на інпут.
@@ -284,9 +265,6 @@ class InputManager(HelpMe):
                                         arguments_list = []
                                         print(result)
                                     command = ''
-
-
-
 
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
