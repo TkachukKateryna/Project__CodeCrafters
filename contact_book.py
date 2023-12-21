@@ -323,7 +323,7 @@ class ContactBook():
 
     def print_contacts(self):
         if len(self.data) > 0:
-            local = {'part_0':{'en':"Saved contacts list:", 'ua':"Наразі збережені такі контакти"},
+            local = {'part_0':{'en':"Saved contacts list", 'ua':"Наразі збережені такі контакти"},
                     'part_1':{'en':"Contact name", 'ua':"Ім'я контакту"},
                     'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
                     'part_3':{'en':"birthday",'ua':"день народження"},
@@ -340,7 +340,7 @@ class ContactBook():
 
     def show_contacts(self):
         if len(self.data) > 0:
-            local = {'part_0':{'en':"Saved contacts list:", 'ua':"Наразі збережені такі контакти"},
+            local = {'part_0':{'en':"Saved contacts list", 'ua':"Наразі збережені такі контакти"},
                     'part_1':{'en':"Contact name", 'ua':"Ім'я контакту"},
                     'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
                     'part_3':{'en':"birthday",'ua':"день народження"},
@@ -472,9 +472,9 @@ class ContactBook():
         note = self.data[self.ongoing]
         note.language = self.language
         local = {'en':"Phone", 'ua':"Телефон"}
-        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
+        done_text = {'en':f"{bcolors.YELLOW}{local[self.language]} edited.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
         try:
-            note.phone_check_and_set(mode='ed', phone=self.data[note].phones[self.field_id], new_phone=new_text)
+            note.phone_check_and_set(mode='ed', phone=note.phones[self.field_id], new_phone=new_text)
         except ValueError as error_text:
             return str(error_text)
         
@@ -490,7 +490,7 @@ class ContactBook():
                 'part_3':{'en':"birthday",'ua':"днем народження"},
                 'part_4':{'en':"email",'ua':"електронною поштою"},
                 'part_5':{'en':"address",'ua':"адресою"}}
-        string = f"{bcolors.YELLOW}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
+        string = f"{bcolors.YELLOW}{local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {'; '.join(f'{v}' for k,v in record.phones)}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}"
         print(string)
             
         self.update_file(mode="add",r_id=self.generated_ids)
