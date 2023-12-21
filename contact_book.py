@@ -1,5 +1,5 @@
 from record_manager import MiscChecks, RecordManager
-from datetime import datetime
+from datetime import date,datetime,timedelta
 
 class bcolors:
     HEADER = '\033[95m'
@@ -174,36 +174,28 @@ class ContactBook():
                                     self.show_contacts:{}}}}
   
         
-    def show_upcoming_birthdays(self, day):
+    def show_upcoming_birthdays(self, number):
         days_ahead = 0
-        if self.dialogue_check(day):
+        if self.dialogue_check(number):
             try:
-                days_ahead = int(day)
+                days_ahead = int(number)
+                days_ahead = (datetime(date.today().year,date.today().month,date.today().day) + timedelta(days=int(number))).date()
             except ValueError:
                 error_text = {'en':f"{bcolors.YELLOW}Error! Number of days must be a valid number{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Помилка! Кількість днів має бути числом!{bcolors.GREEN}"}
                 return error_text[self.language] 
-        today = datetime.now()
+        
         upcoming_birthdays = []
         for record_id, record in self.data.items():
-            if record.birthday != "None":
-                dob = datetime.strptime(record.birthday, '%m-%d-%Y')
-                current_year_birthday = datetime(today.year, dob.month, dob.day)
-                if current_year_birthday >= today:
-                    days_until_birthday = (current_year_birthday - today).days
-                    if days_until_birthday <= days_ahead:
-                        upcoming_birthdays.append(record_id)
-                else:
-                    next_birthday = datetime(today.year + 1, dob.month, dob.day)
-                    days_until_birthday = (next_birthday - today).days
-                    if days_until_birthday <= days_ahead:
-                        upcoming_birthdays.append(record_id)
-        if upcoming_birthdays:
+            result = record.days_to_birthday(mode='no_math')
+            if result != "None" and result <= days_ahead:
+                    upcoming_birthdays.append(record_id)
+        if upcoming_birthdays != []:
             error_text = {'en':f"{bcolors.GREEN}Contacts, which have a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.GREEN}Контакти у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN} днів від сьогоднішньої дати:"}
             print(error_text[self.language])
             for i in upcoming_birthdays:
                 print(f"{self.data[i]}")
         else:
-            error_text = {'en':f"{bcolors.YELLOW}No contacts found, with a birthday in the next {bcolors.RED}{days_ahead}{bcolors.GREEN} days:",'ua':f"{bcolors.YELLOW}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.GREEN}  днів від сьогоднішньої дати."}
+            error_text = {'en':f"{bcolors.YELLOW}No contacts found, with a birthday in the next {bcolors.RED}{days_ahead}{bcolors.YELLOW} days:",'ua':f"{bcolors.YELLOW}Немає контактів у яких день народження протягом наступних {bcolors.RED}{days_ahead}{bcolors.YELLOW}  днів від сьогоднішньої дати."}
             print(error_text[self.language])
 
     # Prepares self.data[id] to be saved.
@@ -365,10 +357,10 @@ class ContactBook():
     def print_contact_attributes(self):
         local = {'part_0':{'en':"Choose, what you are going to edit",'ua':"Оберіть, що ви хочете редагувати"},
                 'part_1':{'en':"Contact name", 'ua':"Ім'я контакту"},
-                'part_2':{'en':"birthday",'ua':"день народження"},
-                'part_3':{'en':"email",'ua':"електронну пошту"},
-                'part_4':{'en':"address",'ua':"адресу"},
-                'part_5':{'en':"phone numbers",'ua':"номера телефонів"}}
+                'part_2':{'en':"Birthday",'ua':"День народження"},
+                'part_3':{'en':"Email",'ua':"Електронну пошту"},
+                'part_4':{'en':"Address",'ua':"Адресу"},
+                'part_5':{'en':"Phone numbers",'ua':"Номера телефонів"}}
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}: {self.data[self.ongoing].name}\n"
         string += f"{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}: {self.data[self.ongoing].birthday}\n"
