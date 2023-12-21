@@ -1,4 +1,17 @@
 from re import search
+
+class bcolors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD_RED = '\033[1m\033[91m'
+    DEFAULT = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 # Зберігає в собі методи перевірки значень класу RecordManager. Окремо не використовується.
 class MiscChecks:
     def month_check(self,month:str):
@@ -199,7 +212,7 @@ class RecordManager(MiscChecks):
             try:
                 phone = self.p_check(phone)
                 self.phones[len(self.phones)] = phone
-                error_text = {'en':"Phone added. if you want to add another one, enter it in the console. When you are done, just enter 'stop' in the console.",'ua':f"Телефон додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть 'stop' у консоль"}
+                error_text = {'en':f"{bcolors.YELLOW}Phone added. if you want to add another one, enter it in the console. When you are done, just enter 'stop' in the console.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Телефон додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть 'stop' у консоль.{bcolors.GREEN}"}
                 raise ValueError(error_text[self.language])
             except ValueError as error_text:
                 raise ValueError(error_text)
