@@ -562,8 +562,8 @@ class ContactBook():
         checker = False
         string = ""
         local = {'Failure':{'en':f"Specified text not found",'ua':f"Вказаний текст не знайдено"},'Intro':{'en':f"Specified text found in the next contacts",'ua':f"Вказаний текст знайдено у наступних контактах"},'Name':{'en':f"name",'ua':f"Ім'я"},'Birthday':{'en':f"birthday",'ua':f"день народження"},'Email':{'en':f"email",'ua':f"електронна пошта"},'Address':{'en':f"address",'ua':f"електронна пошта"},'Phones':{'en':f"phones",'ua':f"номери телефону"}}
-        success = f"{local['Intro'][self.language]}:\n"
-        failure = f"{local['Failure'][self.language]}!"
+        success = f"{bcolors.YELLOW}{local['Intro'][self.language]}:{bcolors.GREEN}\n"
+        failure = f"{bcolors.YELLOW}{local['Failure'][self.language]}!{bcolors.GREEN}"
         highlighted_name = ''
         highlighted_birthday = ''
         highlighted_email = ''
