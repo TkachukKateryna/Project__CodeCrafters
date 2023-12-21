@@ -329,22 +329,6 @@ class ContactBook(): #UserDict
 
             return True
 
-    def search_contact(self, name):
-        count = 0
-        result = []
-        for id, record in self.data.items():
-            count +=1
-            if name.lower() == record.name.lower():
-                local = {'part_1':{'en':"Contact name",'ua':"Ім'я контакту"},
-                    'part_2':{'en':"phone numbers",'ua':"номера телефонів"},
-                    'part_3':{'en':"birthday",'ua':"день народження"},
-                    'part_4':{'en':"email",'ua':"електронна пошта"},
-                    'part_5':{'en':"address",'ua':"адреса"}}
-                result.append(f"{id}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {record.phones}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address}") 
-        print('\n'.join(map(str, result)))
-        if count == len(self.data) and result == []:
-            print(record.search_contact(name)[self.language])
-
     def print_contacts(self):
         if len(self.data) > 0:
             local = {'part_0':{'en':"Saved contacts list:", 'ua':"Наразі збережені такі контакти"},
@@ -375,7 +359,7 @@ class ContactBook(): #UserDict
             print(string)
         else:
             error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
-            return error_text[self.language]
+            print(error_text[self.language])
 
     def print_contact_attributes(self):
         local = {'part_0':{'en':"Choose, what you are going to edit",'ua':"Оберіть, що ви хочете редагувати"},
