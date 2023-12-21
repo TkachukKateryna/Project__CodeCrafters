@@ -49,6 +49,22 @@ class MiscChecks:
             error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY, or MMDDYYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
         
+    def days_to_birthday(self,mode=None):
+        if self.birthday != "None":
+            from datetime import date,datetime
+            TODAY = date.today()
+            tmp = self.birthday
+            BD_DAY = datetime(int(tmp[6:]), int(tmp[0:2]), int(tmp[3:5])).date()
+            if (BD_DAY.month < TODAY.month) or ((BD_DAY.month == TODAY.month) and (BD_DAY.day < TODAY.day)):
+                BD_DAY = BD_DAY.replace(year = TODAY.year + 1)
+            else:
+                BD_DAY = BD_DAY.replace(year = TODAY.year)
+            if mode == 'no_math':
+                return (BD_DAY)
+            else:
+                return (BD_DAY - TODAY)
+        return None
+
     def email_check(self,email):
         # Format: text@text.text
         if (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
