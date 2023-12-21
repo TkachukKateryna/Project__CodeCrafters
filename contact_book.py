@@ -430,7 +430,7 @@ class ContactBook():
         print(done_text[self.language])
 
     def print_contact_phones(self):
-        if len(self.data) > 0:
+        if len(self.data[self.ongoing].phones) > 0:
             local = {'en':"Choose the phone number you need", 'ua':"Оберіть потрібний номер телефону"}
             contact = self.data[self.ongoing]
             string = f"{bcolors.GREEN}{local[self.language]}:\n"
