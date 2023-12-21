@@ -343,7 +343,7 @@ class ContactBook():
             print(string)
         else:
             error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
-            return error_text[self.language]
+            print(error_text[self.language])
 
     def show_contacts(self):
         if len(self.data) > 0:
@@ -391,7 +391,7 @@ class ContactBook():
                 return error_text[self.language]
         else:
             error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
-            return error_text[self.language]
+            print(error_text[self.language])
 
     def choose_contact_attribute(self, field_id):
         try:
