@@ -421,7 +421,7 @@ class ContactBook(): #UserDict
     def edit_contact(self, new_text):
         self.data[self.ongoing].language = self.language
         local = [{'en':"Name", 'ua':"Iм'я"}, {'en':"Birthday", 'ua':"День народження"}, {'en':"Email", 'ua':"Електронну пошту"}, {'en':"Address", 'ua':"Адресу"}, {'en':"Phone", 'ua':"Телефон"}]
-        done_text = {'en':f"{bcolors.GREEN}{local[self.field_id][self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.field_id][self.language]} відредагований.{bcolors.GREEN}"}
+        done_text = {'en':f"{bcolors.GREEN}{local[self.field_id][self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.field_id][self.language]} відредаговано.{bcolors.GREEN}"}
         if self.field_id == 0:
             try:
                 self.data[self.ongoing].add_name(new_text)
