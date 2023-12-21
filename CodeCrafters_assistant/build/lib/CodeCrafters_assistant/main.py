@@ -220,7 +220,7 @@ class InputManager(HelpMe):
             if self.abort:
                 self.abort = None
             if self.menu_delay:
-                local = {'en':f"Enter {bcolors.RED}Y/yes{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Т/Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
+                local = {'en':f"Enter {bcolors.RED}Y/Yes{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Т/Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
                 delay_commands = {'y', 'yes','так', 'т'}
                 while True:
                     command = input(f"{bcolors.CYAN}{local[self.language]}:   {bcolors.RED}")
@@ -319,6 +319,10 @@ class InputManager(HelpMe):
     def say_goodbye(self):
         local = {'en':"Goodbye!",'ua':"До побачення!"}
         print(f'{bcolors.YELLOW}{local[self.language]}{bcolors.DEFAULT}')
+
+# def starter():
+#     manager = InputManager()
+#     manager.main()
 
 if __name__ == "__main__":
     manager = InputManager()
