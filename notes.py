@@ -406,7 +406,7 @@ class NoteFile:
         print(done_text[self.language])
 
     def print_note_tags(self):
-        if len(self.data) > 0:
+        if len(self.data[self.ongoing].tags) > 0:
             local = {'part_0':{
                         'en':"Choose the tag you need",
                         'ua':"Оберіть потрібний тег"}}
