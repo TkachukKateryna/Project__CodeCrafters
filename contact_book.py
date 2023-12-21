@@ -1,6 +1,5 @@
 from record_manager import MiscChecks, RecordManager
 from datetime import datetime
-#from collections import UserDict
 
 class bcolors:
     HEADER = '\033[95m'
@@ -13,7 +12,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-class ContactBook(): #UserDict
+class ContactBook():
     def __init__(self):
         self.data = {}
         self.priority_ids = []
@@ -218,7 +217,7 @@ class ContactBook(): #UserDict
             raise ValueError('Record Id not found!')
     
     # Dynamicly adds new records, deletes records, creates file.bin, etc.
-    # If mode == add, adding record to file (with correct persistent id). If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
+    # If mode == add, adding record to file. If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
     # With "ed", overwrites saved data with the new parsed self.data
     def update_file(self,mode:str,r_id=None):
         import pickle
@@ -269,7 +268,6 @@ class ContactBook(): #UserDict
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
                         #print('Reached the end of file!')
-            #print(self.data)
 
     def contact_create(self):
         new_record = RecordManager()
@@ -341,7 +339,7 @@ class ContactBook(): #UserDict
                     'part_5':{'en':"address",'ua':"адреса"},
                     'part_6':{'en':"To choose the contact, enter it's respective number in a console", 'ua':"Щоб обрати контакт, введіть у консоль його номер у списку"},}
             string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {'; '.join(f'{phone}' for phone in record.phones.values())}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address};" for key, record in self.data.items())# + f"\n{bcolors.RED}{local['part_6'][self.language]}{bcolors.GREEN}\n"
+            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {record.name}; {local['part_2'][self.language]}: {'; '.join(f'{phone}' for phone in record.phones.values())}; {local['part_3'][self.language]}: {record.birthday}; {local['part_4'][self.language]}: {record.email}; {local['part_5'][self.language]}: {record.address};" for key, record in self.data.items())
             print(string)
         else:
             error_text = {'en':f"{bcolors.YELLOW}Contact list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список контактів порожній!{bcolors.GREEN}"}
