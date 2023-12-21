@@ -295,10 +295,10 @@ class InputManager(HelpMe):
                                         if not self.language:
                                             self.language = 'en'
                                         command = input(v[self.language] + f':   {bcolors.RED}')
-                                        if command == 'leave':
+                                        if command.lower() == 'leave':
                                             self.say_goodbye()
                                             return
-                                        if command == 'cancel':
+                                        if command.lower() == 'cancel':
                                             self.silent_restart = True
                                             self.abort = True
                                             break
