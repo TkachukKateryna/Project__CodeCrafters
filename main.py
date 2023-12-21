@@ -237,7 +237,7 @@ class InputManager(HelpMe):
             # чекаючи на інпут.
             category = ''
             command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']        
-            if self.module_chosen and not command in command_exceptions:
+            if self.module_chosen and not command in command_exceptions and (command in self.actions['default'].keys() or command in self.actions[self.module_chosen].keys()):
                 self.menu_delay = True
             if self.module_chosen:
                 if (command in self.actions[self.module_chosen].keys()):
