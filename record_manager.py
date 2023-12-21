@@ -1,3 +1,4 @@
+from re import search
 # Зберігає в собі методи перевірки значень класу RecordManager. Окремо не використовується.
 class MiscChecks:
     def month_check(self,month:str):
@@ -12,8 +13,19 @@ class MiscChecks:
             error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР."}
             raise ValueError(error_text[self.language])
 
+    def day_check(self,day:str):
+        if len(day) > 2:
+            error_text = {'en':"Wrong day format. Should be exactly two characters.",'ua':"Некоректний формат дня: має складатись рівно з двох символів."}
+            raise ValueError(error_text[self.language])
+        if day[:1] == "0":
+            day = day[:1]
+        if int(day) <= 31:
+            return True
+        else:
+            error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР."}
+            raise ValueError(error_text[self.language])
+
     def p_check(self,phone:str):
-        from re import search
         map = {' ':''}
         phone.translate(map)
         if len(phone) == 10 and search(r'\d{10}', phone) != None:
@@ -23,15 +35,14 @@ class MiscChecks:
             raise ValueError(error_text[self.language])
 
     def birthday_check(self,birthday):
-        from re import search
         # Format: MM-DD-YYYY
         if (search(r'\d{2}\D\d{2}\D\d{4}', birthday) != None and len(birthday) == 10):
             tmp = birthday[0:2]
-            if self.month_check(tmp):
+            if self.month_check(tmp) and self.day_check(tmp):
                 return birthday
         elif search(r'\d{8}', birthday) != None and len(birthday) == 8:
             tmp = birthday[0:2]
-            if self.month_check(tmp):
+            if self.month_check(tmp) and self.day_check(tmp):
                 tmp = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return tmp
         else:
@@ -39,7 +50,6 @@ class MiscChecks:
             raise ValueError(error_text[self.language])
         
     def email_check(self,email):
-        from re import search
         # Format: text@text.text
         if (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
             return email
@@ -53,6 +63,37 @@ class MiscChecks:
                 return True
            
         return False 
+
+    def find_in_name(self, text):
+        if self.name.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.name.lower()).span()
+        else:
+            return False
+
+    def find_in_birthday(self, text):
+        if self.birthday.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.birthday.lower()).span()
+        else:
+            return False
+
+    def find_in_email(self, text):
+        if self.email.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.email.lower()).span()
+        else:
+            return False
+
+    def find_in_address(self, text):
+        if self.address.lower().find(text.lower()) != -1:
+            return search(text.lower(),self.address.lower()).span()
+        else:
+            return False
+
+    def find_in_phones(self, text):
+        phones = "; ".join(f"{phone}" for phone in self.phones.values())
+        if phones.lower().find(text.lower()) != -1:
+            return search(text.lower(),phones.lower()).span()
+        else:
+            return False
 
 # Екземпляр класу. Відповідає за зберігання усіх змінних запису. Створюється у ContactBook. Необов'язкові поля можуть бути пропущені символами "n"/"N".
 # У самому класі зберігається лише функціонал запису/зміни/видалення. Все інше наслідується від MiscChecks.
