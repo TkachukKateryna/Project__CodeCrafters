@@ -165,7 +165,7 @@ class ContactBook():
                                         'attr_id':{
                                             'en':f"{self.opnng_en}the phone number you are going to delete",
                                             'ua':f"{self.opnng}номер телефону, який ви збираєтеся видалити"}},
-                                    self.remove_contact_finish:{}}},
+                                    self.remove_contact_phone_finish:{}}},
                             'show_all':{
                                 'description':{
                                     'en':"Displays the contents of the contact book.",
@@ -430,12 +430,10 @@ class ContactBook():
         print(done_text[self.language])
 
     def print_contact_phones(self):
-        local = {'part_0':{
-                    'en':"Choose the phone number you need",
-                    'ua':"Оберіть потрібний номер телефону"}}
+        local = {'en':"Choose the phone number you need", 'ua':"Оберіть потрібний номер телефону"}
         contact = self.data[self.ongoing]
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n".join(f'{bcolors.RED}{phone_id}{bcolors.GREEN}. {phone_number};\n' for phone_id, phone_number in contact.phones.items())
-            
+        string = f"{bcolors.GREEN}{local[self.language]}:\n"
+        string += "".join(f'{bcolors.RED}{phone_id}{bcolors.GREEN}. {phone_number};\n' for phone_id, phone_number in contact.phones.items())
         print(string)
 
     def input_to_id(self, text):
@@ -455,7 +453,7 @@ class ContactBook():
         contact = self.data[self.ongoing]
         try:
             field_id = self.input_to_id(field_id)
-            if type(field_id) == int and field_id <= len(contact.phones):
+            if type(field_id) == int and field_id < len(contact.phones):
                 self.field_id = field_id
             elif type(field_id) == str:
                 return field_id
@@ -497,6 +495,12 @@ class ContactBook():
         done_text = {'en':f"{bcolors.YELLOW}Contact removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Контакт видалений.{bcolors.GREEN}"}
         print(done_text[self.language])
         self.update_file(mode="del", r_id=self.ongoing)
+        self.ongoing = None
+
+    def remove_contact_phone_finish(self):
+        done_text = {'en':f"{bcolors.YELLOW}Phone removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Телефон видалений.{bcolors.GREEN}"}
+        print(done_text[self.language])
+        self.update_file(mode="ed", r_id=self.ongoing)
         self.ongoing = None
 
     def add_phone_finish(self):
