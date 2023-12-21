@@ -40,8 +40,6 @@ class NoteChecks:
             raise ValueError(error_text[self.language])
         elif mode == 'ed':
             self.tags[tag] = new_tag
-            #error_text = {'en':f"{bcolors.GREEN}Tag changed.",'ua':f"{bcolors.GREEN}Тег відредаговано."}
-            #print(error_text[self.language])
         elif mode == 'del':
             error_text = {}
             try:
@@ -80,9 +78,9 @@ class NoteChecks:
 
 class Note(NoteChecks):
     def __init__(self):
-        self.title = "Unnamed note" # Заголовок нотатки
-        self.text = "" # Текст нашої нотатки
-        self.tags = [] # Теги нашої нотатки (необов'язково)
+        self.title = "Unnamed note"
+        self.text = ""
+        self.tags = []
         self.language = None
 
 
@@ -410,7 +408,6 @@ class NoteFile:
         string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
         for i in range(len(note.tags)):
             string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
-            #string += '\n'.join(f"{bcolors.RED}{note.tags.index(key)}{bcolors.GREEN}. {key}" for key in note.tags)
         print(string)
 
     def input_to_id(self, text):
@@ -590,7 +587,7 @@ class NoteFile:
             raise ValueError('Record Id not found!')
     
     # Dynamicly adds new records, deletes records, creates file.bin, etc.
-    # If mode == add, adding record to file (with correct persistent id). If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
+    # If mode == add, adding record to file. If mode == 'del', removes the record by id, overwrites saved data with the new parsed self.data. 
     # With "ed", overwrites saved data with the new parsed self.data
     def update_file(self,mode:str,r_id=None):
         import pickle
@@ -641,4 +638,3 @@ class NoteFile:
                         self.generated_ids = id_generator
                         self.record_cnt = id_generator
                         #print('Reached the end of file!')
-            #print(self.data)
