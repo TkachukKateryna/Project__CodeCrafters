@@ -15,56 +15,49 @@ class bcolors:
 
 # Зберігає в собі методи перевірки значень класу RecordManager. Окремо не використовується.
 class MiscChecks:
-    def month_check(self,year:str,month:str,day:str):
+    def month_check(self,month:str):
         if len(month) > 2:
             error_text = {'en':"Wrong month format. Should be exactly two characters.",'ua':"Некоректний формат місяця: має складатись рівно з двох символів."}
             raise ValueError(error_text[self.language])
+        check_month = month
         if month[:1] == "0":
             check_month = month[:1]
         if int(check_month) <= 12:
-            error_text = {'en':"Wrong month format: there can't be this many of them in the chosen year.",'ua':"Некоректний формат місяця: у обраному році їх стільки бути не може."}
-            try:
-                if datetime(int(year),int(month),int(day)).date():
-                    return True
-                raise ValueError(error_text[self.language])
-            except ValueError:
-                raise ValueError(error_text[self.language])
+            return True
         else:
             error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
-    def day_check(self,year:str,month:str,day:str):
+    def day_check(self,day:str):
         if len(day) > 2:
             error_text = {'en':"Wrong day format. Should be exactly two characters.",'ua':"Некоректний формат дня: має складатись рівно з двох символів."}
             raise ValueError(error_text[self.language])
+        check_day = day
         if day[:1] == "0":
             check_day = day[:1]
         if int(check_day) <= 31:
-            error_text = {'en':"Wrong day format: there can't be this many of them in the chosen month.",'ua':"Некоректний формат дня: у обраному місяці їх стільки бути не може."}
-            try:
-                if datetime(int(year),int(month),int(day)).date():
-                    return True
-                raise ValueError(error_text[self.language])
-            except ValueError:
-                raise ValueError(error_text[self.language])
+            return True
         else:
             error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
-    def year_check(self,year:str,month:str,day:str):
+    def year_check(self,year:str):
         if len(year) > 4:
             error_text = {'en':"Wrong year format. Should be exactly four characters.",'ua':"Некоректний формат року: має складатись рівно з чотирьох символів."}
             raise ValueError(error_text[self.language])
         if int(year) <= date.today().year:
-            error_text = {'en':"Wrong year format: there can't be this many of them (for whatever reason).",'ua':"Некоректний формат року: їх (з якоїсь причини) стільки бути не може."}
-            try:
-                if datetime(int(year),int(month),int(day)).date():
-                    return True
-                raise ValueError(error_text[self.language])
-            except ValueError:
-                raise ValueError(error_text[self.language])
+            return True
         else:
             error_text = {'en':"Wrong year format: birthday cannot be in the future. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат року: день народження не може бути у майбутньому. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
+            raise ValueError(error_text[self.language])
+
+    def calendar_check(self,year:str,month:str,day:str):
+        error_text = {'en':"Wrong date format: there can't be this many days in the chosen year and month.",'ua':"Некоректний формат дати: у обраних місяці та році стільки днів бути не може."}
+        try:
+            if datetime(int(year),int(month),int(day)).date():
+                return True
+            raise ValueError(error_text[self.language])
+        except ValueError:
             raise ValueError(error_text[self.language])
 
     def p_check(self,phone:str):
@@ -82,13 +75,13 @@ class MiscChecks:
             month = birthday[0:2]
             day = birthday[3:5]
             year = birthday[6:10]
-            if self.month_check(year,month,day) and self.day_check(year,month,day) and self.year_check(year,month,day):
+            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(self,year,month,day):
                 return birthday
         elif search(r'\d{8}', birthday) != None and len(birthday) == 8:
             month = birthday[0:2]
             day = birthday[2:4]
             year = birthday[4:8]
-            if self.month_check(year,month,day) and self.day_check(year,month,day) and self.year_check(year,month,day):
+            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(self,year,month,day):
                 birthday = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return birthday
         else:
