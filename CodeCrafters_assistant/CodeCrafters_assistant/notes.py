@@ -36,7 +36,7 @@ class NoteChecks:
             if tag.lower() == "stop":
                 return True
             self.tags.append(tag)
-            error_text = {'en':f"{bcolors.GREEN}Tag added. if you want to add another one, enter it in the console. When you are done, just enter '{bcolors.RED}stop{bcolors.GREEN}' in the console.",'ua':f"{bcolors.GREEN}Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '{bcolors.RED}stop{bcolors.GREEN}' у консоль"}
+            error_text = {'en':f"{bcolors.YELLOW}Tag added. if you want to add another one, enter it in the console. When you are done, just enter '{bcolors.RED}stop{bcolors.YELLOW}' in the console.",'ua':f"{bcolors.YELLOW}Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '{bcolors.RED}stop{bcolors.YELLOW}' у консоль"}
             raise ValueError(error_text[self.language])
         elif mode == 'ed':
             self.tags[tag] = new_tag
@@ -113,7 +113,7 @@ class Note(NoteChecks):
         self.tags = tags
 
     def __str__(self):
-        string = {'en':f"Note found with title {self.title}; tags {self.tags}; text {self.text}",'ua':f"Нотатку знайдено з заголовком {self.title}; тегами {self.tags}; текстом {self.text}"}
+        string = {'en':f"Note found with {bcolors.RED}title{bcolors.GREEN} {self.title}; {bcolors.RED}tags{bcolors.GREEN} {self.tags}; {bcolors.RED}text{bcolors.GREEN} {self.text}",'ua':f"Нотатку знайдено з {bcolors.RED}заголовком{bcolors.GREEN} {self.title}; {bcolors.RED}тегами{bcolors.GREEN} {self.tags}; {bcolors.RED}текстом{bcolors.GREEN} {self.text}"}
         return string[self.language]
 
 
@@ -254,9 +254,39 @@ class NoteFile:
                                         'attr_id':{
                                             'en':f"{self.opnng_en}the tag you are going to delete",
                                             'ua':f"{self.opnng}тег, який ви збираєтеся видалити"}},
-                                    self.remove_tag_finish:{}}}}
+                                    self.remove_tag_finish:{}}},
+                            'show_all':{
+                                'description':{
+                                    'en':"Displays the contents of the note book.",
+                                    'ua':"Виводить всі нотатки, які є в пам'яті."}, 
+                                'methods':{
+                                    self.show_contacts:{}}}}
 
 
+    def show_contacts(self):
+        if len(self.data) > 0:
+            local = {'part_0':{
+                        'en':"Saved notes list",
+                        'ua':"Наразі збережені такі нотатки"},
+                    'part_1':{
+                        'en':"Title",
+                        'ua':"Заголовок"},
+                    'part_2':{
+                        'en':"Text",
+                        'ua':"Текст"},
+                    'part_3':{
+                        'en':"Tags",
+                        'ua':"Теги"},
+                    'part_4':{
+                        'en':"To choose the note, enter it's respective number in a console",
+                        'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
+            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {bcolors.RED}{local['part_1'][self.language]}{bcolors.GREEN}: {value.title}; {bcolors.RED}{local['part_2'][self.language]}{bcolors.GREEN}: {value.text}; {bcolors.RED}{local['part_3'][self.language]}{bcolors.GREEN}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
+            print(string)
+        else:
+            error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
+            print(error_text[self.language])
+    
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
             return True

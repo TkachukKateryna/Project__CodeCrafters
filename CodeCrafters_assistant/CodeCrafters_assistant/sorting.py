@@ -145,17 +145,8 @@ class FileSorter:
         FOLDERS.append(path)
         return ALL_LISTS, FOLDERS
 
-
-
-
-
-
     def normalize(self, name: str, suff="") -> str:
         from re import sub
         translate_name = sub(r'\W', '_', name.translate(self.translate))
         translate_name += suff
         return translate_name
-
-
-
-
