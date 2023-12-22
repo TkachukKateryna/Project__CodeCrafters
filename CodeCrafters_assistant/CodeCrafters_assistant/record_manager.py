@@ -75,13 +75,13 @@ class MiscChecks:
             month = birthday[0:2]
             day = birthday[3:5]
             year = birthday[6:10]
-            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(self,year,month,day):
+            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(year,month,day):
                 return birthday
         elif search(r'\d{8}', birthday) != None and len(birthday) == 8:
             month = birthday[0:2]
             day = birthday[2:4]
             year = birthday[4:8]
-            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(self,year,month,day):
+            if self.month_check(month) and self.day_check(day) and self.year_check(year) and self.calendar_check(year,month,day):
                 birthday = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return birthday
         else:
