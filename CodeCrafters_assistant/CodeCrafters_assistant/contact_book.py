@@ -262,8 +262,7 @@ class ContactBook():
                         #print('Reached the end of file!')
 
     def contact_create(self):
-        new_record = RecordManager()
-        new_record.language = self.language
+        new_record = RecordManager(self.language)
         self.id_assign(mode="add",record=new_record)
 
     def add_name(self,name):
