@@ -77,11 +77,15 @@ class NoteChecks:
             return False
 
 class Note(NoteChecks):
-    def __init__(self):
-        self.title = "Unnamed note"
+    def __init__(self, lang=None):
+        self.language = lang
+        if lang:
+            local = {'en':"Unnamed note", 'ua':"Безіменна нотатка"}
+            self.title = local[self.language]
+        else:
+            self.title = "Unnamed note"
         self.text = ""
         self.tags = []
-        self.language = None
 
 
     def add_title(self,title):
@@ -293,7 +297,7 @@ class NoteFile:
         return False
 
     def note_create(self):
-        new_note = Note()
+        new_note = Note(self.language)
         new_note.language = self.language
         self.id_assign(mode="add",record=new_note)
 
