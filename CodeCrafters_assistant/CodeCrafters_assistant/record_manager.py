@@ -1,4 +1,5 @@
 from re import search
+from datetime import date,datetime
 
 class bcolors:
     HEADER = '\033[95m'
@@ -14,37 +15,54 @@ class bcolors:
 
 # Зберігає в собі методи перевірки значень класу RecordManager. Окремо не використовується.
 class MiscChecks:
-    def month_check(self,month:str):
+    def month_check(self,year:str,month:str,day:str):
         if len(month) > 2:
             error_text = {'en':"Wrong month format. Should be exactly two characters.",'ua':"Некоректний формат місяця: має складатись рівно з двох символів."}
             raise ValueError(error_text[self.language])
         if month[:1] == "0":
-            month = month[:1]
-        if int(month) <= 12:
-            return True
+            check_month = month[:1]
+        if int(check_month) <= 12:
+            error_text = {'en':"Wrong month format: there can't be this many of them in the chosen year.",'ua':"Некоректний формат місяця: у обраному році їх стільки бути не може."}
+            try:
+                if datetime(int(year),int(month),int(day)).date():
+                    return True
+                raise ValueError(error_text[self.language])
+            except ValueError:
+                raise ValueError(error_text[self.language])
         else:
             error_text = {'en':"Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
-    def day_check(self,day:str):
+    def day_check(self,year:str,month:str,day:str):
         if len(day) > 2:
             error_text = {'en':"Wrong day format. Should be exactly two characters.",'ua':"Некоректний формат дня: має складатись рівно з двох символів."}
             raise ValueError(error_text[self.language])
         if day[:1] == "0":
-            day = day[:1]
-        if int(day) <= 31:
-            return True
+            check_day = day[:1]
+        if int(check_day) <= 31:
+            error_text = {'en':"Wrong day format: there can't be this many of them in the chosen month.",'ua':"Некоректний формат дня: у обраному місяці їх стільки бути не може."}
+            try:
+                if datetime(int(year),int(month),int(day)).date():
+                    return True
+                raise ValueError(error_text[self.language])
+            except ValueError:
+                raise ValueError(error_text[self.language])
         else:
             error_text = {'en':"Wrong day format: there can't be more than 31 of them. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат дня: їх не може бути більше тридцяти одного. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
 
-    def year_check(self,year:str):
-        from datetime import date
+    def year_check(self,year:str,month:str,day:str):
         if len(year) > 4:
             error_text = {'en':"Wrong year format. Should be exactly four characters.",'ua':"Некоректний формат року: має складатись рівно з чотирьох символів."}
             raise ValueError(error_text[self.language])
         if int(year) <= date.today().year:
-            return True
+            error_text = {'en':"Wrong year format: there can't be this many of them (for whatever reason).",'ua':"Некоректний формат року: їх (з якоїсь причини) стільки бути не може."}
+            try:
+                if datetime(int(year),int(month),int(day)).date():
+                    return True
+                raise ValueError(error_text[self.language])
+            except ValueError:
+                raise ValueError(error_text[self.language])
         else:
             error_text = {'en':"Wrong year format: birthday cannot be in the future. Correct format: MM-DD-YYYY, or MMDDYYYY.",'ua':"Некоректний формат року: день народження не може бути у майбутньому. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
@@ -64,22 +82,21 @@ class MiscChecks:
             month = birthday[0:2]
             day = birthday[3:5]
             year = birthday[6:10]
-            if self.month_check(month) and self.day_check(day) and self.year_check(year):
+            if self.month_check(year,month,day) and self.day_check(year,month,day) and self.year_check(year,month,day):
                 return birthday
         elif search(r'\d{8}', birthday) != None and len(birthday) == 8:
             month = birthday[0:2]
             day = birthday[2:4]
             year = birthday[4:8]
-            if self.month_check(month) and self.day_check(day) and self.year_check(year):
-                month = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
-                return month
+            if self.month_check(year,month,day) and self.day_check(year,month,day) and self.year_check(year,month,day):
+                birthday = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
+                return birthday
         else:
             error_text = {'en':"Wrong birthday format. The correct format would be: MM-DD-YYYY, or MMDDYYYY",'ua':"Некоректний формат дня народження. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."}
             raise ValueError(error_text[self.language])
         
     def days_to_birthday(self,mode=None):
         if self.birthday != "None":
-            from datetime import date,datetime
             TODAY = date.today()
             tmp = self.birthday
             BD_DAY = datetime(int(tmp[6:]), int(tmp[0:2]), int(tmp[3:5])).date()
@@ -148,10 +165,14 @@ class MiscChecks:
 # Екземпляр класу. Відповідає за зберігання усіх змінних запису. Створюється у ContactBook. Необов'язкові поля можуть бути пропущені символами "n"/"N".
 # У самому класі зберігається лише функціонал запису/зміни/видалення. Все інше наслідується від MiscChecks.
 class RecordManager(MiscChecks):
-    def __init__(self):
-        self.language = None
+    def __init__(self, lang=None):
+        self.language = lang
         self.phones = {}
-        self.name = "Unnamed contact"
+        if lang:
+            local = {'en':"Unnamed contact", 'ua':"Безіменний контакт"}
+            self.name = local[self.language]
+        else:
+            self.name = "Unnamed contact"
         self.birthday = "None"
         self.email = "None"
         self.address = "None"
