@@ -14,7 +14,11 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 class FileSorter:
-    def __init__(self):
+    def __init__(self, parent_class):
+        self.parent = parent_class
+        self.parent.modules.append(self)
+        self.parent.module_chosen = str(len(self.parent.modules) - 1)
+        self.reinit(mode='first')
         self.categories = { 'images':['JPEG', 'JPG', 'PNG', 'SVG'],
                            'video':['AVI', 'MP4', 'MOV', 'MKV'], 
                            'documents':['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'],
@@ -23,8 +27,6 @@ class FileSorter:
         
         Path('./empty_folder').mkdir(exist_ok=True, parents=True)
         Path('./output_folder').mkdir(exist_ok=True, parents=True)
-        self.known_formats = {}
-        self.language = None
         CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
         TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                 "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "u", "ja", "je", "ji", "g")
@@ -33,49 +35,46 @@ class FileSorter:
             self.translate[ord(cyrillic)] = latin
             self.translate[ord(cyrillic.upper())] = latin.upper()
         
+        self.known_formats = {}
         for category,list in self.categories.items():
             for format in list:
                 self.known_formats[format] = category
-        path = (fr" Наприклад: {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
-        path_en = (fr"E.g. {bcolors.RED} 'C:\Users\user_name\Documents\my_folder'")
+
+
+    def reinit(self, mode=None):
+        tmp = None
+        if self.parent.module_chosen != None:
+            tmp = self.parent.module_chosen
+        if mode != 'first':
+            self.parent.module_chosen = str(self.parent.modules.index(self))
+        path = fr"{self.parent.translate_string('path_p0','red')}  {self.parent.translate_string('path_p1','green')}"
         self.method_table = {'__localization_insert':{
-                                'name':{
-                                    'en':"file sorter", 
-                                    'ua':"сортувальника файлів"},
-                                'description':{
-                                    'en':"files sorter", 
-                                    'ua':"сортувальник файлів"}}, 
+                                'name':'file_sorter_name',
+                                'description':'file_sorter_desc'}, 
                             'sort_files':{
-                                'description':{
-                                    'en':'Sorts all files according to the specified path (including folders and files inside of them), and moves them to the specified directory.', 
-                                    'ua':"Сортує усі файли за вказаним шляхом (включаючи усі папки та файли у них) та переміщує їх за введеною адресою."}, 
+                                'description':"sort_files_desc", 
                                 'methods':{
                                     self.starter:{
-                                        'input':{
-                                            'en':f'{bcolors.GREEN}Please, enter the path to the folder we will be sorting. {path_en}',
-                                            'ua':f'{bcolors.GREEN}Введіть, будь ласка, шлях до папки, яку будемо сортувати. {path}'},
-                                        'output':{
-                                            'en':f'{bcolors.GREEN}Please, enter the path to the folder, where sorted files will be stored {path_en}',
-                                            'ua':f'{bcolors.GREEN}Введіть, будь ласка, шлях до папки, в яку будемо складати відсортовані файли {path}'}}}}}
-
+                                        'input':f"{self.parent.translate_string('enter_input_folder','green')} {path}"},
+                                        'output':f"{self.parent.translate_string('enter_output_folder','green')} {path}"}}}
+    
+        if mode != 'first':
+            self.parent.module_chosen = tmp
+  
     def starter(self, arg1: str, arg2: str):
         # Створюємо об'єкт Path для директорії джерела
         source_path = Path(arg1)
         # Перевіряємо, чи існує директорія та чи це директорія
         if not source_path.exists() or not source_path.is_dir():
             # Повертаємо повідомлення про помилку, якщо директорія недійсна
-            error_text = {'en': f"{bcolors.RED}{arg1} is not a valid folder path! Try again!{bcolors.GREEN}",
-                        'ua': f"{bcolors.RED}{arg1} не є коректним шляхом до папки! Спробуйте ще!{bcolors.GREEN}"}
-            return error_text[self.language]
+            return f"{bcolors.RED}{arg1}{self.parent.translate_string('invalid_path','green')}"
 
         # Створюємо об'єкт Path для директорії призначення
         destination_path = Path(arg2)
         # Перевіряємо, чи існує директорія та чи це директорія
         if not destination_path.exists() or not destination_path.is_dir():
             # Повертаємо повідомлення про помилку, якщо директорія недійсна
-            error_text = {'en': f"{bcolors.RED}{arg2} is not a valid folder path! Try again!{bcolors.GREEN}",
-                        'ua': f"{bcolors.RED}{arg2} не є коректним шляхом до папки! Спробуйте ще!{bcolors.GREEN}"}
-            return error_text[self.language]
+            return f"{bcolors.RED}{arg2}{self.parent.translate_string('invalid_path','green')}"
 
         # Якщо директорії коректні, викликаємо метод real_sorter з правильними директоріями
         self.real_sorter(source_path, destination_path)

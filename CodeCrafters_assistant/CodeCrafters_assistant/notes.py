@@ -17,38 +17,32 @@ class NoteChecks:
         if title != '':
             return title
         else:
-            error_text = {'en':"Wrong title format: the title cannot be empty.",'ua':"Некоректний формат заголовку: заголовок не може бути порожнім."}
-            raise ValueError(error_text[self.language])
+            raise ValueError(self.parent.translate_string('wrong_title_format','yellow','green'))
 
     def text_check(self,text): #Закоментував, бо немає необхідності використовувати. Треба - розкоментовуєш та коментуєш останній return.
         # if text != '':
         #     return text
         # else:
-        #     error_text = {'en':"Wrong note format: the note cannot be empty.",'ua':"Некоректний формат нотатки: нотатка не може бути порожньою."}
-        #     raise ValueError(error_text[self.language])
+        #     raise ValueError(self.parent.translate_string('wrong_text_format','yellow','green'))
         return text
 
     def tag_check_and_set(self,mode,tag,new_tag=None):
         if tag == '':
-            error_text = {'en':"Wrong tag format: the tag cannot be empty.",'ua':"Некоректний формат тегу: тег не може бути порожнім."}
-            raise ValueError(error_text[self.language])
+            raise ValueError(self.parent.translate_string('wrong_tag_format','yellow','green'))
         elif mode == 'add':
             if tag.lower() == "stop":
                 return True
             self.tags.append(tag)
-            error_text = {'en':f"{bcolors.YELLOW}Tag added. if you want to add another one, enter it in the console. When you are done, just enter '{bcolors.RED}stop{bcolors.YELLOW}' in the console.",'ua':f"{bcolors.YELLOW}Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '{bcolors.RED}stop{bcolors.YELLOW}' у консоль"}
-            raise ValueError(error_text[self.language])
+            raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p0','yellow','green')}")
         elif mode == 'ed':
             self.tags[tag] = new_tag
         elif mode == 'del':
             error_text = {}
             try:
                 del self.tags[tag]
-                error_text = {'en':f"{bcolors.YELLOW}Tag removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Тег видалено.{bcolors.GREEN}"}
-                print(error_text[self.language])
+                print(self.parent.translate_string('tag_removed','yellow','green'))
             except:
-                error_text = {'en':f"{bcolors.GREEN}No tag with such name!",'ua':f"{bcolors.GREEN}Такого тегу не існує!"}
-                raise ValueError(error_text[self.language])
+                raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
             
 
     def find_the_text(self, text):
@@ -77,14 +71,14 @@ class NoteChecks:
             return False
 
 class Note(NoteChecks):
-    def __init__(self, lang=None):
-        self.language = lang
-        if lang:
-            local = {'en':"Unnamed note", 'ua':"Безіменна нотатка"}
-            self.title = local[self.language]
+    def __init__(self, parent_class):
+        self.parent = parent_class
+        if self.parent:
+            self.title = self.parent.translate_string('unnamed_note')
+            self.text = self.parent.translate_string('none')
         else:
             self.title = "Unnamed note"
-        self.text = ""
+            self.text = "None"
         self.tags = []
 
 
@@ -117,179 +111,120 @@ class Note(NoteChecks):
         self.tags = tags
 
     def __str__(self):
-        string = {'en':f"Note found with {bcolors.RED}title{bcolors.GREEN} {self.title}; {bcolors.RED}tags{bcolors.GREEN} {self.tags}; {bcolors.RED}text{bcolors.GREEN} {self.text}",'ua':f"Нотатку знайдено з {bcolors.RED}заголовком{bcolors.GREEN} {self.title}; {bcolors.RED}тегами{bcolors.GREEN} {self.tags}; {bcolors.RED}текстом{bcolors.GREEN} {self.text}"}
-        return string[self.language]
+        return f"{self.parent.translate_string('str_self_p0','red','green')}: {self.title}; {self.parent.translate_string('str_self_p1','red','green')}: {self.tags}; {self.parent.translate_string('str_self_p2','red','green')}: {self.text}"
 
 
 class NoteFile:
-    def __init__(self):
+    def __init__(self, parent_class):
+        self.parent = parent_class
+        self.parent.modules.append(self)
+        self.parent.module_chosen = str(len(self.parent.modules) - 1)
+        self.reinit(mode='first')
         self.data = {}
         self.priority_ids = []
-        self.language = None
         self.record_cnt = 0
         self.generated_ids = 0
         self.file = "note_storage.bin"
         
         self.update_file("load",0)
 
-        self.opnng = f"{bcolors.CYAN}Введіть, будь ласка, "
-        self.non_obligatory = f"{bcolors.CYAN}( або '{bcolors.RED}N{bcolors.CYAN}', якщо бажаєте додати пізніше)"
-        self.opnng_en = f"{bcolors.CYAN}Please, enter the "
-        self.non_obligatory_en = f"{bcolors.CYAN}( or '{bcolors.RED}N{bcolors.CYAN}', if you want to add it later)"
+    def reinit(self, mode=None):
+        tmp = None
+        if self.parent.module_chosen != None:
+            tmp = self.parent.module_chosen
+        if mode != 'first':
+            self.parent.module_chosen = str(self.parent.modules.index(self))
+        self.opnng = f"{self.parent.translate_string('please_enter_p0','cyan')} "
+        self.non_obligatory = f"{bcolors.CYAN} ( {self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
         self.method_table = {'__localization_insert':{
-                                'name':{
-                                    'en':"note manager", 
-                                    'ua':"менеджера нотаток"},
-                                'description':{
-                                    'en':"note manager", 
-                                    'ua':"менеджер нотаток"}},
+                                'name':"note_manager_name", 
+                                'description':"note_manager_desc"},
                             'create':{
-                                'description':{
-                                    'en':"Adds a new record to the note book. You can add a title, text, tags - either when creating a record, or later.",
-                                    'ua':"Додає новий запис до книги нотаток. Можна додати заголовок, текст та теги одразу, а можна й пізніше."}, 
+                                'description':"create_desc", 
                                 'methods':{ 
                                     self.note_create:{},
                                     self.add_title:{
-                                        'name':{
-                                            'en':f"{self.opnng_en}title{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}заголовок{self.non_obligatory}"}},
+                                        'name':f"{self.opnng}{self.parent.translate_string('note_attr_p0')}{self.non_obligatory}"},
                                     self.add_text:{
-                                        'name':{
-                                            'en':f"{self.opnng_en}text{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}текст{self.non_obligatory}"}},
+                                        'name':f"{self.opnng}{self.parent.translate_string('note_attr_p1')}{self.non_obligatory}"},
                                     self.add_tags:{
-                                        'address':{
-                                            'en':f"{self.opnng_en}tag{self.non_obligatory_en}",
-                                            'ua':f"{self.opnng}тег{self.non_obligatory}"}},
+                                        'address':f"{self.opnng}{self.parent.translate_string('note_attr_p2')}{self.non_obligatory}"},
                                     self.add_note_finisher:{}}},
                             'edit':{
-                                'description':{
-                                    'en':"Edits the title, or the text of a note.",
-                                    'ua':"Редагує заголовок, або текст нотатки."}, 
+                                'description':"edit_desc", 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'note_id':{
-                                            'en':f"{self.opnng_en}number of a note you want to edit",
-                                            'ua':f"{self.opnng}номер нотатки, яку ви хочете відредагувати"}},
+                                        'note_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
                                     self.print_note_attributes:{},
                                     self.choose_note_attribute:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}what you are going to edit",
-                                            'ua':f"{self.opnng}що ви збираєтесь редагувати"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note_attr')}"},
                                     self.edit_note:{
-                                        'new_text':{
-                                            'en':f"{self.opnng_en}new text",
-                                            'ua':f"{self.opnng}новий текст"}},
+                                        'new_text':f"{self.opnng}{self.parent.translate_string('edit_note_text')}"},
                                     }},
                             'edit_tags':{
-                                'description':{
-                                    'en':"Edits the tags of a note.",
-                                    'ua':"Редагує теги нотатки."}, 
+                                'description':"edit_tags_desc", 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'note_id':{
-                                            'en':f"{self.opnng_en}number of a note, which has the tag you want to edit",
-                                            'ua':f"{self.opnng}номер нотатки, тег якої ви хочете відредагувати"}},
+                                        'note_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
                                     self.print_note_tags:{},
                                     self.choose_note_tag:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}tag you are going to edit",
-                                            'ua':f"{self.opnng}тег, який ви збираєтесь редагувати"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note_tag')}"},
                                     self.edit_tags:{
-                                        'new_text':{
-                                            'en':f"{self.opnng_en}new tag",
-                                            'ua':f"{self.opnng}новий тег"}},
+                                        'new_text':f"{self.opnng}{self.parent.translate_string('edit_note_tag')}"},
                                     }},
                             'add_tag':{
-                                'description':{
-                                    'en':"Add a new tag to the note.",
-                                    'ua':"Додає новий тег до нотатки."}, 
+                                'description':"add_tag_desc", 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}number of the note, which you are going to edit",
-                                            'ua':f"{self.opnng}номер нотатки, теги якої ви збираєтесь редагувати"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
                                     self.add_tags:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}tag, which you are going to add",
-                                            'ua':f"{self.opnng}тег, який ви хочете додати"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('enter_the_tag')}"},
                                     self.add_tag_finish:{},
                                     }},
                             'find':{
-                                'description':{
-                                    'en':"Looks for a specified text in the notes.",
-                                    'ua':"Шукає введений текст у нотатках."}, 
+                                'description':"find_desc", 
                                 'methods':{
                                     self.print_find_modes:{},
                                     self.choose_find_mode:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}search mode number",
-                                            'ua':f"{self.opnng}номер режиму пошуку"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_find_mode')}"},
                                     self.find_hub:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}text you want to find",
-                                            'ua':f"{self.opnng}текст, який ви бажаєте знайти"}}}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('find_text')}"}}},
                             'remove':{
-                                'description':{
-                                    'en':"Deletes the note.",
-                                    'ua':"Видаляє нотатку."}, 
+                                'description':"remove_desc", 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}note you are going to delete",
-                                            'ua':f"{self.opnng}нотатку, яку збираєтесь видалити"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
                                     self.remove_note_finish:{}}},
                             'remove_tag':{
-                                'description':{
-                                    'en':"Deletes one of the tags of the chosen note.",
-                                    'ua':"Видаляє один з тегів обраної нотатки."}, 
+                                'description':"remove_tag_desc", 
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}note, where the tag is",
-                                            'ua':f"{self.opnng}нотатку, де знаходиться тег"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
                                     self.print_note_tags:{},
                                     self.choose_note_tag:{
-                                        'attr_id':{
-                                            'en':f"{self.opnng_en}the tag you are going to delete",
-                                            'ua':f"{self.opnng}тег, який ви збираєтеся видалити"}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_tag_to_del')}"},
                                     self.remove_tag_finish:{}}},
                             'show_all':{
-                                'description':{
-                                    'en':"Displays the contents of the note book.",
-                                    'ua':"Виводить всі нотатки, які є в пам'яті."}, 
+                                'description':"show_all_desc", 
                                 'methods':{
                                     self.show_contacts:{}}}}
+        if mode != 'first':
+            self.parent.module_chosen = tmp
+  
 
 
     def show_contacts(self):
         if len(self.data) > 0:
-            local = {'part_0':{
-                        'en':"Saved notes list",
-                        'ua':"Наразі збережені такі нотатки"},
-                    'part_1':{
-                        'en':"Title",
-                        'ua':"Заголовок"},
-                    'part_2':{
-                        'en':"Text",
-                        'ua':"Текст"},
-                    'part_3':{
-                        'en':"Tags",
-                        'ua':"Теги"},
-                    'part_4':{
-                        'en':"To choose the note, enter it's respective number in a console",
-                        'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
-            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {bcolors.RED}{local['part_1'][self.language]}{bcolors.GREEN}: {value.title}; {bcolors.RED}{local['part_2'][self.language]}{bcolors.GREEN}: {value.text}; {bcolors.RED}{local['part_3'][self.language]}{bcolors.GREEN}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
+            string = self.parent.translate_string('print_contact_p0','green')
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
             print(string)
         else:
-            error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
-            print(error_text[self.language])
+            print(self.parent.translate_string('note_list_empty','yellow','green'))
     
     def dialogue_check(self,variable):
         if variable.lower() != 'n':
@@ -297,14 +232,12 @@ class NoteFile:
         return False
 
     def note_create(self):
-        new_note = Note(self.language)
-        new_note.language = self.language
+        new_note = Note(self.parent)
         self.id_assign(mode="add",record=new_note)
 
 
     def add_title(self,title):
         new_note = self.data[self.ongoing]
-        new_note.language = self.language
         if self.dialogue_check(title):
             try:
                 new_note.add_title(title)
@@ -315,7 +248,6 @@ class NoteFile:
 
     def add_text(self,text):
         new_note = self.data[self.ongoing]
-        new_note.language = self.language
         if self.dialogue_check(text):
             try:
                 new_note.add_text(text)
@@ -326,7 +258,6 @@ class NoteFile:
 
     def add_tags(self,tags):
         new_note = self.data[self.ongoing]
-        new_note.language = self.language
         if self.dialogue_check(tags):
             try:
                 new_note.add_tags(tags)
@@ -342,46 +273,18 @@ class NoteFile:
 
     def print_notes(self):
         if len(self.data) > 0:
-            local = {'part_0':{
-                        'en':"Saved notes list",
-                        'ua':"Наразі збережені такі нотатки"},
-                    'part_1':{
-                        'en':"Title",
-                        'ua':"Заголовок"},
-                    'part_2':{
-                        'en':"Text",
-                        'ua':"Текст"},
-                    'part_3':{
-                        'en':"Tags",
-                        'ua':"Теги"},
-                    'part_4':{
-                        'en':"To choose the note, enter it's respective number in a console",
-                        'ua':"Щоб обрати нотатку, введіть у консоль її номер у списку"},}
-            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-            string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {local['part_1'][self.language]}: {value.title}; {local['part_2'][self.language]}: {value.text}; {local['part_3'][self.language]}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
+            string = self.parent.translate_string('print_contact_p0','green')
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
             print(string)
         else:
-            error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
-            print(error_text[self.language])
+            print(self.parent.translate_string('note_list_empty','yellow','green'))
             return 'abort'
     
     def print_note_attributes(self):
-        local = {'part_0':{
-                    'en':"Choose, what you are going to edit",
-                    'ua':"Оберіть, що ви хочете редагувати"},
-                'part_1':{
-                    'en':"Title",
-                    'ua':"Заголовок"},
-                'part_2':{
-                    'en':"Text",
-                    'ua':"Текст"},
-                'part_3':{
-                    'en':"Tags",
-                    'ua':"Теги"}}
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}: {self.data[self.ongoing].title}\n"
-        string += f"{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}: {self.data[self.ongoing].text}\n"
-        #string += f"{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}: {self.data[self.ongoing].tags}\n"
+        string = f"{bcolors.GREEN}{self.parent.translate_string('choose_what_to_edit')}:\n"
+        string += f"{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1')}: {self.data[self.ongoing].title}\n"
+        string += f"{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('print_contact_p2')}: {self.data[self.ongoing].text}\n"
+        #string += f"{bcolors.RED}2{bcolors.GREEN}. {self.parent.translate_string('print_contact_p3')}: {self.data[self.ongoing].tags}\n"
         print(string)
 
     def choose_note_from_the_list(self, note_id):
@@ -395,11 +298,9 @@ class NoteFile:
                 else:
                     raise ValueError
             except ValueError:
-                error_text = {'en':f"{bcolors.YELLOW}There is no note with this id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатки з таким id немає, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.parent.translate_string('note_not_found','yellow','green')
         else:
-            error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
-            return error_text[self.language]
+            return self.parent.translate_string('note_list_empty','yellow','green')
 
     def choose_note_attribute(self, field_id):
         try:
@@ -411,13 +312,10 @@ class NoteFile:
             else:
                 raise ValueError
         except:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.parent.translate_string('wrong_id_error','yellow','green')
         
     def edit_note(self, new_text):
-        self.data[self.ongoing].language = self.language
-        tmp = [{'en':"Title", 'ua':"Заголовок"},{'en':"Text", 'ua':"Текст"},{'en':"Tags", 'ua':"Теги"}]
-        done_text = {'en':f"{bcolors.GREEN}{tmp[self.field_id][self.language]} edited.",'ua':f"{bcolors.YELLOW}{tmp[self.field_id][self.language]} відредагований.{bcolors.GREEN}"}
+        tmp = ['print_contact_p1','print_contact_p2','print_contact_p3']
         if self.field_id == 0:
             try:
                 self.data[self.ongoing].add_title(new_text)
@@ -435,23 +333,19 @@ class NoteFile:
                 return str(error_text)
         
         self.update_file(mode="ed")
+        print(f"{self.parent.translate_string(tmp[self.field_id],'yellow')} {self.parent.translate_string('edited','yellow','green')}")
         self.field_id = None
         self.ongoing = None
-        print(done_text[self.language])
 
     def print_note_tags(self):
         if len(self.data[self.ongoing].tags) > 0:
-            local = {'part_0':{
-                        'en':"Choose the tag you need",
-                        'ua':"Оберіть потрібний тег"}}
             note = self.data[self.ongoing]
-            string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
+            string = self.parent.translate_string('choose_the_tag','green') + ":\n"
             for i in range(len(note.tags)):
                 string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
             print(string)
         else:
-            error_text = {'en':f"{bcolors.YELLOW}The note has no tags!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатка не має тегів!{bcolors.GREEN}"}
-            print(error_text[self.language])
+            print(self.parent.translate_string('no_tags','yellow','green'))
             return 'abort'
 
     def input_to_id(self, text):
@@ -463,11 +357,9 @@ class NoteFile:
             if int(new_line) >= 0:
                 return int(new_line)
             else:
-                error_text = {'en':f"{bcolors.YELLOW}An id cannot be a negative number!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Id не може бути від'ємним числом!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.parent.translate_string('negative_id_error','yellow','green')
         except ValueError:
-            error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-            return error_text[self.language]
+            return self.parent.translate_string('wrong_id_error','yellow','green')
 
     def choose_note_tag(self, field_id):
         note = self.data[self.ongoing]
@@ -480,28 +372,23 @@ class NoteFile:
             else:
                 raise ValueError
         except:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.parent.translate_string('wrong_id_error','yellow','green')
         
     def edit_tags(self, new_text):
         note = self.data[self.ongoing]
-        note.language = self.language
-        local = {'en':"Tag", 'ua':"Тег"}
-        done_text = {'en':f"{bcolors.GREEN}{local[self.language]} edited.",'ua':f"{bcolors.YELLOW}{local[self.language]} відредагований.{bcolors.GREEN}"}
         try:
             note.tag_check_and_set(mode='ed', tag=self.field_id, new_tag=new_text)
         except ValueError as error_text:
             return str(error_text)
         
+        print(f"{self.parent.translate_string('print_contact_p3_1','yellow','green')} {self.parent.translate_string('edited','yellow','green')}.")
         self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
-        print(done_text[self.language])
 
     def remove_note_finish(self):
         self.update_file(mode="del", r_id=int(self.ongoing))
-        done_text = {'en':f"{bcolors.YELLOW}Note removed.{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Нотатка видалена.{bcolors.GREEN}"}
-        print(done_text[self.language])
+        print(self.parent.translate_string('note_removed','yellow','green'))
         self.ongoing = None
   
     def add_tag_finish(self):
@@ -511,7 +398,6 @@ class NoteFile:
   
     def remove_tag_finish(self):
         note = self.data[self.ongoing]
-        note.language = self.language
         try:
             note.tag_check_and_set(mode='del', tag=self.field_id)
         except ValueError as error_text:
@@ -522,24 +408,8 @@ class NoteFile:
         self.ongoing = None
   
     def print_find_modes(self):
-        local = {'part_0':{
-                    'en':"Choose, where you want to look for the text",
-                    'ua':"Оберіть, де ви хочете шукати текст"},
-                'part_1':{
-                    'en':"In the titles.",
-                    'ua':"У заголовках."},
-                'part_2':{
-                    'en':"In the text.",
-                    'ua':"У тексті."},
-                'part_3':{
-                    'en':"In the tags.",
-                    'ua':"У тегах."},
-                'part_4':{
-                    'en':"Everywhere.",
-                    'ua':"Всюди."}}
-        
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        string += f"{bcolors.RED}0{bcolors.GREEN}. {local['part_1'][self.language]}\n{bcolors.RED}1{bcolors.GREEN}. {local['part_2'][self.language]}\n{bcolors.RED}2{bcolors.GREEN}. {local['part_3'][self.language]}\n{bcolors.RED}3{bcolors.GREEN}. {local['part_4'][self.language]}\n"
+        string = self.parent.translate_string('search_attr_p0','green') + ":\n"
+        string += f"{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('search_attr_p1')}\n{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('search_attr_p2')}\n{bcolors.RED}2{bcolors.GREEN}. {self.parent.translate_string('search_attr_p3')}\n{bcolors.RED}3{bcolors.GREEN}. {self.parent.translate_string('search_attr_p4')}\n"
         print(string)
 
     def choose_find_mode(self, field_id):
@@ -552,15 +422,11 @@ class NoteFile:
             else:
                 raise ValueError
         except:
-                error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.parent.translate_string('wrong_id_error','yellow','green')
         
     def find_hub(self, text):
         checker = False
         string = ""
-        local = {'Failure':{'en':f"Specified text not found",'ua':f"Вказаний текст не знайдено"},'Intro':{'en':f"Specified text found in the next notes",'ua':f"Вказаний текст знайдено у наступних нотатках"},'Title':{'en':f"Title",'ua':f"Заголовок"},'Text':{'en':f"text",'ua':f"текст"},'Tags':{'en':f"tags",'ua':f"теги"}}
-        success = f"{local['Intro'][self.language]}:\n"
-        failure = f"{local['Failure'][self.language]}!"
         highlighted_title = ''
         highlighted_text = ''
         highlighted_tags = ''
@@ -569,40 +435,40 @@ class NoteFile:
                 if class_instance.find_in_title(text):
                     checker = True
                     highlighted_title = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {highlighted_title}; {self.parent.translate_string('print_contact_p3','red','green')}: {class_instance.tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {class_instance.text};\n"
         elif self.field_id == 1:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_text(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {class_instance.title}; {self.parent.translate_string('print_contact_p3','red','green')}: {class_instance.tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {highlighted_text};\n"
         elif self.field_id == 2:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_tags(text):
                     checker = True
                     tags = "; ".join(f"{tag}" for tag in class_instance.tags)
                     highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_tags(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_tags(text)[0]:class_instance.find_in_tags(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_tags(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {highlighted_tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {class_instance.title}; {self.parent.translate_string('print_contact_p3','red','green')}: {highlighted_tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {class_instance.text};\n"
         elif self.field_id == 3:
             for note_id,class_instance in self.data.items():
                 if class_instance.find_in_title(text):
                     checker = True
                     highlighted_title = f"{bcolors.GREEN}{class_instance.title[:class_instance.find_in_title(text)[0]]}{bcolors.YELLOW}{class_instance.title[class_instance.find_in_title(text)[0]:class_instance.find_in_title(text)[1]]}{bcolors.GREEN}{class_instance.title[class_instance.find_in_title(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {highlighted_title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {highlighted_title}; {self.parent.translate_string('print_contact_p3','red','green')}: {class_instance.tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {class_instance.text};\n"
                 elif class_instance.find_in_text(text):
                     checker = True
                     highlighted_text = f"{bcolors.GREEN}{class_instance.text[:class_instance.find_in_text(text)[0]]}{bcolors.YELLOW}{class_instance.text[class_instance.find_in_text(text)[0]:class_instance.find_in_text(text)[1]]}{bcolors.GREEN}{class_instance.text[class_instance.find_in_text(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {class_instance.tags}; {local['Text'][self.language]}: {highlighted_text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {class_instance.title}; {self.parent.translate_string('print_contact_p3','red','green')}: {class_instance.tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {highlighted_text};\n"
                 elif class_instance.find_in_tags(text):
                     checker = True
                     tags = "; ".join(f"{tag}" for tag in class_instance.tags)
                     highlighted_tags = f"{bcolors.GREEN}{tags[:class_instance.find_in_tags(text)[0]]}{bcolors.YELLOW}{tags[class_instance.find_in_tags(text)[0]:class_instance.find_in_tags(text)[1]]}{bcolors.GREEN}{tags[class_instance.find_in_tags(text)[1]:]}"
-                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {local['Title'][self.language]}: {class_instance.title}; {local['Tags'][self.language]}: {highlighted_tags}; {local['Text'][self.language]}: {class_instance.text};\n"
+                    string += f"{bcolors.RED}{note_id}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {class_instance.title}; {self.parent.translate_string('print_contact_p3','red','green')}: {highlighted_tags}; {self.parent.translate_string('print_contact_p2','red','green')}: {class_instance.text};\n"
 
         if checker:
-            print(f"{success}{string}")
+            print(f"{self.parent.translate_string('find_intro','green')}:\n{string}")
         else:
-            print(f"{failure}")
+            print(self.parent.translate_string('find_intro','yellow','green'))
 
     
     def id_assign(self,mode:str,record:Note):
@@ -658,8 +524,7 @@ class NoteFile:
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
-                    error_text = {'en':f"{bcolors.YELLOW}Note list is empty!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Список нотаток порожній!{bcolors.GREEN}"}
-                    print(error_text[self.language])
+                    print(self.parent.translate_string('note_list_empty','yellow','green'))
         elif mode == "ed":
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
@@ -675,7 +540,7 @@ class NoteFile:
                     try:
                         while True:  
                             record = pickle.load(storage)
-                            self.data[id_generator] = Note()
+                            self.data[id_generator] = Note(parent_class=self.parent)
                             self.data[id_generator].load_data(title=record['Title'],text=record['Text'],tags=record['Tags'])
                             id_generator += 1
                     except EOFError:

@@ -4,6 +4,7 @@ from CodeCrafters_assistant.sorting import FileSorter
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.styles import Style
+import xml.etree.ElementTree as ET
 
 class bcolors:
     HEADER = '\033[95m'
@@ -16,121 +17,128 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-class HelpMe:
-    def help(self):
-        # При запуску функції пропонує обрати тему (книга контактів, сортування файлів, тощо). Коли користувач обере тему, видає список команд відповідного класу з self.help_modules
-        # Навіщо так? А щоб кожний писав список команд для свого модуля окремо, і редагував у тому ж файлі, одразу ж при внесенні змін або створення нових методів.
-        # Тільки не забуваємо перевіряти, щоб назви КОНСОЛЬНИХ команд з вашого модулю не співпадали з назвами з інших модулів.
-        help_phrase = {'part_1':{'en':". To see the list of commands for ",'ua':". Щоб подивитись список команд для "},
-                       'part_2':{'en':", enter in the console '",'ua':", введіть у консоль '"},
-                       'part_3':{'en':"The assistant has the next functions: ",'ua':"Помічник має такі функції: "},
-                       'part_4':{'en':"If you want to exit the program, enter '",'ua':"Якщо хочете вийти з програми, напишіть '"},
-                       'part_5':{'en':"Please, choose the section number: ",'ua':"Будь ласка, оберіть номер розділу: "},
-                       'part_6':{'en':"A list of commands, available for ",'ua':"Список доступних команд для "}}
-        func_str = ''
-        func_str_p2 = '\n'
-        for k,v in self.help_modules.items():
-            func_str += self.help_modules[k]['localization']['description'][self.language] + ', '
-            func_str_p2 += f"{k}{help_phrase['part_1'][self.language]}{self.help_modules[k]['localization']['name'][self.language]}{help_phrase['part_2'][self.language]}{bcolors.RED}{k}{bcolors.GREEN}'.\n"
-
-        func_str = func_str[:len(func_str)-2]
-
-        general_info = f"{bcolors.GREEN}{'_' * 80}\n{help_phrase['part_3'][self.language]}{func_str}. {func_str_p2}\n{help_phrase['part_4'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'."
-        print(general_info)
-        while True:
-            answer = input(f"{bcolors.CYAN}{help_phrase['part_5'][self.language]}{bcolors.GREEN}").strip().lower()
-            if answer in self.help_modules.keys():
-                string = f"{'_' * 80}\n{help_phrase['part_6'][self.language]}{self.help_modules[answer]['localization']['name'][self.language]}:\n"
-                string += '\n'.join(f'{key} - {value[self.language]}' for key, value in self.help_modules[answer]['scripts'].items()) + f"\n{help_phrase['part_4'][self.language]}{bcolors.RED}leave{bcolors.GREEN}'.\n{'_' * 80}"
-                print(string)
-                break
 
 
-
-class InputManager(HelpMe):
+class InputManager():
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
-        self.help_modules = {}
-        self.notepad = NoteFile()
-        self.contactbook = ContactBook()
-        self.sorter = FileSorter()
-        can_have_a_command = [self.contactbook, self.notepad, self.sorter]
-        self.actions = self.action_filler(can_have_a_command)
-        self.actions['default'] = {}
-        self.actions['default']["change_language"] = { 
-                                           'description':{
-                                               'en':"Sets the programm's language",
-                                               'ua':"Встановлює мову програми."}, 
-                                            'methods':{self.print_languages:{},
-                                                       self.set_language:{
-                                                           'lang':{
-                                                               'en':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language",
-                                                               'ua':f"{bcolors.CYAN}Будь ласка, оберіть мову {bcolors.RED}/{bcolors.CYAN} Please, choose the language"}}}}
-        
-        self.actions['default']["change_module"] = {
-                                           'description':{
-                                               'en':"Allows you to switch to a different menu",
-                                               'ua':"Дозволяє переключитись на інше меню."}, 
-                                            'methods':{self.print_modules:{},
-                                                       self.set_module:{
-                                                           'module_id':{
-                                                               'en':f"{bcolors.CYAN}Please, choose the menu",
-                                                               'ua':f"{bcolors.CYAN}Будь ласка, оберіть меню"}}}}
-        
-        self.actions['default']["leave"] = quit
-
-        self.current_module_commands = []
+        tree = ET.parse("localization_eng.xml")
+        self.localization = tree.getroot()
         self.module_chosen = None
+        self.command = 'change_language'
+        self.help_modules = {}
+        self.modules = []
+        self.contactbook = ContactBook(self)
+        self.notepad = NoteFile(self)
+        self.sorter = FileSorter(self)
+        
+        self.reinit(mode='first')
+        
+        self.current_module_commands = []
         self.silent_restart = None
         self.abort = None
         self.menu_delay = None
         self.language = None
-        self.languages = {'0':'en','1':'ua'}
+        self.languages = {'0':"eng",'1':"ua"}
         self.languages_local = {'0':'English','1':'Українська'}
 
-    def default_action(self):
-        print("Невідома команда. Спробуйте знову, або викликайте команду help щоб отримати допомогу щодо використання програми.")
+    def reinit(self, mode=None):
+        if mode != 'first':
+            self.contactbook.reinit()
+            self.notepad.reinit()
+            self.sorter.reinit()
+        self.actions = {}
+        self.actions = self.action_filler(self.modules)
+        tmp = None
+        if mode != 'first' and self.module_chosen != None:
+            tmp = self.module_chosen
+        self.actions['default'] = {}
+        self.actions['default']["change_language"] = { 
+                                           'description':"change_language_desc", 
+                                            'methods':{self.print_languages:{},
+                                                       self.set_language:{
+                                                           'lang':self.translate_string('select_language','cyan')}}}
+        self.actions['default']["change_module"] = {
+                                           'description':"change_module_desc", 
+                                            'methods':{self.print_modules:{},
+                                                       self.set_module:{
+                                                           'module_id':self.translate_string('select_module','cyan')}}}
+        self.actions['default']["leave"] = {
+                                           'description':"exit", 
+                                            'methods':{self.say_goodbye:{},
+                                                       quit:{}}}
+
+        if mode != 'first':
+            self.module_chosen = tmp
+        else:
+            self.module_chosen = None
+
+
+    def translate_string(self,string:str,st_color=None,end_color=None, mode=None):
+        string = string.strip().lower()
+        local = self.localization[0]
+        local_def = self.localization[0]
+        try:
+            local = self.localization[int(self.module_chosen) + 1]
+        except:
+            pass
+        if mode:
+            try:
+                local = self.localization[int(mode) + 1]
+            except:
+                pass
+        colors = {'header':'\033[95m',
+                  'blue':'\033[94m',
+                  'cyan':'\033[96m',
+                  'green':'\033[92m',
+                  'yellow':'\033[93m',
+                  'red':'\033[91m',
+                  'default':'\033[0m',
+                  'bold':'\033[1m',
+                  'underline':'\033[4m'}
+        return_string = ""
+        if st_color and st_color in colors.keys():
+            return_string += colors[st_color]
+        if local.find(string) != None and local.find(string).attrib['text'] != None:
+            return_string += local.find(string).attrib['text']
+        elif local_def.find(string) != None and local_def.find(string).attrib['text'] != None:
+            return_string += local_def.find(string).attrib['text']
+        else:
+            if local.find("local_not_found_1") and local.find("local_not_found_2"):
+                print(f"{colors['yellow']}{local.find('local_not_found_1').attrib['text']} {colors['red']}{string}{colors['yellow']} {local.find('local_not_found_2').attrib['text']}{colors['green']}")
+            else:
+                print(f"{colors['yellow']}Item {colors['red']}{string}{colors['yellow']} not found in the XML-file!{colors['green']}")
+            return_string += string
+        if end_color and end_color in colors.keys():
+            return_string += colors[end_color]
+        return return_string
 
     def set_language(self,lang):
         try:
             lang = self.input_to_id(lang)
             lang = str(lang)
             if str(lang) in self.languages:
-                self.language = self.languages[lang]
-                self.contactbook.language = self.languages[lang]
-                self.sorter.language = self.languages[lang]
-                self.notepad.language = self.languages[lang]
+                tree = ET.parse(f"localization_{self.languages[lang]}.xml")
+                self.localization = tree.getroot()
+                self.reinit()
             else:
-                self.language = None
-                return f"{bcolors.GREEN}Некоректний id. Будь ласка, спробуйте ще раз! {bcolors.RED}/{bcolors.GREEN} Wrong id. Please, try again!"
+                return self.translate_string('wrong_id_error','yellow')
             
-            welcome_phrase = {'en':"Hello! I'm your personal assistant!",'ua':"Привіт! Я ваш персональний помічник."}
-            print(f"{bcolors.GREEN}{welcome_phrase[self.language]}")
+            print(self.translate_string('assistant_welcome','green'))
         except ValueError:
-            return f"{bcolors.GREEN}Некоректний id. Будь ласка, спробуйте ще раз! {bcolors.RED}/{bcolors.GREEN} Wrong id. Please, try again!"
+            return self.translate_string('wrong_id_error','yellow')
 
     
     def print_languages(self):
-        string = f"{bcolors.GREEN}Список доступних мов:  {bcolors.RED}/{bcolors.GREEN}   Languages available:\n"
-        string += '\n'.join(f'{bcolors.RED}{key}{bcolors.GREEN}. {value}' for key, value in self.languages_local.items()) + '\n'
+        string = self.translate_string('change_language_list','green')
+        string += '\n' + '\n'.join(f'{bcolors.RED}{key}{bcolors.GREEN}. {value}' for key, value in self.languages_local.items()) + '\n'
         print(string)
     
     def print_modules(self):
-        local = {'part_0':{
-                    'en':"Available menus",
-                    'ua':"Можна перейти у такі меню"},
-                'part_1':{
-                    'en':"To choose the",
-                    'ua':"Щоб обрати меню"},
-                'part_2':{
-                    'en':"menu, enter '",
-                    'ua':"напишіть '"},
-                'part_3':{
-                    'en':"' in the console.",
-                    'ua':"' у консоль."}}
-        string = f"{bcolors.GREEN}{local['part_0'][self.language]}:\n"
-        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[key]['localization']['name'][self.language]}{bcolors.GREEN} {local['part_2'][self.language]}{bcolors.RED}{key}{bcolors.GREEN}{local['part_3'][self.language]}" for key,value in self.help_modules.items()) + '\n'
+        self.module_chosen = None
+        string = self.translate_string('print_module_p0','green') + ':\n'
+        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.translate_string('print_module_p1')} {self.translate_string(self.help_modules[key]['localization']['name'],'red','green',mode=key)} {self.translate_string('print_module_p2')} '{bcolors.RED}{key}{bcolors.GREEN}' {self.translate_string('print_module_p3')}" for key in self.help_modules.keys()) + '\n'
         print(string)
 
     def set_module(self,module_id):
@@ -140,9 +148,7 @@ class InputManager(HelpMe):
             if module_id in self.help_modules:
                 self.module_chosen = module_id
                 self.actions['default']["back"] = {
-                                            'description':{
-                                                'en':"Allows you to switch to a different menu",
-                                                'ua':"Дозволяє переключитись на інше меню."}, 
+                                            'description':"change_module_desc", 
                                                 'methods':{self.reset_module:{}}}
                 self.current_module_commands = []
                 for script in self.actions[self.module_chosen].keys():
@@ -154,11 +160,9 @@ class InputManager(HelpMe):
 
                 self.command_completer = WordCompleter(self.current_module_commands)
             else:
-                error_phrase = {'en':"Wrong module number. Please, try again!",'ua':"Неправильний номер модуля. Спробуйте ще раз!"}
-                print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
+                print(self.translate_string('wrong_module_number','yellow','green'))
         except ValueError:
-            error_phrase = {'en':"Wrong module number. Please, try again!",'ua':"Неправильний номер модуля. Спробуйте ще раз!"}
-            print(f"{bcolors.YELLOW}{error_phrase[self.language]}")
+            print(self.translate_string('wrong_module_number','yellow','green'))
 
 
     def reset_module(self):
@@ -173,25 +177,23 @@ class InputManager(HelpMe):
             if int(new_line) >= 0:
                 return int(new_line)
             else:
-                error_text = {'en':f"{bcolors.YELLOW}An id cannot be a negative number!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Id не може бути від'ємним числом!{bcolors.GREEN}"}
-                return error_text[self.language]
+                return self.translate_string('negative_id_error','yellow','green')
         except ValueError:
-            error_text = {'en':f"{bcolors.YELLOW}Wrong id, try again!{bcolors.GREEN}",'ua':f"{bcolors.YELLOW}Некоректний id, спробуйте ще раз!{bcolors.GREEN}"}
-            return error_text[self.language]
+            return self.translate_string('wrong_id_error','yellow','green')
 
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
-    def action_filler(self, can_have_a_command):
+    def action_filler(self, modules):
         actions_dict = {}
         filler_ids = -1
-        for item in can_have_a_command:
+        for item in modules:
             if hasattr(item, 'method_table') and item.method_table != {}:
                 filler_ids += 1
-                actions_dict[str(can_have_a_command.index(item))] = {}
+                actions_dict[str(modules.index(item))] = {}
                 for com_name,parameters in item.method_table.items():
                     if com_name != '__localization_insert':
-                        actions_dict[str(can_have_a_command.index(item))][com_name] = parameters
+                        actions_dict[str(modules.index(item))][com_name] = parameters
                     
                     if 'description' in parameters.keys():
                         conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager', self.sorter:'Sorter'}
@@ -207,40 +209,24 @@ class InputManager(HelpMe):
         return actions_dict
     
     def main(self):
-
-        input_phrase = {
-            'part_1':{
-                'en':"Please, enter the command:   ",
-                'ua':"Будь ласка, введіть необхідну команду:   "},
-            'part_3':{
-                'en':"If you decide to exit the program, enter '",
-                'ua':"Якщо захочете вийти з програми, напишіть '"}}
-
         while True:
             if self.abort:
                 self.abort = None
             if self.menu_delay:
-                local = {'en':f"Enter {bcolors.RED}Y/Yes{bcolors.CYAN} to return to the previous menu",'ua':f"Напишіть {bcolors.RED}Т/Так{bcolors.CYAN}, щоб повернутися до попереднього меню"}
                 delay_commands = {'y', 'yes','так', 'т'}
-                while True:
-                    command = input(f"{bcolors.CYAN}{local[self.language]}:   {bcolors.RED}")
-                    if command.lower() in delay_commands:
+                while True: 
+                    self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')} {self.translate_string('enter_back_p2')}:   {bcolors.RED}")
+                    if self.command.lower() in delay_commands:
                         self.menu_delay = None
                         break
             if self.silent_restart:
                 self.silent_restart = None
-            command = ''
-            if self.language != None:
+            if self.command == '':
                 if self.silent_restart:
                     pass
                 elif self.module_chosen:
-                    local = {'part_1':{'en':"You are in the",'ua':"Ви перейшли у меню"},
-                             'part_2':{'en':" menu. Available commands list:",'ua':". Список доступних команд:"},
-                             'part_3':{'en':"Return to the main menu",'ua':"Повернутися у головне меню"},
-                             'part_4':{'en':"Exit the program",'ua':"Вийти з програми"},
-                             'part_5':{'en':"Cancels the execution of the current command (e.g. create/edit/sort_files)",'ua':"Скасовує виконання поточної команди (наприклад, create/edit/sort_files)"}}
-                    string = f"{bcolors.GREEN}{local['part_1'][self.language]} {bcolors.RED}{self.help_modules[self.module_chosen]['localization']['name'][self.language]}{bcolors.GREEN}{local['part_2'][self.language]}\n"
-                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {value[self.language]}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {local['part_3'][self.language]}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {local['part_4'][self.language]}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {local['part_5'][self.language]}.\n{'_' * 80}"
+                    string = f"{self.translate_string('menu_entered_p0','green')} {self.translate_string(self.help_modules[self.module_chosen]['localization']['name'], 'red', 'green')}{self.translate_string('menu_entered_p1')}\n"
+                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {self.translate_string(value)}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {self.translate_string('return_to_main')}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {self.translate_string('exit')}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {self.translate_string('cancel')}.\n{'_' * 80}"
                     print(string)
         
                     style = Style.from_dict({
@@ -250,32 +236,30 @@ class InputManager(HelpMe):
                     })
 
                     message = [
-                        ('class:part_1', input_phrase['part_1'][self.language]),
+                        ('class:part_1', self.translate_string('enter_the_command')),
                     ]
-                    command = prompt(message, completer=self.command_completer, style=style).strip().lower()
+                    self.command = prompt(message, completer=self.command_completer, style=style).strip().lower()
                 elif not self.module_chosen:
-                    command = 'change_module'
-            else:
-                command = 'change_language'
+                    self.command = 'change_module'
  
             # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
             # чекаючи на інпут.
             category = ''
             command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']        
-            if self.module_chosen and not command in command_exceptions and (command in self.actions['default'].keys() or command in self.actions[self.module_chosen].keys()):
+            if self.module_chosen and not self.command in command_exceptions and (self.command in self.actions['default'].keys() or self.command in self.actions[self.module_chosen].keys()):
                 self.menu_delay = True
             if self.module_chosen:
-                if (command in self.actions[self.module_chosen].keys()):
+                if (self.command in self.actions[self.module_chosen].keys()):
                     category = self.module_chosen
-            if (command in self.actions['default'].keys()):
+            if (self.command in self.actions['default'].keys()):
                 category = 'default'
             if category:
-                if type(self.actions[category][command]) != dict:
-                    selected_action = self.actions[category][command]
+                if type(self.actions[category][self.command]) != dict:
+                    selected_action = self.actions[category][self.command]
                     selected_action()
                 else:
-                    for key,value in self.actions[category][command]['methods'].items():
+                    for key,value in self.actions[category][self.command]['methods'].items():
                         if self.abort:
                             break
                         if value == {}:
@@ -292,9 +276,7 @@ class InputManager(HelpMe):
                                     if self.abort:
                                         break
                                     while True:
-                                        if not self.language:
-                                            self.language = 'en'
-                                        command = input(v[self.language] + f':   {bcolors.RED}')
+                                        command = input(f"{bcolors.CYAN}{v}" + f':   {bcolors.RED}')
                                         if command.strip().lower() == 'leave':
                                             self.say_goodbye()
                                             return
@@ -314,11 +296,11 @@ class InputManager(HelpMe):
 
                                         arguments_list = []
                                         print(result)
-                                command = ''
+
+            self.command = ''
 
     def say_goodbye(self):
-        local = {'en':"Goodbye!",'ua':"До побачення!"}
-        print(f'{bcolors.YELLOW}{local[self.language]}{bcolors.DEFAULT}')
+        print(self.translate_string('goodbye', 'yellow','default'))
 
 def starter():
     manager = InputManager()
