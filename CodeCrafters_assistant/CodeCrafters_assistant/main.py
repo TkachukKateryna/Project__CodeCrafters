@@ -23,7 +23,7 @@ class InputManager():
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
-        print(self.set_language)
+        #print(self.set_language)
         self.languages = {'0':"en",'1':"ua",'2':"ru"}
         self.languages_local = {'0':'English','1':'Українська','2':'Русский'}
         import locale
