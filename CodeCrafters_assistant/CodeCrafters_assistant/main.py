@@ -29,7 +29,6 @@ class InputManager():
         import locale
         system_language = locale.getdefaultlocale()[0].lower().split('_')
         tree = None
-        print(system_language[0])
         if system_language[0] in self.languages.values():
             tree = ET.parse(f"localization_{system_language[0]}.xml")
         else:
