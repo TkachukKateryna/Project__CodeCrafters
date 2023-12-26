@@ -205,65 +205,53 @@ class ContactBook():
                         self.record_cnt = id_generator
                         #print('Reached the end of file!')
 
+    def contactbook_error(func):
+        def true_handler(self,arg):
+            try:
+                result = func(self,arg)
+            except ValueError as error_text:
+                return str(error_text)
+        return true_handler
+
     def contact_create(self):
         from CodeCrafters_assistant.record_manager import RecordManager
         new_record = RecordManager(parent_class=self.parent)
         self.id_assign(mode="add",record=new_record)
 
+    @contactbook_error
     def add_name(self,name):
         record = self.data[self.ongoing]
         if self.dialogue_check(name):
-            try:
-                record.add_name(name)
-            except ValueError as error_text:
-                return str(error_text)
-            
-            return True
+            record.add_name(name)
 
+    @contactbook_error
     def add_phone(self,phone):
         record = self.data[self.ongoing]
         if self.dialogue_check(phone):
-            try:
-                record.phone_check_and_set(mode='add', phone=phone)
-            except ValueError as error_text:
-                return str(error_text)
+            record.phone_check_and_set(mode='add', phone=phone)
 
-        return True
-
+    @contactbook_error
     def add_birthday(self,birthday):
         record = self.data[self.ongoing]
         if self.dialogue_check(birthday):
-            try:
-                record.add_birthday(birthday)
-            except ValueError as error_text:
-                return str(error_text)
+            record.add_birthday(birthday)
 
-            return True
-
+    @contactbook_error
     def add_email(self,email):
         record = self.data[self.ongoing]
         if self.dialogue_check(email):
-            try:
-                record.add_email(email)
-            except ValueError as error_text:
-                return str(error_text)
+            record.add_email(email)
 
-            return True
-
+    @contactbook_error
     def add_address(self,address):
         record = self.data[self.ongoing]
         if self.dialogue_check(address):
-            try:
-                record.add_address(address)
-            except ValueError as error_text:
-                return str(error_text)
-
-            return True
+            record.add_address(address)
 
     def print_contacts(self):
         if len(self.data) > 0:
-            string = self.parent.translate_string('print_contacts_p0','green')
-            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contacts_p1','red','green')}: {record.name}; {self.parent.translate_string('print_contacts_p2','red','green')}: {'; '.join(f'{phone}' for phone in record.phones.values())}; {self.parent.translate_string('print_contacts_p3','red','green')}: {record.birthday}; {self.parent.translate_string('print_contacts_p4','red','green')}: {record.email}; {self.parent.translate_string('print_contacts_p5','red','green')}: {record.address};" for key, record in self.data.items())
+            string = self.parent.translate_string('print_contacts','green')
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('contact_attr_p1','red','green')}: {record.name}; {self.parent.translate_string('contact_attr_p2','red','green')}: {record.birthday}; {self.parent.translate_string('contact_attr_p3','red','green')}: {record.email}; {self.parent.translate_string('contact_attr_p4','red','green')}: {record.address}; {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(f'{phone}' for phone in record.phones.values())};" for key, record in self.data.items())
             print(string)
         else:
             print(self.parent.translate_string('contact_list_empty','yellow','green'))
@@ -271,8 +259,8 @@ class ContactBook():
 
     def show_contacts(self):
         if len(self.data) > 0:
-            string = self.parent.translate_string('print_contacts_p0','green')
-            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contacts_p1','red','green')}: {record.name}; {self.parent.translate_string('print_contacts_p2','red','green')}: {'; '.join(f'{phone}' for phone in record.phones.values())}; {self.parent.translate_string('print_contacts_p3','red','green')}: {record.birthday}; {self.parent.translate_string('print_contacts_p4','red','green')}: {record.email}; {self.parent.translate_string('print_contacts_p5','red','green')}: {record.address};" for key, record in self.data.items())
+            string = self.parent.translate_string('print_contacts','green')
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('contact_attr_p1','red','green')}: {record.name}; {self.parent.translate_string('contact_attr_p2','red','green')}: {record.birthday}; {self.parent.translate_string('contact_attr_p3','red','green')}: {record.email}; {self.parent.translate_string('contact_attr_p4','red','green')}: {record.address}; {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(f'{phone}' for phone in record.phones.values())};" for key, record in self.data.items())
             print(string)
         else:
             print(self.parent.translate_string('contact_list_empty','yellow','green'))
@@ -312,29 +300,18 @@ class ContactBook():
                 raise ValueError
         except:
             print(self.parent.translate_string('wrong_id_error','yellow','green'))
-           
+
+    @contactbook_error
     def edit_contact(self, new_text):
         local = ["contact_attr_p1", "contact_attr_p2", "contact_attr_p3", "contact_attr_p4", "contact_attr_p5"]
         if self.field_id == 0:
-            try:
-                self.data[self.ongoing].add_name(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_name(new_text)
         elif self.field_id == 1:
-            try:
-                self.data[self.ongoing].add_birthday(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_birthday(new_text)
         elif self.field_id == 2:
-            try:
-                self.data[self.ongoing].add_email(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_email(new_text)
         elif self.field_id == 3:
-            try:
-                self.data[self.ongoing].add_address(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_address(new_text)
         
         self.update_file(mode="ed")
         print(f"{self.parent.translate_string(local[self.field_id],'green')} {self.parent.translate_string('edit_contact_p1')}")
@@ -374,13 +351,11 @@ class ContactBook():
                 raise ValueError
         except:
                 return self.parent.translate_string('wrong_id_error','yellow','green')
-        
+
+    @contactbook_error
     def edit_phones(self, new_text):
         note = self.data[self.ongoing]
-        try:
-            note.phone_check_and_set(mode='ed', phone=note.phones[self.field_id], new_phone=new_text)
-        except ValueError as error_text:
-            return str(error_text)
+        note.phone_check_and_set(mode='ed', phone=note.phones[self.field_id], new_phone=new_text)
         
         self.update_file(mode="ed")
         print(f"{self.parent.translate_string('contact_attr_p5_1','yellow')} {self.parent.translate_string('edit_contact_p1',end_color='green')}.")
@@ -411,13 +386,11 @@ class ContactBook():
         self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
-  
+
+    @contactbook_error
     def remove_phone_finish(self):
         note = self.data[self.ongoing]
-        try:
-            note.phone_check_and_set(mode='del', phone=self.field_id)
-        except ValueError as error_text:
-            return str(error_text)
+        note.phone_check_and_set(mode='del', phone=self.field_id)
         
         self.update_file(mode="ed")
         self.field_id = None

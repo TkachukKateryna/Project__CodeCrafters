@@ -86,13 +86,7 @@
 
    		<contact_list_empty text="Contact list is empty!"/>
 
-   		<print_contacts_p0 text="Saved contacts list"/>
-   		<print_contacts_p1 text="Contact name"/>
-   		<print_contacts_p2 text="phone numbers"/>
-   		<print_contacts_p3 text="birthday"/>
-   		<print_contacts_p4 text="email"/>
-   		<print_contacts_p5 text="address"/>
-   		<print_contacts_p6 text="To choose the contact, enter it's respective number in a console"/>
+   		<print_contacts text="Saved contacts list"/>
 
    		<print_contact_attr_p0 text="Choose, what you are going to edit"/>
    		<print_contact_attr_p1 text="Contact name"/>

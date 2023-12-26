@@ -33,11 +33,10 @@ class NoteChecks:
             if tag.lower() == "stop":
                 return True
             self.tags.append(tag)
-            raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p0','yellow','green')}")
+            raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p2','yellow','green')}")
         elif mode == 'ed':
             self.tags[tag] = new_tag
         elif mode == 'del':
-            error_text = {}
             try:
                 del self.tags[tag]
                 print(self.parent.translate_string('tag_removed','yellow','green'))
@@ -81,29 +80,25 @@ class Note(NoteChecks):
             self.text = "None"
         self.tags = []
 
+    def note_error(func):
+        def true_handler(self,arg):
+            try:
+                result = func(self,arg)
+            except ValueError as error_text:
+                raise ValueError(error_text)
+        return true_handler
 
+    @note_error
     def add_title(self,title):
-        try:
-            self.title = self.title_check(title)
-            return
-        except ValueError as error_text:
-            raise ValueError(error_text)
+        self.title = self.title_check(title)
 
-    
+    @note_error
     def add_text(self,text):
-        try:
-            self.text = self.text_check(text)
-            return
-        except ValueError as error_text:
-            raise ValueError(error_text)
-            
-            
+        self.text = self.text_check(text)
+
+    @note_error
     def add_tags(self,tag):
-        try:
-            self.tag_check_and_set(mode='add', tag=tag)
-            return
-        except ValueError as error_text:
-            raise ValueError(error_text)
+        self.tag_check_and_set(mode='add', tag=tag)
             
     def load_data(self,title,text,tags): # To avoid reoccurring checks when loading from storage.bin
         self.title = title
@@ -235,41 +230,35 @@ class NoteFile:
         new_note = Note(self.parent)
         self.id_assign(mode="add",record=new_note)
 
+    def notepad_error(func):
+        def true_handler(self,arg):
+            try:
+                result = func(self,arg)
+            except ValueError as error_text:
+                return str(error_text)
+        return true_handler
 
+    @notepad_error
     def add_title(self,title):
         new_note = self.data[self.ongoing]
         if self.dialogue_check(title):
-            try:
-                new_note.add_title(title)
-            except ValueError as error_text:
-                return str(error_text)
-            
-            return True
+            new_note.add_title(title)
 
+    @notepad_error
     def add_text(self,text):
         new_note = self.data[self.ongoing]
         if self.dialogue_check(text):
-            try:
-                new_note.add_text(text)
-            except ValueError as error_text:
-                return str(error_text)
-            
-            return True
+            new_note.add_text(text)
 
+    @notepad_error
     def add_tags(self,tags):
         new_note = self.data[self.ongoing]
         if self.dialogue_check(tags):
-            try:
-                new_note.add_tags(tags)
-                return True
-            except ValueError as error_text:
-                return str(error_text)
-            
+            new_note.add_tags(tags)
 
     def add_note_finisher(self):
             self.update_file(mode="add",r_id=self.generated_ids)
             self.ongoing = None
-
 
     def print_notes(self):
         if len(self.data) > 0:
@@ -313,24 +302,16 @@ class NoteFile:
                 raise ValueError
         except:
                 return self.parent.translate_string('wrong_id_error','yellow','green')
-        
+
+    @notepad_error
     def edit_note(self, new_text):
         tmp = ['print_contact_p1','print_contact_p2','print_contact_p3']
         if self.field_id == 0:
-            try:
-                self.data[self.ongoing].add_title(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_title(new_text)
         elif self.field_id == 1:
-            try:
-                self.data[self.ongoing].add_text(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].add_text(new_text)
         elif self.field_id == 2:
-            try:
-                self.data[self.ongoing].edit_tag(new_text)
-            except ValueError as error_text:
-                return str(error_text)
+            self.data[self.ongoing].edit_tag(new_text)
         
         self.update_file(mode="ed")
         print(f"{self.parent.translate_string(tmp[self.field_id],'yellow')} {self.parent.translate_string('edited','yellow','green')}")
@@ -373,13 +354,11 @@ class NoteFile:
                 raise ValueError
         except:
                 return self.parent.translate_string('wrong_id_error','yellow','green')
-        
+
+    @notepad_error
     def edit_tags(self, new_text):
         note = self.data[self.ongoing]
-        try:
-            note.tag_check_and_set(mode='ed', tag=self.field_id, new_tag=new_text)
-        except ValueError as error_text:
-            return str(error_text)
+        note.tag_check_and_set(mode='ed', tag=self.field_id, new_tag=new_text)
         
         print(f"{self.parent.translate_string('print_contact_p3_1','yellow','green')} {self.parent.translate_string('edited','yellow','green')}.")
         self.update_file(mode="ed")
@@ -395,13 +374,11 @@ class NoteFile:
         self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
-  
+
+    @notepad_error
     def remove_tag_finish(self):
         note = self.data[self.ongoing]
-        try:
-            note.tag_check_and_set(mode='del', tag=self.field_id)
-        except ValueError as error_text:
-            return str(error_text)
+        note.tag_check_and_set(mode='del', tag=self.field_id)
         
         self.update_file(mode="ed")
         self.field_id = None

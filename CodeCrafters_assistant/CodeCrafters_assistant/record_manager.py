@@ -153,70 +153,67 @@ class RecordManager(MiscChecks):
     def __str__(self):
         return f"{self.parent.translate_string('record_name','red','green')}: {self.name}, {self.parent.translate_string('contact_attr_p2','red','green')}: {self.birthday}, {self.parent.translate_string('contact_attr_p3','red','green')}: {self.email}, {self.parent.translate_string('contact_attr_p4','red','green')}: {self.address}, {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(phone for phone in self.phones.values())}"
 
+    def record_error(func):
+        def true_handler(self,arg):
+            try:
+                result = func(self,arg)
+            except ValueError as error_text:
+                raise ValueError(error_text)
+        return true_handler
+
+    @record_error
     def add_birthday(self,birthday):
-        try:
-            self.birthday = self.birthday_check(birthday)
-        except ValueError as error_text:
-            raise ValueError(error_text)
-            
+        self.birthday = self.birthday_check(birthday)
+
+    @record_error
     def add_name(self,name:str):
         self.name = name
 
+    @record_error
     def add_email(self,email:str):
-        try:
-            self.email = self.email_check(email)
-        except ValueError as error_text:
-            raise ValueError(error_text)
+        self.email = self.email_check(email)
 
+    @record_error
     def add_address(self,address:str):
         self.address = address
 
+    @record_error
     def edit_birthday(self,new_birthday:str):
         if self.birthday != "None":
-            try:
-                self.birthday = self.birthday_check(new_birthday)
-                return
-            except ValueError as error_text:
-                raise ValueError(error_text)
+            self.birthday = self.birthday_check(new_birthday)
         
         raise ValueError(self.parent.translate_string('no_birthday','yellow','green'))
-            
+
+    @record_error
     def edit_email(self,new_email:str):
         if self.email != "None":
-            try:
                 self.email = self.email_check(new_email)
-                return
-            except ValueError as error_text:
-                raise ValueError(error_text)
 
         raise ValueError(self.parent.translate_string('no_email','yellow','green'))
-        
+
+    @record_error
     def edit_name(self,name:str):
         self.name = name
 
+    @record_error
     def edit_address(self,address:str):
         self.address = address
-    
+
+    @record_error
     def phone_check_and_set(self,mode,phone,new_phone=None):
         if mode == 'add':
             if phone.lower() == "stop":
                 return True
-            try:
-                phone = self.p_check(phone)
-                self.phones[len(self.phones)] = phone
-                raise ValueError(self.parent.translate_string('phone_added_p0','yellow','red') + self.parent.translate_string('phone_added_p1') + self.parent.translate_string('phone_added_p2','yellow','green'))
-            except ValueError as error_text:
-                raise ValueError(error_text)
+            phone = self.p_check(phone)
+            self.phones[len(self.phones)] = phone
+            raise ValueError(self.parent.translate_string('phone_added_p0','yellow','red') + self.parent.translate_string('phone_added_p1') + self.parent.translate_string('phone_added_p2','yellow','green'))
         elif mode == 'ed':
             if self.has_phone(phone):
-                try:
-                    if type(self.p_check(new_phone)) == str:
-                        for phone_id,phone_number in self.phones.items():
-                            if phone_number == phone:
-                                self.phones[phone_id] = new_phone
-                                return
-                except ValueError as error_text_2:
-                    raise ValueError(error_text_2)
+                if type(self.p_check(new_phone)) == str:
+                    for phone_id,phone_number in self.phones.items():
+                        if phone_number == phone:
+                            self.phones[phone_id] = new_phone
+                            return
                 
             raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
         elif mode == 'del':

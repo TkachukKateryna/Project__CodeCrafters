@@ -1,2 +1,4 @@
 CodeCrafters_assistant
 build
+empty_folder
+output_folder

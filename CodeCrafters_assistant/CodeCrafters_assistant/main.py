@@ -23,7 +23,17 @@ class InputManager():
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
-        tree = ET.parse("localization_eng.xml")
+        print(self.set_language)
+        self.languages = {'0':"en",'1':"ua",'2':"ru"}
+        self.languages_local = {'0':'English','1':'Українська','2':'Русский'}
+        import locale
+        system_language = locale.getdefaultlocale()[0].lower().split('_')
+        tree = None
+        print(system_language[0])
+        if system_language[0] in self.languages.values():
+            tree = ET.parse(f"localization_{system_language[0]}.xml")
+        else:
+            tree = ET.parse("localization_en.xml")
         self.localization = tree.getroot()
         self.module_chosen = None
         self.command = 'change_language'
@@ -39,9 +49,6 @@ class InputManager():
         self.silent_restart = None
         self.abort = None
         self.menu_delay = None
-        self.language = None
-        self.languages = {'0':"eng",'1':"ua"}
-        self.languages_local = {'0':'English','1':'Українська'}
 
     def reinit(self, mode=None):
         if mode != 'first':
@@ -213,7 +220,7 @@ class InputManager():
             if self.abort:
                 self.abort = None
             if self.menu_delay:
-                delay_commands = {'y', 'yes','так', 'т'}
+                delay_commands = {'y', 'yes','так', 'т', 'д','да'}
                 while True: 
                     self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')} {self.translate_string('enter_back_p2')}:   {bcolors.RED}")
                     if self.command.lower() in delay_commands:

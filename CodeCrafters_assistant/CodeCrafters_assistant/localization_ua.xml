@@ -75,7 +75,7 @@
    		<remove_phone_desc text="Видаляє один з номерів телефону обраного контакту."/>
    		<choose_phone_to_delete text="номер телефону, який ви збираєтеся видалити"/>
 
-   		<show_all_desc text="Виводить всі контакти, які є в книзі."/>
+   		<show_all_desc text="Виводить всі контакти, які є в пам'яті."/>
 
    		<invalid_day_error text="Помилка! Кількість днів має бути числом!"/>
    		<found_birthdays_p0 text="Контакти у яких день народження протягом наступних"/>
@@ -86,13 +86,7 @@
 
    		<contact_list_empty text="Список контактів порожній!"/>
 
-   		<print_contacts_p0 text="Наразі збережені такі контакти"/>
-   		<print_contacts_p1 text="Ім'я контакту"/>
-   		<print_contacts_p2 text="номера телефонів"/>
-   		<print_contacts_p3 text="день народження"/>
-   		<print_contacts_p4 text="електронна пошта"/>
-   		<print_contacts_p5 text="адреса"/>
-   		<print_contacts_p6 text="Щоб обрати контакт, введіть у консоль його номер у списку"/>
+   		<print_contacts text="Наразі збережені такі контакти"/>
 
    		<print_contact_attr_p0 text="Оберіть, що ви хочете редагувати"/>
    		<print_contact_attr_p1 text="Ім'я контакту"/>
