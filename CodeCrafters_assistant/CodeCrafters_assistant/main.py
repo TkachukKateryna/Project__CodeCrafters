@@ -57,6 +57,12 @@ class InputManager():
         tmp = None
         if mode != 'first' and self.module_chosen != None:
             tmp = self.module_chosen
+        self.confirm = ['y','yes']
+        self.confirm.append(self.translate_string('confirm'))
+        self.confirm.append(self.translate_string('confirm_long'))
+        self.deny = ['n','no']
+        self.confirm.append(self.translate_string('deny'))
+        self.confirm.append(self.translate_string('deny_long'))
         self.actions['default'] = {}
         self.actions['default']["change_language"] = { 
                                            'description':"change_language_desc", 
@@ -104,11 +110,9 @@ class InputManager():
         elif local_def.find(string) != None and local_def.find(string).attrib['text'] != None:
             return_string += local_def.find(string).attrib['text']
         else:
-            if local.find("local_not_found_1") and local.find("local_not_found_2"):
+            if local_def.find("local_not_found_1") and local_def.find("local_not_found_2"):
                 print(f"{colors['yellow']}{local.find('local_not_found_1').attrib['text']} {colors['red']}{string}{colors['yellow']} {local.find('local_not_found_2').attrib['text']}{colors['green']}")
             else:
-                print(local)
-                print(type(self.module_chosen))
                 print(f"{colors['yellow']}Item {colors['red']}{string}{colors['yellow']} not found in the XML-file!{colors['green']}")
             return_string += string
         if end_color and end_color in colors.keys():
@@ -202,10 +206,9 @@ class InputManager():
             if self.abort:
                 self.abort = None
             if self.menu_delay:
-                delay_commands = {'y', 'yes','так', 'т', 'д','да'}
                 while True: 
                     self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')} {self.translate_string('enter_back_p2')}:   {bcolors.RED}")
-                    if self.command.lower() in delay_commands:
+                    if self.command.lower() in self.confirm:
                         self.menu_delay = None
                         break
             if self.silent_restart:
