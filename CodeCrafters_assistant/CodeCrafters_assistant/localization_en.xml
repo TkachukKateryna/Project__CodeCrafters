@@ -23,7 +23,7 @@
    		<enter_back_p2 text="to return to the previous menu"/>
 
    		<menu_entered_p0 text="You are in the"/>
-   		<menu_entered_p1 text="menu. Available commands:"/>
+   		<menu_entered_p1 text=" menu. Available commands:"/>
 
    		<return_to_main text="Return to the main menu"/>
    		<exit text="Exit the program"/>

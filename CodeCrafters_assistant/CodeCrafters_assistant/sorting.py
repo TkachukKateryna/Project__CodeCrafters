@@ -17,7 +17,7 @@ class FileSorter:
     def __init__(self, parent_class):
         self.parent = parent_class
         self.parent.modules.append(self)
-        self.parent.module_chosen = str(len(self.parent.modules) - 1)
+        self.parent.module_chosen = len(self.parent.modules) - 1
         self.reinit(mode='first')
         self.categories = { 'images':['JPEG', 'JPG', 'PNG', 'SVG'],
                            'video':['AVI', 'MP4', 'MOV', 'MKV'], 
@@ -43,12 +43,12 @@ class FileSorter:
 
     def reinit(self, mode=None):
         tmp = None
-        if self.parent.module_chosen != None:
+        if type(self.parent.module_chosen) == int:
             tmp = self.parent.module_chosen
         if mode != 'first':
-            self.parent.module_chosen = str(self.parent.modules.index(self))
+            self.parent.module_chosen = self.parent.modules.index(self)
         path = fr"{self.parent.translate_string('path_p0','red')}  {self.parent.translate_string('path_p1','green')}"
-        self.method_table = {'__localization_insert':{
+        self.method_table = {'__localization':{
                                 'name':'file_sorter_name',
                                 'description':'file_sorter_desc'}, 
                             'sort_files':{

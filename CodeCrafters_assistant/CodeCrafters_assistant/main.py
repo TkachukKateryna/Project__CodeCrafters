@@ -23,8 +23,8 @@ class InputManager():
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
-        self.languages = {'0':"en",'1':"ua",'2':"ru"}
-        self.languages_local = {'0':'English','1':'Українська','2':'Русский'}
+        self.languages = {0:"en",1:"ua",2:"ru"}
+        self.languages_local = {0:'English',1:'Українська',2:'Русский'}
         import locale
         system_language = locale.getdefaultlocale()[0].lower().split('_')
         tree = None
@@ -35,7 +35,6 @@ class InputManager():
         self.localization = tree.getroot()
         self.module_chosen = None
         self.command = 'change_language'
-        self.help_modules = {}
         self.modules = []
         self.contactbook = ContactBook(self)
         self.notepad = NoteFile(self)
@@ -81,18 +80,13 @@ class InputManager():
 
 
     def translate_string(self,string:str,st_color=None,end_color=None, mode=None):
-        string = string.strip().lower()
+        string = str(string).strip().lower()
         local = self.localization[0]
         local_def = self.localization[0]
-        try:
-            local = self.localization[int(self.module_chosen) + 1]
-        except:
-            pass
-        if mode:
-            try:
-                local = self.localization[int(mode) + 1]
-            except:
-                pass
+        if type(mode) == int and mode < len(self.modules):
+            local = self.localization[int(mode) + 1]
+        elif type(self.module_chosen) == int and self.module_chosen < len(self.modules):
+            local = self.localization[self.module_chosen + 1]
         colors = {'header':'\033[95m',
                   'blue':'\033[94m',
                   'cyan':'\033[96m',
@@ -113,6 +107,8 @@ class InputManager():
             if local.find("local_not_found_1") and local.find("local_not_found_2"):
                 print(f"{colors['yellow']}{local.find('local_not_found_1').attrib['text']} {colors['red']}{string}{colors['yellow']} {local.find('local_not_found_2').attrib['text']}{colors['green']}")
             else:
+                print(local)
+                print(type(self.module_chosen))
                 print(f"{colors['yellow']}Item {colors['red']}{string}{colors['yellow']} not found in the XML-file!{colors['green']}")
             return_string += string
         if end_color and end_color in colors.keys():
@@ -122,8 +118,7 @@ class InputManager():
     def set_language(self,lang):
         try:
             lang = self.input_to_id(lang)
-            lang = str(lang)
-            if str(lang) in self.languages:
+            if lang in self.languages.keys():
                 tree = ET.parse(f"localization_{self.languages[lang]}.xml")
                 self.localization = tree.getroot()
                 self.reinit()
@@ -143,14 +138,13 @@ class InputManager():
     def print_modules(self):
         self.module_chosen = None
         string = self.translate_string('print_module_p0','green') + ':\n'
-        string += '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.translate_string('print_module_p1')} {self.translate_string(self.help_modules[key]['localization']['name'],'red','green',mode=key)} {self.translate_string('print_module_p2')} '{bcolors.RED}{key}{bcolors.GREEN}' {self.translate_string('print_module_p3')}" for key in self.help_modules.keys()) + '\n'
+        string += '\n'.join(f"{bcolors.RED}{self.modules.index(key)}{bcolors.GREEN}. {self.translate_string('print_module_p1')} {self.translate_string(key.method_table['__localization']['name'],'red','green',mode=self.modules.index(key))} {self.translate_string('print_module_p2')} '{bcolors.RED}{self.modules.index(key)}{bcolors.GREEN}' {self.translate_string('print_module_p3')}" for key in self.modules) + '\n'
         print(string)
 
     def set_module(self,module_id):
         try:
             module_id = self.input_to_id(module_id)
-            module_id = str(module_id)
-            if module_id in self.help_modules:
+            if module_id < len(self.modules):
                 self.module_chosen = module_id
                 self.actions['default']["back"] = {
                                             'description':"change_module_desc", 
@@ -164,6 +158,7 @@ class InputManager():
                     self.current_module_commands.append(script) 
 
                 self.command_completer = WordCompleter(self.current_module_commands)
+                self.command = ''
             else:
                 print(self.translate_string('wrong_module_number','yellow','green'))
         except ValueError:
@@ -195,21 +190,10 @@ class InputManager():
         for item in modules:
             if hasattr(item, 'method_table') and item.method_table != {}:
                 filler_ids += 1
-                actions_dict[str(modules.index(item))] = {}
+                actions_dict[modules.index(item)] = {}
                 for com_name,parameters in item.method_table.items():
-                    if com_name != '__localization_insert':
-                        actions_dict[str(modules.index(item))][com_name] = parameters
-                    
-                    if 'description' in parameters.keys():
-                        conversion_dict = {self.contactbook:'Contact_book', self.notepad:'Note_manager', self.sorter:'Sorter'}
-                        if not str(filler_ids) in self.help_modules:
-                            self.help_modules[str(filler_ids)] = {'name':conversion_dict[item],'scripts':{},'localization':{}}
-                        
-                        if com_name != '__localization_insert':
-                            self.help_modules[str(filler_ids)]['scripts'][com_name] = parameters['description']
-                        else:
-                            self.help_modules[str(filler_ids)]['localization']['description'] = parameters['description']
-                            self.help_modules[str(filler_ids)]['localization']['name'] = parameters['name']
+                    if com_name != '__localization':
+                        actions_dict[modules.index(item)][com_name] = parameters
 
         return actions_dict
     
@@ -229,9 +213,9 @@ class InputManager():
             if self.command == '':
                 if self.silent_restart:
                     pass
-                elif self.module_chosen:
-                    string = f"{self.translate_string('menu_entered_p0','green')} {self.translate_string(self.help_modules[self.module_chosen]['localization']['name'], 'red', 'green')}{self.translate_string('menu_entered_p1')}\n"
-                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {self.translate_string(value)}" for key, value in self.help_modules[self.module_chosen]['scripts'].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {self.translate_string('return_to_main')}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {self.translate_string('exit')}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {self.translate_string('cancel')}.\n{'_' * 80}"
+                elif self.module_chosen != None:
+                    string = f"{self.translate_string('menu_entered_p0','green')} {self.translate_string(self.modules[self.module_chosen].method_table['__localization']['name'], 'red', 'green')}{self.translate_string('menu_entered_p1')}\n"
+                    string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {self.translate_string(value['description'])}" for key, value in self.actions[self.module_chosen].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {self.translate_string('return_to_main')}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {self.translate_string('exit')}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {self.translate_string('cancel')}.\n{'_' * 80}"
                     print(string)
         
                     style = Style.from_dict({
@@ -244,22 +228,22 @@ class InputManager():
                         ('class:part_1', self.translate_string('enter_the_command')),
                     ]
                     self.command = prompt(message, completer=self.command_completer, style=style).strip().lower()
-                elif not self.module_chosen:
+                elif self.module_chosen == None:
                     self.command = 'change_module'
  
             # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
             # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
             # чекаючи на інпут.
-            category = ''
+            category = None
             command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']        
-            if self.module_chosen and not self.command in command_exceptions and (self.command in self.actions['default'].keys() or self.command in self.actions[self.module_chosen].keys()):
+            if type(self.module_chosen) == int and not self.command in command_exceptions and (self.command in self.actions['default'].keys() or self.command in self.actions[self.module_chosen].keys()):
                 self.menu_delay = True
-            if self.module_chosen:
+            if type(self.module_chosen) == int:
                 if (self.command in self.actions[self.module_chosen].keys()):
                     category = self.module_chosen
             if (self.command in self.actions['default'].keys()):
                 category = 'default'
-            if category:
+            if category != None:
                 if type(self.actions[category][self.command]) != dict:
                     selected_action = self.actions[category][self.command]
                     selected_action()

@@ -15,7 +15,7 @@ class ContactBook():
     def __init__(self, parent_class):
         self.parent = parent_class
         self.parent.modules.append(self)
-        self.parent.module_chosen = str(len(self.parent.modules) - 1)
+        self.parent.module_chosen = len(self.parent.modules) - 1
         self.reinit(mode='first')
         self.data = {}
         self.priority_ids = []
@@ -26,13 +26,13 @@ class ContactBook():
 
     def reinit(self, mode=None):
         tmp = None
-        if self.parent.module_chosen != None:
+        if type(self.parent.module_chosen) == int:
             tmp = self.parent.module_chosen
         if mode != 'first':
-            self.parent.module_chosen = str(self.parent.modules.index(self))
+            self.parent.module_chosen = self.parent.modules.index(self)
         self.opnng = f"{self.parent.translate_string('please_enter_p0','cyan')} "
-        self.non_obligatory = f"{bcolors.CYAN} ( {self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
-        self.method_table = {'__localization_insert':{
+        self.non_obligatory = f"{bcolors.CYAN} ({self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
+        self.method_table = {'__localization':{
                                 'name':"contact_manager_name",
                                 'description':"contact_manager_desc"},
                             'create':{
