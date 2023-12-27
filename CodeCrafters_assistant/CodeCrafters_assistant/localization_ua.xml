@@ -4,6 +4,11 @@
 	<default>
    		<local_not_found_1 text="Запис"/>
    		<local_not_found_2 text="у XML-файлі не знайдено!"/>
+   		<confirm text="Т"/>
+   		<confirm_long text="Так"/>
+   		<deny text="Н"/>
+   		<deny_long text="Ні"/>
+   		<local_not_found_1 text="Запис"/>
    		<change_language_desc text="Встановлює мову програми."/>
    		<change_language_list text="Список доступних мов:"/>
    		<change_module_desc text="Дозволяє переключитись на інше меню."/>
@@ -32,7 +37,11 @@
    		<select_language text="Будь ласка, оберіть мову"/>
    		<select_module text="Будь ласка, оберіть меню"/>
 
-   		<please_enter_p0 text="Введіть, будь ласка,"/>
+   		<please_enter_conirm_p0 text="Будь ласка, введіть"/>
+   		<please_enter_conirm_p1 text="щоб підтвердити ваш вибір"/>
+   		<please_enter_conirm_p2 text="або"/>
+   		<please_enter_conirm_p3 text="щоб скасувати операцію"/>
+   		<please_enter_p0 text="Будь ласка, введіть"/>
    		<please_enter_p1 text="або"/>
    		<please_enter_p2 text="N"/>
    		<please_enter_p3 text=", якщо бажаєте додати пізніше"/>
@@ -56,6 +65,7 @@
 
    		<edit_desc text="Редагує ім'я/день народження/електронну пошту/адресу контакта."/>
    		<choose_contact text="номер контакта, який ви хочете відредагувати"/>
+   		<choose_contact_to_remove text="номер контакта, який ви хочете видалити"/>
    		<enter_edit text="що ви збираєтесь редагувати"/>
    		<enter_new_text text="новий текст"/>
 
@@ -117,6 +127,8 @@
    		<no_phone_numbers_error text="Контакт не має збережених номерів телефону!"/>
    		<choose_the_phone text="Оберіть потрібний номер телефону"/>
    		<contact_removed text="Контакт видалений."/>
+   		<contact_remove_abort text="Видалення скасовано."/>
+   		<contact_remove_submit text="Ви точно впевнені, що хочете видалити цей контакт:"/>
    		<phone_removed text="Телефон видалений."/>
 
    		<print_find_modules_p0 text="Оберіть, де ви хочете шукати текст"/>
@@ -182,6 +194,7 @@
    		<note_attr_p2 text="тег"/>
    		<edit_desc text="Редагує заголовок, або текст нотатки."/>
    		<choose_note text="номер нотатки, яку ви хочете відредагувати"/>
+   		<choose_note_to_remove text="номер нотатки, яку ви хочете видалити"/>
    		<choose_note_attr text="що ви збираєтесь редагувати"/>
    		<edit_note_text text="новий текст"/>
 
@@ -211,6 +224,8 @@
    		<choose_the_tag text="Оберіть потрібний тег"/>
    		<no_tags text="Нотатка не має тегів!"/>
    		<note_removed text="Нотатка видалена."/>
+   		<note_remove_abort text="Видалення скасовано."/>
+   		<note_remove_submit text="Ви точно впевнені, що хочете видалити цю нотатку:"/>
 
    		<search_attr_p0 text="Оберіть, де ви хочете шукати текст"/>
    		<search_attr_p1 text="У заголовках."/>
