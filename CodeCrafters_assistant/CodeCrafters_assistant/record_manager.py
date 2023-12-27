@@ -206,7 +206,7 @@ class RecordManager(MiscChecks):
                 return True
             phone = self.p_check(phone)
             self.phones[len(self.phones)] = phone
-            raise ValueError(self.parent.translate_string('phone_added_p0','yellow','red') + self.parent.translate_string('phone_added_p1') + self.parent.translate_string('phone_added_p2','yellow','green'))
+            raise ValueError(f"{self.parent.translate_string('phone_added_p0','yellow','red')}{self.parent.translate_string('phone_added_p1')}{self.parent.translate_string('phone_added_p2','yellow','green')}")
         elif mode == 'ed':
             if self.has_phone(phone):
                 if type(self.p_check(new_phone)) == str:
