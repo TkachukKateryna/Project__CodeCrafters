@@ -4,6 +4,10 @@
 	<default>
    		<local_not_found_1 text="Запись"/>
    		<local_not_found_2 text="в XML-файле не найдена!"/>
+   		<confirm text="Д"/>
+   		<confirm_long text="Да"/>
+   		<deny text="Н"/>
+   		<deny_long text="Нет"/>
    		<change_language_desc text="Устанавливает язык программы."/>
    		<change_language_list text="Список доступних языков:"/>
    		<change_module_desc text="Позволяет переключиться на другое меню."/>
@@ -32,6 +36,10 @@
    		<select_language text="Пожалуйста, выберите язык"/>
    		<select_module text="Пожалуйста, выберите меню"/>
 
+   		<please_enter_conirm_p0 text="Пожалуйста, введите"/>
+   		<please_enter_conirm_p1 text="чтобы подтвердить ваш выбор"/>
+   		<please_enter_conirm_p2 text="или"/>
+   		<please_enter_conirm_p3 text="чтобы отменить операцию"/>
    		<please_enter_p0 text="Введите, пожалуйста,"/>
    		<please_enter_p1 text="либо"/>
    		<please_enter_p2 text="N"/>
@@ -55,7 +63,8 @@
    		<enter_days_number text="количество дней"/>
 
    		<edit_desc text="Редактирует имя/день рождения/електронную почту/адрес контакта."/>
-   		<choose_contact text="номер контакта, который вы хотити отредактировать"/>
+   		<choose_contact text="номер контакта, который вы хотите отредактировать"/>
+   		<choose_contact_to_remove text="номер контакта, который вы хотите удалить"/>
    		<enter_edit text="что вы собираетесь редактировать"/>
    		<enter_new_text text="новый текст"/>
 
@@ -117,6 +126,8 @@
    		<no_phone_numbers_error text="Контакт не имеет сохранённых номеров телефона!"/>
    		<choose_the_phone text="Выберите нужный номер телефона"/>
    		<contact_removed text="Контакт удалён."/>
+   		<contact_remove_abort text="Удаление отменено."/>
+   		<contact_remove_submit text="Вы точно уверены, что хотите удалить этот контакт:"/>
    		<phone_removed text="Телефон удалён."/>
 
    		<print_find_modules_p0 text="Выберите, где вы хотите искать текст"/>
@@ -182,6 +193,7 @@
    		<note_attr_p2 text="тег"/>
    		<edit_desc text="Редактирует заголовок, или текст заметки."/>
    		<choose_note text="номер заметки, которую вы хотите отредактировать"/>
+   		<choose_note_to_remove text="номер заметки, которую вы хотите удалить"/>
    		<choose_note_attr text="что вы собираетесь редактировать"/>
    		<edit_note_text text="новый текст"/>
 
@@ -211,6 +223,8 @@
    		<choose_the_tag text="Выберите нужный тег"/>
    		<no_tags text="Заметка не имеет тегов!"/>
    		<note_removed text="Заметка удалена."/>
+   		<note_remove_abort text="Удаление отменено."/>
+   		<note_remove_submit text="Вы точно уверены, что хотите удалить эту заметку:"/>
 
    		<search_attr_p0 text="Выберите, где вы хотите искать текст"/>
    		<search_attr_p1 text="В заголовках."/>
