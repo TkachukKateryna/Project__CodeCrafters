@@ -4,6 +4,10 @@
 	<default>
    		<local_not_found_1 text="Запис"/>
    		<local_not_found_2 text="у XML-файлі не знайдено!"/>
+   		<confirm text="Y"/>
+   		<confirm_long text="Yes"/>
+   		<deny text="N"/>
+   		<deny_long text="No"/>
    		<change_language_desc text="Sets the programm's language."/>
    		<change_language_list text="Languages available:"/>
    		<change_module_desc text="Allows you to switch to a different menu."/>
@@ -32,6 +36,10 @@
    		<select_language text="Please, choose the language"/>
    		<select_module text="Please, choose the menu"/>
 
+   		<please_enter_conirm_p0 text="Please, enter"/>
+   		<please_enter_conirm_p1 text="to confirm your choice,"/>
+   		<please_enter_conirm_p2 text="or"/>
+   		<please_enter_conirm_p3 text="to cancel the operation"/>
    		<please_enter_p0 text="Please, enter the"/>
    		<please_enter_p1 text="or"/>
    		<please_enter_p2 text="N"/>
@@ -56,6 +64,7 @@
 
    		<edit_desc text="Edits the name/birthday/email/address of a contact."/>
    		<choose_contact text="number of a contact you want to edit"/>
+   		<choose_contact_to_remove text="number of a contact you want to delete"/>
    		<enter_edit text="what you are going to edit"/>
    		<enter_new_text text="new text"/>
 
@@ -117,6 +126,8 @@
    		<no_phone_numbers_error text="The contact has no saved phone numbers!"/>
    		<choose_the_phone text="Choose the phone number you need"/>
    		<contact_removed text="Contact removed."/>
+   		<contact_remove_abort text="Removal cancelled."/>
+   		<contact_remove_submit text="Are you sure that you want to remove this contact:"/>
    		<phone_removed text="Phone removed."/>
 
    		<print_find_modules_p0 text="Choose, where you want to look for the text"/>
@@ -182,6 +193,7 @@
    		<note_attr_p2 text="tag"/>
    		<edit_desc text="Edits the title, or the text of a note."/>
    		<choose_note text="number of a note you want to edit"/>
+   		<choose_note_to_remove text="number of a note you want to delete"/>
    		<choose_note_attr text="what you are going to edit"/>
    		<edit_note_text text="new text"/>
 
@@ -211,6 +223,8 @@
    		<choose_the_tag text="Choose the tag you need"/>
    		<no_tags text="The note has no tags!"/>
    		<note_removed text="Note removed."/>
+   		<note_remove_abort text="Removal cancelled."/>
+   		<note_remove_submit text="Are you sure that you want to remove this note:"/>
 
    		<search_attr_p0 text="Choose, where you want to look for the text"/>
    		<search_attr_p1 text="In the titles."/>
