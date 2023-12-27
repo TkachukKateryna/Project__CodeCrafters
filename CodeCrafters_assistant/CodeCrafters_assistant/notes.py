@@ -19,12 +19,24 @@ class NoteChecks:
         else:
             raise ValueError(self.parent.translate_string('wrong_title_format','yellow','green'))
 
-    def text_check(self,text): #Закоментував, бо немає необхідності використовувати. Треба - розкоментовуєш та коментуєш останній return.
-        # if text != '':
-        #     return text
-        # else:
-        #     raise ValueError(self.parent.translate_string('wrong_text_format','yellow','green'))
-        return text
+    def text_check(self,text):
+        if text != '':
+            return text
+        else:
+            raise ValueError(self.parent.translate_string('wrong_text_format','yellow','green'))
+
+    def tag_check(self,text):
+        if text != '':
+            return text
+        else:
+            raise ValueError(self.parent.translate_string('wrong_text_format','yellow','green'))
+
+    def has_tag(self,tag:str):
+        for i in self.tags.values():
+            if i == tag:
+                return True
+           
+        return False 
 
     def tag_check_and_set(self,mode,tag,new_tag=None):
         if tag == '':
@@ -32,17 +44,27 @@ class NoteChecks:
         elif mode == 'add':
             if tag.lower() == "stop":
                 return True
-            self.tags.append(tag)
+            tag = self.tag_check(tag)
+            self.tags[len(self.tags)] = tag
             raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p2','yellow','green')}")
         elif mode == 'ed':
-            self.tags[tag] = new_tag
+            if self.has_tag(tag):
+                if type(self.tag_check(new_tag)) == str:
+                    for tag_id,tag_item in self.tags.items():
+                        if tag_item == tag:
+                            self.tags[tag_id] = new_tag
+                            return
+                
+            raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
         elif mode == 'del':
-            try:
-                del self.tags[tag]
-                print(self.parent.translate_string('tag_removed','yellow','green'))
-            except:
-                raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
+            if self.has_tag(tag):
+                for tag_id,tag_item in self.tags.items():
+                    if tag_item == tag:
+                        del self.tags[tag_id]
+                        print(self.parent.translate_string('tag_removed','yellow','green'))
+                        return
             
+            raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
 
     def find_the_text(self, text):
         if self.text.lower().find(text.lower()) != -1:
@@ -63,7 +85,7 @@ class NoteChecks:
             return False
 
     def find_in_tags(self, text):
-        tags = "; ".join(f"{tag}" for tag in self.tags)
+        tags = "; ".join(f"{tag}" for tag in self.tags.values())
         if tags.lower().find(text.lower()) != -1:
             return search(text.lower(),tags.lower()).span()
         else:
@@ -72,13 +94,13 @@ class NoteChecks:
 class Note(NoteChecks):
     def __init__(self, parent_class):
         self.parent = parent_class
+        self.tags = {}
         if self.parent:
             self.title = self.parent.translate_string('unnamed_note')
             self.text = self.parent.translate_string('none')
         else:
             self.title = "Unnamed note"
             self.text = "None"
-        self.tags = []
 
     def note_error(func):
         def true_handler(self,arg):
@@ -101,12 +123,16 @@ class Note(NoteChecks):
         self.tag_check_and_set(mode='add', tag=tag)
             
     def load_data(self,title,text,tags): # To avoid reoccurring checks when loading from storage.bin
+        id_generator = 0
+        for do_not_use,tag in tags.items(): #rearranging tag ids, just like with contactbook records.
+            self.tags[id_generator] = tag
+            id_generator += 1
+
         self.title = title
         self.text = text
-        self.tags = tags
 
     def __str__(self):
-        return f"{self.parent.translate_string('str_self_p0','red','green')}: {self.title}; {self.parent.translate_string('str_self_p1','red','green')}: {self.tags}; {self.parent.translate_string('str_self_p2','red','green')}: {self.text}"
+        return f"{self.parent.translate_string('str_self_p0','red','green')}: {self.title}; {self.parent.translate_string('str_self_p1','red','green')}: {'; '.join(tag for tag in self.tags.values())}; {self.parent.translate_string('str_self_p2','red','green')}: {self.text}"
 
 
 class NoteFile:
@@ -129,6 +155,7 @@ class NoteFile:
             tmp = self.parent.module_chosen
         if mode != 'first':
             self.parent.module_chosen = self.parent.modules.index(self)
+        self.confirmation = f"{self.parent.translate_string('please_enter_conirm_p0')} {self.parent.translate_string('confirm','red','cyan')}/{self.parent.translate_string('confirm_long','red','cyan')} {self.parent.translate_string('please_enter_conirm_p1')} {self.parent.translate_string('please_enter_conirm_p2')} {self.parent.translate_string('deny','red','cyan')}/{self.parent.translate_string('deny_long','red','cyan')} {self.parent.translate_string('please_enter_conirm_p3')}"
         self.opnng = f"{self.parent.translate_string('please_enter_p0','cyan')} "
         self.non_obligatory = f"{bcolors.CYAN} ( {self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
         self.method_table = {'__localization':{
@@ -192,8 +219,10 @@ class NoteFile:
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note')}"},
-                                    self.remove_note_finish:{}}},
+                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_note_to_remove')}"},
+                                    self.remove_note_ask:{},
+                                    self.remove_note_submit:{
+                                        'attr_id':self.confirmation}}},
                             'remove_tag':{
                                 'description':"remove_tag_desc", 
                                 'methods':{
@@ -216,7 +245,7 @@ class NoteFile:
     def show_contacts(self):
         if len(self.data) > 0:
             string = self.parent.translate_string('print_contact_p0','green')
-            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags.values())};" for key,value in self.data.items())
             print(string)
         else:
             print(self.parent.translate_string('note_list_empty','yellow','green'))
@@ -263,7 +292,7 @@ class NoteFile:
     def print_notes(self):
         if len(self.data) > 0:
             string = self.parent.translate_string('print_contact_p0','green')
-            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags)};" for key,value in self.data.items())
+            string += ":\n" + '\n'.join(f"{bcolors.RED}{key}{bcolors.GREEN}. {self.parent.translate_string('print_contact_p1','red','green')}: {value.title}; {self.parent.translate_string('print_contact_p2','red','green')}: {value.text}; {self.parent.translate_string('print_contact_p3','red','green')}: {'; '.join(f'{tag}' for tag in value.tags.values())};" for key,value in self.data.items())
             print(string)
         else:
             print(self.parent.translate_string('note_list_empty','yellow','green'))
@@ -321,9 +350,8 @@ class NoteFile:
     def print_note_tags(self):
         if len(self.data[self.ongoing].tags) > 0:
             note = self.data[self.ongoing]
-            string = self.parent.translate_string('choose_the_tag','green') + ":\n"
-            for i in range(len(note.tags)):
-                string += f"{bcolors.RED}{i}{bcolors.GREEN}. {note.tags[i]}\n"
+            string = self.parent.translate_string('choose_the_tag','green')
+            string += ":\n" + "".join(f'{bcolors.RED}{note_id}{bcolors.GREEN}. {note_item};\n' for note_id, note_item in note.tags.items())
             print(string)
         else:
             print(self.parent.translate_string('no_tags','yellow','green'))
@@ -365,10 +393,23 @@ class NoteFile:
         self.field_id = None
         self.ongoing = None
 
-    def remove_note_finish(self):
-        self.update_file(mode="del", r_id=int(self.ongoing))
-        print(self.parent.translate_string('note_removed','yellow','green'))
-        self.ongoing = None
+    def remove_note_submit(self, answer:str):
+        if answer.lower().strip() in self.parent.confirm:
+            self.update_file(mode="del", r_id=int(self.ongoing))
+            print(self.parent.translate_string('note_removed','yellow','green'))
+            self.ongoing = None
+            return
+        elif answer.lower().strip() in self.parent.deny:
+            print(self.parent.translate_string('note_remove_abort','yellow','green'))
+            return
+
+        return ' '
+
+    def remove_note_ask(self):
+        note = self.data[self.ongoing]
+        string = f"{self.parent.translate_string('note_remove_submit','green')}\n"
+        string += f"{self.parent.translate_string('print_contact_p1','yellow','red')}: {note.title}; {self.parent.translate_string('print_contact_p2','yellow','red')}: {note.text}; {self.parent.translate_string('print_contact_p3','yellow','red')}: {'; '.join(f'{v}' for v in note.tags.values())}\n{bcolors.GREEN}?"
+        print(string)
   
     def add_tag_finish(self):
         self.update_file(mode="ed")
@@ -501,7 +542,8 @@ class NoteFile:
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
-                    print(self.parent.translate_string('note_list_empty','yellow','green'))
+                    #print(self.parent.translate_string('note_list_empty','yellow','green'))
+                    pass
         elif mode == "ed":
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
