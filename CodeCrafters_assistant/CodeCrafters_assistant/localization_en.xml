@@ -83,7 +83,7 @@
    		<choose_search_mode text="search mode number"/>
    		<enter_text_to_find text="text you want to find"/>
 
-   		<remove_desc text="Deletes the contact."/>
+   		<remove_desc text="Removes the name/birthday/email/address/phone number of the contact, or the contact itself."/>
 
    		<remove_phone_desc text="Deletes one of the phone numbers of the chosen contact."/>
    		<choose_phone_to_delete text="the phone number you are going to delete"/>
