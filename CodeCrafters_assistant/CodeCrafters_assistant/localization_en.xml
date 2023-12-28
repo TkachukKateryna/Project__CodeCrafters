@@ -36,10 +36,11 @@
    		<select_language text="Please, choose the language"/>
    		<select_module text="Please, choose the menu"/>
 
-   		<please_enter_conirm_p0 text="Please, enter"/>
-   		<please_enter_conirm_p1 text="to confirm your choice,"/>
-   		<please_enter_conirm_p2 text="or"/>
-   		<please_enter_conirm_p3 text="to cancel the operation"/>
+   		<please_enter_confirm_p0 text="Please, enter"/>
+   		<please_enter_confirm_p1 text="to confirm your choice,"/>
+   		<please_enter_confirm_p2 text="or"/>
+   		<please_enter_confirm_p3 text="to cancel the operation"/>
+   		<please_enter_p0_1 text="Please, choose"/>
    		<please_enter_p0 text="Please, enter the"/>
    		<please_enter_p1 text="or"/>
    		<please_enter_p2 text="N"/>
@@ -62,14 +63,17 @@
    		<check_birthdays_desc text="Displays a list of contacts, who have a birthday in the specified perioud."/>
    		<enter_days_number text="number of days"/>
 
-   		<edit_desc text="Edits the name/birthday/email/address of a contact."/>
-   		<choose_contact text="number of a contact you want to edit"/>
+   		<edit_desc text="Edits the name/birthday/email/address/phone numbers of a contact. Adds a new phone number."/>
+   		<choose_contact text="number of a contact"/>
+   		<choose_contact_to_edit text="number of a contact you want to edit"/>
    		<choose_contact_to_remove text="number of a contact you want to delete"/>
    		<enter_edit text="what you are going to edit"/>
+   		<enter_remove text="what you are going to remove"/>
    		<enter_new_text text="new text"/>
 
    		<edit_phone_desc text="Edits the phone number of a contact."/>
    		<choose_contact_phone text="phone number, which you are going to edit"/>
+   		<choose_phone_edit_option text="what you want to do"/>
    		<enter_new_phone text="new phone number"/>
 
    		<add_phone_desc text="Adds a new phone number to the contact."/>
@@ -118,6 +122,17 @@
    		<contact_attr_add_p4 text="Address"/>
    		<contact_attr_add_p5 text="Phone number"/>
 
+   		<what_to_delete_p0 text="What do you want to delete:"/>
+   		<what_to_delete_p1 text="The contact itself."/>
+   		<what_to_delete_p2 text="name/birthday/email/address/phone."/>
+
+   		<how_to_edit_phone_p0 text="What do you want to do:"/>
+   		<how_to_edit_phone_p1 text="Edit the phone number."/>
+   		<how_to_edit_phone_p2 text="Add a new one."/>
+
+   		<remove_attribute_ask_p0 text="Do you really want to delete the"/>
+   		<remove_attribute_ask_p1 text="of the contact?"/>
+		
    		<contact_id_not_found text="There is no contact with this id, try again!"/>
    		<negative_id_error text="An id cannot be a negative number!"/>
    		<wrong_id_error text="Wrong id, try again!"/>
@@ -154,6 +169,10 @@
    		<phone_added_p2 text="' in the console."/>
    		<phone_not_found text="Haven't found this phone number in the chosen contact!"/>
 
+   		<name_removed text="Name removed."/>
+   		<birthday_removed text="Birthday removed."/>
+   		<email_removed text="Email removed."/>
+   		<address_removed text="Address removed."/>
    		<phone_removed text="Phone removed."/>
    		<wrong_month_format_char_num text="Wrong month format. Should be exactly two characters."/>
    		<wrong_month_format_out_bound text="Wrong month format: there can't be more than 12 of them. Correct format: MM-DD-YYYY, or MMDDYYYY."/>
@@ -169,6 +188,7 @@
 		<!--Record manager-specific commands end-->
 	</contact_book>
 	<note_manager>
+   		<removed text="removed."/>
    		<wrong_title_format text="Wrong title format: the title cannot be empty."/>
    		<wrong_text_format text="Wrong note format: the note cannot be empty."/>
    		<wrong_tag_format text="Wrong tag format: the tag cannot be empty."/>
