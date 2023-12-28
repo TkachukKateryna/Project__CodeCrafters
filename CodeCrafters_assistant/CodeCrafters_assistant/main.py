@@ -43,8 +43,6 @@ class InputManager():
         self.reinit(mode='first')
         
         self.current_module_commands = []
-        self.silent_restart = None
-        self.abort = None
         self.menu_delay = None
 
     def reinit(self, mode=None):
@@ -53,16 +51,18 @@ class InputManager():
             self.notepad.reinit()
             self.sorter.reinit()
         self.actions = {}
+        self.technical_actions = {}
+        self.technical_actions['default'] = {}
         self.actions = self.action_filler(self.modules)
         tmp = None
         if mode != 'first' and self.module_chosen != None:
             tmp = self.module_chosen
         self.confirm = ['y','yes']
-        self.confirm.append(self.translate_string('confirm'))
-        self.confirm.append(self.translate_string('confirm_long'))
+        self.confirm.append(self.translate_string('confirm').lower())
+        self.confirm.append(self.translate_string('confirm_long').lower())
         self.deny = ['n','no']
-        self.confirm.append(self.translate_string('deny'))
-        self.confirm.append(self.translate_string('deny_long'))
+        self.deny.append(self.translate_string('deny').lower())
+        self.deny.append(self.translate_string('deny_long').lower())
         self.actions['default'] = {}
         self.actions['default']["change_language"] = { 
                                            'description':"change_language_desc", 
@@ -195,28 +195,26 @@ class InputManager():
             if hasattr(item, 'method_table') and item.method_table != {}:
                 filler_ids += 1
                 actions_dict[modules.index(item)] = {}
+                self.technical_actions[modules.index(item)] = {}
                 for com_name,parameters in item.method_table.items():
                     if com_name != '__localization':
-                        actions_dict[modules.index(item)][com_name] = parameters
+                        if 'technical' in parameters.keys():
+                            self.technical_actions[modules.index(item)][com_name] = parameters
+                        else:
+                            actions_dict[modules.index(item)][com_name] = parameters
 
         return actions_dict
     
     def main(self):
         while True:
-            if self.abort:
-                self.abort = None
             if self.menu_delay:
                 while True: 
                     self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')} {self.translate_string('enter_back_p2')}:   {bcolors.RED}")
                     if self.command.lower() in self.confirm:
                         self.menu_delay = None
                         break
-            if self.silent_restart:
-                self.silent_restart = None
             if self.command == '':
-                if self.silent_restart:
-                    pass
-                elif self.module_chosen != None:
+                if self.module_chosen != None:
                     string = f"{self.translate_string('menu_entered_p0','green')} {self.translate_string(self.modules[self.module_chosen].method_table['__localization']['name'], 'red', 'green')}{self.translate_string('menu_entered_p1')}\n"
                     string += "\n".join(f"{'  '}{bcolors.RED}{key}{bcolors.GREEN} - {self.translate_string(value['description'])}" for key, value in self.actions[self.module_chosen].items()) + f"\n{'  '}{bcolors.RED}back{bcolors.GREEN} - {self.translate_string('return_to_main')}. \n{'  '}{bcolors.RED}leave{bcolors.GREEN} - {self.translate_string('exit')}. \n{'  '}{bcolors.RED}cancel{bcolors.GREEN} - {self.translate_string('cancel')}.\n{'_' * 80}"
                     print(string)
@@ -233,63 +231,63 @@ class InputManager():
                     self.command = prompt(message, completer=self.command_completer, style=style).strip().lower()
                 elif self.module_chosen == None:
                     self.command = 'change_module'
- 
-            # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
-            # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
-            # чекаючи на інпут.
-            category = None
-            command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']        
-            if type(self.module_chosen) == int and not self.command in command_exceptions and (self.command in self.actions['default'].keys() or self.command in self.actions[self.module_chosen].keys()):
-                self.menu_delay = True
-            if type(self.module_chosen) == int:
-                if (self.command in self.actions[self.module_chosen].keys()):
-                    category = self.module_chosen
-            if (self.command in self.actions['default'].keys()):
-                category = 'default'
-            if category != None:
-                if type(self.actions[category][self.command]) != dict:
-                    selected_action = self.actions[category][self.command]
-                    selected_action()
-                else:
-                    for key,value in self.actions[category][self.command]['methods'].items():
-                        if self.abort:
-                            break
-                        if value == {}:
-                            result = key()
-                            if result == 'abort':
-                                self.abort = True
-                        else:
-                            arguments_list = []
-                            result = ' '
-                            while type(result) == str:
-                                if self.abort:
-                                    break
-                                for k,v in value.items():
-                                    if self.abort:
+            if self.command != '':
+                result = self.start_script(self.command)
+                if result == 'leave':
+                    break
+    # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
+    # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
+    # чекаючи на інпут.
+    def start_script(self,command,mode=None):
+        scripts = None
+        if mode != 'technical':
+            scripts = self.actions
+        else:
+            scripts = self.technical_actions
+        category = None
+        command_exceptions = ['change_language', 'change_module', 'back', 'leave', 'cancel']
+        if type(self.module_chosen) == int and not command in command_exceptions and (command in scripts['default'].keys() or command in scripts[self.module_chosen].keys()):
+            self.menu_delay = True
+        if type(self.module_chosen) == int:
+            if (command in scripts[self.module_chosen].keys()):
+                category = self.module_chosen
+        if (command in scripts['default'].keys()):
+            category = 'default'
+        if category != None:
+            if type(scripts[category][command]) != dict:
+                selected_action = scripts[category][command]
+                selected_action()
+            else:
+                for key,value in scripts[category][command]['methods'].items():
+                    if value == {}:
+                        result = key()
+                        if result == 'abort':
+                            return
+                    else:
+                        arguments_list = []
+                        result = ' '
+                        while type(result) == str:
+                            silent_restart = None
+                            for k,v in value.items():
+                                while True:
+                                    argument = input(f"{bcolors.CYAN}{v}" + f':   {bcolors.RED}')
+                                    if argument.strip().lower() == 'leave':
+                                        self.say_goodbye()
+                                        return 'leave'
+                                    if argument.strip().lower() == 'cancel':
+                                        silent_restart = True
+                                        return
+                                    if argument != '':
+                                        arguments_list.append(argument)
                                         break
-                                    while True:
-                                        command = input(f"{bcolors.CYAN}{v}" + f':   {bcolors.RED}')
-                                        if command.strip().lower() == 'leave':
-                                            self.say_goodbye()
-                                            return
-                                        if command.strip().lower() == 'cancel':
-                                            self.silent_restart = True
-                                            self.abort = True
-                                            break
-                                        if command != '':
-                                            arguments_list.append(command)
-                                            break
-                                if not self.silent_restart:
-                                    result = key(*arguments_list)
-                                    if type(result) == str:
-                                        if result == 'abort':
-                                            self.abort = True
-                                            arguments_list = []
-
-                                        arguments_list = []
-                                        print(result)
-
-            self.command = ''
+                            if not silent_restart:
+                                result = key(*arguments_list)
+                                if type(result) == str:
+                                    if result == 'abort':
+                                        return
+                                    arguments_list = []
+                                    print(result)
+        self.command = ''
 
     def say_goodbye(self):
         print(self.translate_string('goodbye', 'yellow','default'))
@@ -297,7 +295,3 @@ class InputManager():
 def starter():
     manager = InputManager()
     manager.main()
-
-# if __name__ == "__main__":
-#     manager = InputManager()
-#     manager.main()
