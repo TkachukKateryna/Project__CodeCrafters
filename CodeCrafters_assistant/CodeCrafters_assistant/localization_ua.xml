@@ -37,10 +37,11 @@
    		<select_language text="Будь ласка, оберіть мову"/>
    		<select_module text="Будь ласка, оберіть меню"/>
 
-   		<please_enter_conirm_p0 text="Будь ласка, введіть"/>
-   		<please_enter_conirm_p1 text="щоб підтвердити ваш вибір"/>
-   		<please_enter_conirm_p2 text="або"/>
-   		<please_enter_conirm_p3 text="щоб скасувати операцію"/>
+   		<please_enter_confirm_p0 text="Будь ласка, введіть"/>
+   		<please_enter_confirm_p1 text="щоб підтвердити ваш вибір"/>
+   		<please_enter_confirm_p2 text="або"/>
+   		<please_enter_confirm_p3 text="щоб скасувати операцію"/>
+   		<please_enter_p0_1 text="Оберіть, будь ласка,"/>
    		<please_enter_p0 text="Будь ласка, введіть"/>
    		<please_enter_p1 text="або"/>
    		<please_enter_p2 text="N"/>
@@ -63,14 +64,17 @@
    		<check_birthdays_desc text="Виводить список іменинників на обраний користувачем період."/>
    		<enter_days_number text="кількість днів"/>
 
-   		<edit_desc text="Редагує ім'я/день народження/електронну пошту/адресу контакта."/>
-   		<choose_contact text="номер контакта, який ви хочете відредагувати"/>
+   		<edit_desc text="Редагує ім'я/день народження/електронну пошту/адресу/номери телефонів контакта. Додає новий номер телефона."/>
+   		<choose_contact text="номер контакта"/>
+   		<choose_contact_to_edit text="номер контакта, який ви хочете відредагувати"/>
    		<choose_contact_to_remove text="номер контакта, який ви хочете видалити"/>
    		<enter_edit text="що ви збираєтесь редагувати"/>
+   		<enter_remove text="що ви збираєтесь видалити"/>
    		<enter_new_text text="новий текст"/>
 
    		<edit_phone_desc text="Редагує номер телефона контакта."/>
    		<choose_contact_phone text="номер телефону, який ви збираєтесь редагувати"/>
+   		<choose_phone_edit_option text="що ви хочете зробити"/>
    		<enter_new_phone text="новий номер телефону"/>
 
    		<add_phone_desc text="Додає новий номер телефону до контакта."/>
@@ -108,8 +112,8 @@
 
    		<contact_attr_p1 text="Ім'я"/>
    		<contact_attr_p2 text="День народження"/>
-   		<contact_attr_p3 text="Електронну пошту"/>
-   		<contact_attr_p4 text="Адресу"/>
+   		<contact_attr_p3 text="Електронна пошта"/>
+   		<contact_attr_p4 text="Адреса"/>
    		<contact_attr_p5 text="Номера телефонів"/>
    		<contact_attr_p5_1 text="Номер телефона"/>
 
@@ -118,6 +122,17 @@
    		<contact_attr_add_p3 text="електронною поштою"/>
    		<contact_attr_add_p4 text="адресою"/>
    		<contact_attr_add_p5 text="номерами телефону"/>
+
+   		<what_to_delete_p0 text="Що ви хочете видалити:"/>
+   		<what_to_delete_p1 text="Сам контакт."/>
+   		<what_to_delete_p2 text="Ім'я/день народження/электронну пошту/адресу/телефон."/>
+
+   		<how_to_edit_phone_p0 text="Що ви хочете зробити:"/>
+   		<how_to_edit_phone_p1 text="Відредагувати існуючий номер телефона."/>
+   		<how_to_edit_phone_p2 text="Додати новий."/>
+
+   		<remove_attribute_ask_p0 text="Ви дійсно хочете видалити"/>
+   		<remove_attribute_ask_p1 text="контакта?"/>
 
    		<contact_id_not_found text="Контакту з таким id немає, спробуйте ще раз!"/>
    		<negative_id_error text="Id не може бути від'ємним числом!"/>
@@ -155,7 +170,11 @@
    		<phone_added_p2 text="' у консоль."/>
    		<phone_not_found text="Цей телефон у обраному контакті не знайдено!"/>
 
-   		<phone_removed text="Телефон видалено."/>
+   		<name_removed text="Ім'я видалене."/>
+   		<birthday_removed text="День народження видалений."/>
+   		<email_removed text="Електронна пошта видалена."/>
+   		<address_removed text="Адреса видалена."/>
+   		<phone_removed text="Телефон видалений."/>
    		<wrong_month_format_char_num text="Некоректний формат місяця: має складатись рівно з двох символів."/>
    		<wrong_month_format_out_bound text="Некоректний формат місяця: їх не може бути більше дванадцяти. Правильний формат: ММ-ДД-РРРР, або ММДДРРРР."/>
    		<wrong_day_format_char_num text="Некоректний формат дня: має складатись рівно з двох символів."/>
