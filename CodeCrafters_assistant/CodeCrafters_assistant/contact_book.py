@@ -30,7 +30,9 @@ class ContactBook():
             tmp = self.parent.module_chosen
         if mode != 'first':
             self.parent.module_chosen = self.parent.modules.index(self)
+        self.confirmation = f"{self.parent.translate_string('please_enter_confirm_p0')} {self.parent.translate_string('confirm','red','cyan')}/{self.parent.translate_string('confirm_long','red','cyan')} {self.parent.translate_string('please_enter_confirm_p1')} {self.parent.translate_string('please_enter_confirm_p2')} {self.parent.translate_string('deny','red','cyan')}/{self.parent.translate_string('deny_long','red','cyan')} {self.parent.translate_string('please_enter_confirm_p3')}"
         self.opnng = f"{self.parent.translate_string('please_enter_p0','cyan')} "
+        self.opnng_alt = f"{self.parent.translate_string('please_enter_p0_1','cyan')} "
         self.non_obligatory = f"{bcolors.CYAN} ({self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
         self.method_table = {'__localization':{
                                 'name':"contact_manager_name",
@@ -60,31 +62,40 @@ class ContactBook():
                                 'methods':{
                                     self.print_contacts:{},
                                     self.choose_contact_from_the_list:{
-                                        'note_id':f"{self.opnng}{self.parent.translate_string('choose_contact')}"},
+                                        'note_id':f"{self.opnng_alt}{self.parent.translate_string('choose_contact_to_edit')}"},
                                     self.print_contact_attributes:{},
-                                    self.choose_contact_attribute:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('enter_edit')}"},
-                                    self.edit_contact:{
-                                        'new_text':f"{self.opnng}{self.parent.translate_string('enter_new_text')}"},
+                                    self.choose_contact_attribute_edit:{
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('enter_edit')}"},
                                     }},
                             'edit_phone':{
                                 'description':"edit_phone_desc", 
+                                'technical':True,
                                 'methods':{
-                                    self.print_contacts:{},
-                                    self.choose_contact_from_the_list:{
-                                        'note_id':f"{self.opnng}{self.parent.translate_string('choose_contact')}"},
+                                    self.print_edit_phone_options:{},
+                                    self.choose_edit_phone_option:{
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('choose_phone_edit_option')}"},
+                                    }},
+                            'edit_phone_true':{
+                                'description':"edit_phone_desc", 
+                                'technical':True,
+                                'methods':{
                                     self.print_contact_phones:{},
                                     self.choose_contact_phone:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_contact_phone')}"},
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('choose_contact_phone')}"},
                                     self.edit_phones:{
                                         'new_text':f"{self.opnng}{self.parent.translate_string('enter_new_phone')}"},
                                     }},
+                            'edit_other':{
+                                'description':"edit_phone_desc", 
+                                'technical':True,
+                                'methods':{
+                                    self.edit_contact:{
+                                        'new_text':f"{self.opnng}{self.parent.translate_string('enter_new_text')}"}
+                                    }},
                             'add_phone':{
                                 'description':"add_phone_desc", 
+                                'technical':True,
                                 'methods':{
-                                    self.print_contacts:{},
-                                    self.choose_contact_from_the_list:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_contact')}"},
                                     self.add_phone:{
                                         'attr_id':f"{self.opnng}{self.parent.translate_string('phone_number_add')}"},
                                     self.add_phone_finish:{},
@@ -102,18 +113,41 @@ class ContactBook():
                                 'methods':{
                                     self.print_contacts:{},
                                     self.choose_contact_from_the_list:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_contact')}"},
-                                    self.remove_contact_finish:{}}},
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('choose_contact')}"},
+                                    self.print_delete_options:{},
+                                    self.choose_remove_option_from_the_list:{
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('enter_remove')}"}}},
+                            'remove_contact':{
+                                'description':"remove_desc", 
+                                'technical':True,
+                                'methods':{
+                                    self.remove_contact_ask:{},
+                                    self.remove_contact_submit:{
+                                        'attr_id':self.confirmation}}},
+                            'remove_attributes':{
+                                'description':"remove_desc", 
+                                'technical':True,
+                                'methods':{
+                                    self.print_contact_attributes:{},
+                                    self.choose_contact_attribute_remove:{
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('enter_edit')}"}}},
+                            'remove_other':{
+                                'description':"remove_desc", 
+                                'technical':True,
+                                'methods':{
+                                    self.remove_attribute_ask:{},
+                                    self.remove_attribute_submit:{
+                                        'attr_id':self.confirmation}}},
                             'remove_phone':{
                                 'description':"remove_phone_desc", 
+                                'technical':True,
                                 'methods':{
-                                    self.print_contacts:{},
-                                    self.choose_contact_from_the_list:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_contact')}"},
                                     self.print_contact_phones:{},
                                     self.choose_contact_phone:{
-                                        'attr_id':f"{self.opnng}{self.parent.translate_string('choose_phone_to_delete')}"},
-                                    self.remove_contact_phone_finish:{}}},
+                                        'attr_id':f"{self.opnng_alt}{self.parent.translate_string('choose_phone_to_delete')}"},
+                                    self.remove_phone_ask:{},
+                                    self.remove_phone_submit:{
+                                        'attr_id':self.confirmation}}},
                             'show_all':{
                                 'description':"show_all_desc", 
                                 'methods':{
@@ -180,7 +214,8 @@ class ContactBook():
                         id_generator += 1
                     self.generated_ids = id_generator
                 else:
-                    print(self.parent.translate_string('contact_list_empty','yellow','green'))
+                    #print(self.parent.translate_string('contact_list_empty','yellow','green'))
+                    pass
         elif mode == "ed":
             with open(file, 'wb') as storage:
                 if len(self.data) > 0:
@@ -265,13 +300,50 @@ class ContactBook():
         else:
             print(self.parent.translate_string('contact_list_empty','yellow','green'))
 
+    def print_edit_phone_options(self):
+        string = f"{self.parent.translate_string('how_to_edit_phone_p0','green')}\n{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('how_to_edit_phone_p1')}\n{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('how_to_edit_phone_p2')}\n"
+        print(string)
+
+    def choose_edit_phone_option(self, option):
+        try:
+            option = self.input_to_id(option)
+            if (type(option) == int) and option == 0:
+                self.parent.start_script('edit_phone_true', mode='technical')
+            elif (type(option) == int) and option == 1:
+                self.parent.start_script('add_phone', mode='technical')
+            elif type(option) == str:
+                return option
+            else:
+                raise ValueError
+        except ValueError:
+            return self.parent.translate_string('wrong_id_error','yellow','green')
+
+    def print_delete_options(self):
+        string = f"{self.parent.translate_string('what_to_delete_p0','green')}\n{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('what_to_delete_p1')}\n{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('what_to_delete_p2')}\n"
+        print(string)
+
+    def choose_remove_option_from_the_list(self, option):
+        try:
+            option = self.input_to_id(option)
+            if (type(option) == int) and option == 0:
+                self.parent.start_script('remove_contact', mode='technical')
+            elif (type(option) == int) and option == 1:
+                self.parent.start_script('remove_attributes', mode='technical')
+            elif type(option) == str:
+                return option
+            else:
+                raise ValueError
+        except ValueError:
+            return self.parent.translate_string('wrong_id_error','yellow','green')
+
     def print_contact_attributes(self):
+        record = self.data[self.ongoing]
         string = self.parent.translate_string('print_contact_attr_p0','green')
-        string += f":\n{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p1')}: {self.data[self.ongoing].name}\n"
-        string += f"{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p2')}: {self.data[self.ongoing].birthday}\n"
-        string += f"{bcolors.RED}2{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p3')}: {self.data[self.ongoing].email}\n"
-        string += f"{bcolors.RED}3{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p4')}: {self.data[self.ongoing].address}\n"
-        #string += f"{bcolors.RED}5{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p5')}: {self.data[self.ongoing].phones}\n"
+        string += f":\n{bcolors.RED}0{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p1')}: {record.name}\n"
+        string += f"{bcolors.RED}1{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p2')}: {record.birthday}\n"
+        string += f"{bcolors.RED}2{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p3')}: {record.email}\n"
+        string += f"{bcolors.RED}3{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p4')}: {record.address}\n"
+        string += f"{bcolors.RED}4{bcolors.GREEN}. {self.parent.translate_string('print_contact_attr_p5')}: {'; '.join(phone for phone in record.phones.values())}\n"
         print(string)
 
     def choose_contact_from_the_list(self, contact_id):
@@ -289,21 +361,86 @@ class ContactBook():
         else:
             print(self.parent.translate_string('contact_list_empty','yellow','green'))
 
-    def choose_contact_attribute(self, field_id):
+    def choose_contact_attribute_edit(self, field_id):
         try:
             field_id = self.input_to_id(field_id)
-            if type(field_id) == int and field_id < 4:
+            if type(field_id) == int and field_id == 4:
                 self.field_id = field_id
+                self.parent.start_script('edit_phone', mode='technical')
+            elif type(field_id) == int and field_id < 4:
+                self.field_id = field_id
+                self.parent.start_script('edit_other', mode='technical')
             elif type(field_id) == str:
                 return field_id
             else:
                 raise ValueError
-        except:
+        except ValueError:
             print(self.parent.translate_string('wrong_id_error','yellow','green'))
+
+    def choose_contact_attribute_remove(self, field_id):
+        try:
+            field_id = self.input_to_id(field_id)
+            if type(field_id) == int and field_id == 4:
+                self.field_id = field_id
+                self.parent.start_script('remove_phone', mode='technical')
+            elif type(field_id) == int and field_id < 4:
+                self.field_id = field_id
+                self.parent.start_script('remove_other', mode='technical')
+            elif type(field_id) == str:
+                return field_id
+            else:
+                raise ValueError
+        except ValueError:
+            print(self.parent.translate_string('wrong_id_error','yellow','green'))
+
+    def remove_phone_ask(self):
+        print(f"{self.parent.translate_string('remove_attribute_ask_p0','yellow','red')} {self.parent.translate_string('contact_attr_p5_1','red')} {self.parent.translate_string('remove_attribute_ask_p1','yellow','red')} ( {self.data[self.ongoing].phones[self.field_id]} )")
+
+    def remove_phone_submit(self, answer:str):
+        record = self.data[self.ongoing]
+        if answer.lower().strip() in self.parent.confirm:
+            #del self.data[self.ongoing].phones[self.field_id]
+            record.phone_check_and_set(mode='del',phone=record.phones[self.field_id])
+            #note.phone_check_and_set(mode='del', phone=self.field_id)
+            self.update_file(mode="ed")
+            self.ongoing = None
+            self.field_id = None
+            return
+        elif answer.lower().strip() in self.parent.deny:
+            print(self.parent.translate_string('contact_remove_abort','yellow','green'))
+            return
+
+        return ' '
+    
+    def remove_attribute_ask(self):
+        ref_dict = ['contact_attr_p1','contact_attr_p2','contact_attr_p3','contact_attr_p4']
+        print(f"{self.parent.translate_string('remove_attribute_ask_p0','yellow')} {self.parent.translate_string(ref_dict[self.field_id],'red')} {self.parent.translate_string('remove_attribute_ask_p1','yellow','green')}")
+
+    def remove_attribute_submit(self, answer:str):
+        record = self.data[self.ongoing]
+        if answer.lower().strip() in self.parent.confirm:
+            if self.field_id == 0:
+                record.remove_name()
+            elif self.field_id == 1:
+                record.remove_birthday()
+            elif self.field_id == 2:
+                record.remove_email()
+            elif self.field_id == 3:
+                record.remove_address()
+            self.update_file(mode="ed")
+            self.ongoing = None
+            self.field_id = None
+            return
+        elif answer.lower().strip() in self.parent.deny:
+            print(self.parent.translate_string('contact_remove_abort','yellow','green'))
+            return
+
+        return ' '
+    
 
     @contactbook_error
     def edit_contact(self, new_text):
-        local = ["contact_attr_p1", "contact_attr_p2", "contact_attr_p3", "contact_attr_p4", "contact_attr_p5"]
+        local = ["contact_attr_p1", "contact_attr_p2", "contact_attr_p3", "contact_attr_p4", "contact_attr_p5_1"]
         if self.field_id == 0:
             self.data[self.ongoing].add_name(new_text)
         elif self.field_id == 1:
@@ -314,7 +451,7 @@ class ContactBook():
             self.data[self.ongoing].add_address(new_text)
         
         self.update_file(mode="ed")
-        print(f"{self.parent.translate_string(local[self.field_id],'green')} {self.parent.translate_string('edit_contact_p1')}")
+        print(f"{self.parent.translate_string(local[self.field_id],'yellow')} {self.parent.translate_string('edit_contact_p1','yellow','green')}")
         self.field_id = None
         self.ongoing = None
 
@@ -358,7 +495,7 @@ class ContactBook():
         note.phone_check_and_set(mode='ed', phone=note.phones[self.field_id], new_phone=new_text)
         
         self.update_file(mode="ed")
-        print(f"{self.parent.translate_string('contact_attr_p5_1','yellow')} {self.parent.translate_string('edit_contact_p1',end_color='green')}.")
+        print(f"{self.parent.translate_string('contact_attr_p5_1','yellow')} {self.parent.translate_string('edit_contact_p1',end_color='green')}")
         self.field_id = None
         self.ongoing = None
 
@@ -370,28 +507,25 @@ class ContactBook():
         self.update_file(mode="add",r_id=self.generated_ids)
         self.ongoing = None
 
-    def remove_contact_finish(self):
-        print(self.parent.translate_string('contact_removed','yellow','green'))
-        self.update_file(mode="del", r_id=self.ongoing)
-        self.ongoing = None
+    def remove_contact_submit(self, answer:str):
+        if answer.lower().strip() in self.parent.confirm:
+            print(self.parent.translate_string('contact_removed','yellow','green'))
+            self.update_file(mode="del", r_id=self.ongoing)
+            self.ongoing = None
+            return
+        elif answer.lower().strip() in self.parent.deny:
+            print(self.parent.translate_string('contact_remove_abort','yellow','green'))
+            return
 
-    def remove_contact_phone_finish(self):
-        del self.data[self.ongoing].phones[self.field_id]
-        print(self.parent.translate_string('phone_removed','yellow','green'))
-        self.update_file(mode="ed", r_id=self.ongoing)
-        self.ongoing = None
-        self.field_id = None
+        return ' '
+    
+    def remove_contact_ask(self):
+        record = self.data[self.ongoing]
+        string = f"{self.parent.translate_string('contact_remove_submit','green')}\n"
+        string += f"{self.parent.translate_string('contact_attr_p1','yellow','red')}: {record.name}; {self.parent.translate_string('contact_attr_p2','yellow','red')}: {record.birthday}; {self.parent.translate_string('contact_attr_p3','yellow','red')}: {record.email}; {self.parent.translate_string('contact_attr_p4','yellow','red')}: {record.address}; {self.parent.translate_string('contact_attr_p5','yellow','red')}: {'; '.join(f'{v}' for v in record.phones.values())}\n{bcolors.GREEN}?"
+        print(string)
 
     def add_phone_finish(self):
-        self.update_file(mode="ed")
-        self.field_id = None
-        self.ongoing = None
-
-    @contactbook_error
-    def remove_phone_finish(self):
-        note = self.data[self.ongoing]
-        note.phone_check_and_set(mode='del', phone=self.field_id)
-        
         self.update_file(mode="ed")
         self.field_id = None
         self.ongoing = None
