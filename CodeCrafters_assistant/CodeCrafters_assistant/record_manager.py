@@ -154,6 +154,7 @@ class RecordManager(MiscChecks):
         return f"{self.parent.translate_string('record_name','red','green')}: {self.name}, {self.parent.translate_string('contact_attr_p2','red','green')}: {self.birthday}, {self.parent.translate_string('contact_attr_p3','red','green')}: {self.email}, {self.parent.translate_string('contact_attr_p4','red','green')}: {self.address}, {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(phone for phone in self.phones.values())}"
 
     def record_error(func):
+        print(func.__name__)
         def true_handler(self,arg):
             try:
                 result = func(self,arg)
@@ -199,44 +200,50 @@ class RecordManager(MiscChecks):
     def edit_address(self,address:str):
         self.address = address
 
-    @record_error
     def phone_check_and_set(self,mode,phone,new_phone=None):
-        if mode == 'add':
-            if phone.lower() == "stop":
-                return True
-            phone = self.p_check(phone)
-            self.phones[len(self.phones)] = phone
-            raise ValueError(f"{self.parent.translate_string('phone_added_p0','yellow','red')}{self.parent.translate_string('phone_added_p1')}{self.parent.translate_string('phone_added_p2','yellow','green')}")
-        elif mode == 'ed':
-            if self.has_phone(phone):
-                if type(self.p_check(new_phone)) == str:
+        try:
+            if mode == 'add':
+                if phone.lower() == "stop":
+                    return True
+                phone = self.p_check(phone)
+                self.phones[len(self.phones)] = phone
+                raise ValueError(f"{self.parent.translate_string('phone_added_p0','yellow','red')}{self.parent.translate_string('phone_added_p1')}{self.parent.translate_string('phone_added_p2','yellow','green')}")
+            elif mode == 'ed':
+                if self.has_phone(phone):
+                    if type(self.p_check(new_phone)) == str:
+                        for phone_id,phone_number in self.phones.items():
+                            if phone_number == phone:
+                                self.phones[phone_id] = new_phone
+                                return
+                    
+                raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
+            elif mode == 'del':
+                if self.has_phone(phone):
                     for phone_id,phone_number in self.phones.items():
                         if phone_number == phone:
-                            self.phones[phone_id] = new_phone
+                            del self.phones[phone_id]
+                            print(self.parent.translate_string('phone_removed','yellow','green'))
                             return
                 
-            raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
-        elif mode == 'del':
-            if self.has_phone(phone):
-                for phone_id,phone_number in self.phones.items():
-                    if phone_number == phone:
-                        del self.phones[phone_id]
-                        print(self.parent.translate_string('phone_removed','yellow','green'))
-                        return
+                raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
+        except ValueError as error_text:
+            raise ValueError(error_text)
             
-            raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
-            
-    def remove_birthday(self):
-        self.birthday = self.parent.translate_string('none')
-    
     def remove_name(self):
         self.name = self.parent.translate_string('unnamed_contact')
+        print(self.parent.translate_string('name_removed','yellow','green'))
 
+    def remove_birthday(self):
+        self.birthday = self.parent.translate_string('none')
+        print(self.parent.translate_string('birthday_removed','yellow','green'))
+    
     def remove_email(self):
         self.email = self.parent.translate_string('none')
+        print(self.parent.translate_string('email_removed','yellow','green'))
 
     def remove_address(self):
         self.address = self.parent.translate_string('none')
+        print(self.parent.translate_string('address_removed','yellow','green'))
         
     def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
         id_generator = 0
