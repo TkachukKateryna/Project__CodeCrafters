@@ -209,7 +209,7 @@ class InputManager():
         while True:
             if self.menu_delay:
                 while True: 
-                    self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')} {self.translate_string('enter_back_p2')}:   {bcolors.RED}")
+                    self.command = input(f"{self.translate_string('enter_back_p0','cyan')} {self.translate_string('enter_back_p1','red','cyan')}{self.translate_string('enter_back_p2')}:   {bcolors.RED}")
                     if self.command.lower() in self.confirm:
                         self.menu_delay = None
                         break
