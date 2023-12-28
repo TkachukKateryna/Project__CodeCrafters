@@ -154,7 +154,7 @@ class RecordManager(MiscChecks):
         return f"{self.parent.translate_string('record_name','red','green')}: {self.name}, {self.parent.translate_string('contact_attr_p2','red','green')}: {self.birthday}, {self.parent.translate_string('contact_attr_p3','red','green')}: {self.email}, {self.parent.translate_string('contact_attr_p4','red','green')}: {self.address}, {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(phone for phone in self.phones.values())}"
 
     def record_error(func):
-        print(func.__name__)
+        #print(func.__name__)
         def true_handler(self,arg):
             try:
                 result = func(self,arg)
