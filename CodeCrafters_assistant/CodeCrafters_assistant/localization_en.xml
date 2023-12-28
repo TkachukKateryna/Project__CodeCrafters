@@ -24,7 +24,7 @@
    		<enter_to_leave text="If you decide to exit the program, enter"/>
    		<enter_back_p0 text="Enter"/>
    		<enter_back_p1 text="Y/Yes"/>
-   		<enter_back_p2 text="to return to the previous menu"/>
+   		<enter_back_p2 text=" to return to the previous menu"/>
 
    		<menu_entered_p0 text="You are in the"/>
    		<menu_entered_p1 text=" menu. Available commands:"/>
