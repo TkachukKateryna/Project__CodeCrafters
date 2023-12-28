@@ -39,32 +39,35 @@ class NoteChecks:
         return False 
 
     def tag_check_and_set(self,mode,tag,new_tag=None):
-        if tag == '':
-            raise ValueError(self.parent.translate_string('wrong_tag_format','yellow','green'))
-        elif mode == 'add':
-            if tag.lower() == "stop":
-                return True
-            tag = self.tag_check(tag)
-            self.tags[len(self.tags)] = tag
-            raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p2','yellow','green')}")
-        elif mode == 'ed':
-            if self.has_tag(tag):
-                if type(self.tag_check(new_tag)) == str:
+        try:
+            if tag == '':
+                raise ValueError(self.parent.translate_string('wrong_tag_format','yellow','green'))
+            elif mode == 'add':
+                if tag.lower() == "stop":
+                    return True
+                tag = self.tag_check(tag)
+                self.tags[len(self.tags)] = tag
+                raise ValueError(f"{self.parent.translate_string('tag_added_p0','yellow','red')}{self.parent.translate_string('tag_added_p1')}{self.parent.translate_string('tag_added_p2','yellow','green')}")
+            elif mode == 'ed':
+                if self.has_tag(tag):
+                    if type(self.tag_check(new_tag)) == str:
+                        for tag_id,tag_item in self.tags.items():
+                            if tag_item == tag:
+                                self.tags[tag_id] = new_tag
+                                return
+                    
+                raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
+            elif mode == 'del':
+                if self.has_tag(tag):
                     for tag_id,tag_item in self.tags.items():
                         if tag_item == tag:
-                            self.tags[tag_id] = new_tag
+                            del self.tags[tag_id]
+                            print(self.parent.translate_string('tag_removed','yellow','green'))
                             return
                 
-            raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
-        elif mode == 'del':
-            if self.has_tag(tag):
-                for tag_id,tag_item in self.tags.items():
-                    if tag_item == tag:
-                        del self.tags[tag_id]
-                        print(self.parent.translate_string('tag_removed','yellow','green'))
-                        return
-            
-            raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
+                raise ValueError(self.parent.translate_string('tag_not_found','yellow','green'))
+        except ValueError as error_text:
+            raise ValueError(error_text)
 
     def find_the_text(self, text):
         if self.text.lower().find(text.lower()) != -1:
@@ -155,8 +158,9 @@ class NoteFile:
             tmp = self.parent.module_chosen
         if mode != 'first':
             self.parent.module_chosen = self.parent.modules.index(self)
-        self.confirmation = f"{self.parent.translate_string('please_enter_conirm_p0')} {self.parent.translate_string('confirm','red','cyan')}/{self.parent.translate_string('confirm_long','red','cyan')} {self.parent.translate_string('please_enter_conirm_p1')} {self.parent.translate_string('please_enter_conirm_p2')} {self.parent.translate_string('deny','red','cyan')}/{self.parent.translate_string('deny_long','red','cyan')} {self.parent.translate_string('please_enter_conirm_p3')}"
+        self.confirmation = f"{self.parent.translate_string('please_enter_confirm_p0')} {self.parent.translate_string('confirm','red','cyan')}/{self.parent.translate_string('confirm_long','red','cyan')} {self.parent.translate_string('please_enter_confirm_p1')} {self.parent.translate_string('please_enter_confirm_p2')} {self.parent.translate_string('deny','red','cyan')}/{self.parent.translate_string('deny_long','red','cyan')} {self.parent.translate_string('please_enter_confirm_p3')}"
         self.opnng = f"{self.parent.translate_string('please_enter_p0','cyan')} "
+        self.opnng_alt = f"{self.parent.translate_string('please_enter_p0_1','cyan')} "
         self.non_obligatory = f"{bcolors.CYAN} ( {self.parent.translate_string('please_enter_p1')} '{self.parent.translate_string('please_enter_p2','red','cyan')}'{self.parent.translate_string('please_enter_p3')})"
         self.method_table = {'__localization':{
                                 'name':"note_manager_name", 
@@ -173,7 +177,7 @@ class NoteFile:
                                         'address':f"{self.opnng}{self.parent.translate_string('note_attr_p2')}{self.non_obligatory}"},
                                     self.add_note_finisher:{}}},
                             'edit':{
-                                'description':"edit_desc", 
+                                'description':"edit_desc",
                                 'methods':{
                                     self.print_notes:{},
                                     self.choose_note_from_the_list:{
