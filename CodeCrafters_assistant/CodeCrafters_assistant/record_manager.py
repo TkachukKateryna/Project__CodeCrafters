@@ -1,53 +1,46 @@
+from CodeCrafters_assistant.utils import Translate
 from re import search
 from datetime import date,datetime
 
-# Зберігає в собі методи перевірки значень класу RecordManager. Окремо не використовується.
-class MiscChecks:
+# Зберігає в собі методи перевірки значень класу Record. Окремо не використовується.
+class BirthdayChecks(Translate):
     def month_check(self,month:str):
         if len(month) > 2:
-            raise ValueError(self.parent.translate_string('wrong_month_format_char_num','yellow','green'))
+            raise ValueError(self.translate_string('wrong_month_format_char_num','yellow','green'))
         check_month = month
         if month[:1] == "0":
             check_month = month[:1]
         if int(check_month) <= 12:
             return True
         else:
-            raise ValueError(self.parent.translate_string('wrong_month_format_out_bound','yellow','green'))
+            raise ValueError(self.translate_string('wrong_month_format_out_bound','yellow','green'))
 
     def day_check(self,day:str):
         if len(day) > 2:
-            raise ValueError(self.parent.translate_string('wrong_day_format_char_num','yellow','green'))
+            raise ValueError(self.translate_string('wrong_day_format_char_num','yellow','green'))
         check_day = day
         if day[:1] == "0":
             check_day = day[:1]
         if int(check_day) <= 31:
             return True
         else:
-            raise ValueError(self.parent.translate_string('wrong_day_format_out_bound','yellow','green'))
+            raise ValueError(self.translate_string('wrong_day_format_out_bound','yellow','green'))
 
     def year_check(self,year:str):
         if len(year) > 4:
-            raise ValueError(self.parent.translate_string('wrong_year_format_char_num','yellow','green'))
+            raise ValueError(self.translate_string('wrong_year_format_char_num','yellow','green'))
         if int(year) <= date.today().year:
             return True
         else:
-           raise ValueError(self.parent.translate_string('wrong_year_format_out_bound','yellow','green'))
+           raise ValueError(self.translate_string('wrong_year_format_out_bound','yellow','green'))
 
     def calendar_check(self,year:str,month:str,day:str):
         try:
             if datetime(int(year),int(month),int(day)).date():
                 return True
-            raise ValueError(self.parent.translate_string('wrong_year_format_days_num','yellow','green'))
+            raise ValueError(self.translate_string('wrong_year_format_days_num','yellow','green'))
         except ValueError:
-            raise ValueError(self.parent.translate_string('wrong_year_format_days_num','yellow','green'))
-
-    def p_check(self,phone:str):
-        map = {' ':''}
-        phone.translate(map)
-        if len(phone) == 10 and search(r'\d{10}', phone) != None:
-            return phone
-        else:
-            raise ValueError(self.parent.translate_string('incorrect_phone','yellow','green'))
+            raise ValueError(self.translate_string('wrong_year_format_days_num','yellow','green'))
 
     def birthday_check(self,birthday):
         # Format: MM-DD-YYYY
@@ -65,12 +58,12 @@ class MiscChecks:
                 birthday = birthday[0:2] + "-" + birthday[2:4] + "-" + birthday[4:6] + birthday[6:8]
                 return birthday
         else:
-            raise ValueError(self.parent.translate_string('wrong_birthday_format','yellow','green'))
+            raise ValueError(self.translate_string('wrong_birthday_format','yellow','green'))
         
     def days_to_birthday(self,mode=None):
-        if self.birthday != "None":
+        if search(r'\d{2}\D\d{2}\D\d{4}', self.data['Birthday']) != None:
             TODAY = date.today()
-            tmp = self.birthday
+            tmp = self.data['Birthday']
             BD_DAY = datetime(int(tmp[6:]), int(tmp[0:2]), int(tmp[3:5])).date()
             if (BD_DAY.month < TODAY.month) or ((BD_DAY.month == TODAY.month) and (BD_DAY.day < TODAY.day)):
                 BD_DAY = BD_DAY.replace(year = TODAY.year + 1)
@@ -82,76 +75,43 @@ class MiscChecks:
                 return (BD_DAY - TODAY)
         return "None"
 
+class MiscChecks(Translate):
+    def p_check(self,phone:str):
+        map = {' ':''}
+        phone.translate(map)
+        if len(phone) == 10 and search(r'\d{10}', phone) != None:
+            return phone
+        else:
+            raise ValueError(self.translate_string('incorrect_phone','yellow','green'))
+
     def email_check(self,email:str):
         # Format: text@text.text
-        if (search(r'\S{3,}@[a-zA-Z]{2,}.[a-zA-Z]{2,}', email) != None):
+        if (search(r'\S{3,}@[a-zA-Z]{2,}\.[a-zA-Z]{2,}', email) != None):
             email = f"{email[:email.rfind('@')]}{email[email.rfind('@'):].lower()}"
             return email
         else:
-            raise ValueError(self.parent.translate_string('wrong_email_format','yellow','green'))
+            raise ValueError(self.translate_string('wrong_email_format','yellow','green'))
         
     def has_phone(self,phone:str):
-        for i in self.phones.values():
+        for i in self.data['Phones'].values():
             if i == phone:
                 return True
            
         return False 
-
-    def find_in_name(self, text):
-        text = fr"{text.lower()}"
-        if self.name.lower().find(text) != -1:
-            return search(text,self.name.lower()).span()
-        else:
-            return False
-
-    def find_in_birthday(self, text):
-        text = fr"{text.lower()}"
-        if self.birthday.lower().find(text) != -1:
-            return search(text,self.birthday.lower()).span()
-        else:
-            return False
-
-    def find_in_email(self, text):
-        text = fr"{text.lower()}"
-        if self.email.lower().find(text) != -1:
-            return search(text,self.email.lower()).span()
-        else:
-            return False
-
-    def find_in_address(self, text):
-        text = fr"{text.lower()}"
-        if self.address.lower().find(text) != -1:
-            return search(text,self.address.lower()).span()
-        else:
-            return False
-
-    def find_in_phones(self, text):
-        text = fr"{text.lower()}"
-        phones = "; ".join(f"{phone}" for phone in self.phones.values())
-        if phones.lower().find(text) != -1:
-            return search(text,phones.lower()).span()
-        else:
-            return False
-
+    
 # Екземпляр класу. Відповідає за зберігання усіх змінних запису. Створюється у ContactBook. Необов'язкові поля можуть бути пропущені символами "n"/"N".
 # У самому класі зберігається лише функціонал запису/зміни/видалення. Все інше наслідується від MiscChecks.
-class RecordManager(MiscChecks):
+class Record(MiscChecks, BirthdayChecks):
     def __init__(self, parent_class):
         self.parent = parent_class
-        self.phones = {}
+        self.data = {}
         if self.parent:
-            self.name = self.parent.translate_string('unnamed_contact')
-            self.birthday = self.parent.translate_string('none')
-            self.email = self.parent.translate_string('none')
-            self.address = self.parent.translate_string('none')
+            self.data = {'Name':self.translate_string('unnamed_contact'),'Birthday':self.translate_string('none'),'Email':self.translate_string('none'),'Address':self.translate_string('none'),'Phones':{}}
         else:
-            self.name = "Unnamed contact"
-            self.birthday = "None"
-            self.email = "None"
-            self.address = "None"
+            self.data = {'Name':"Unnamed contact",'Birthday':"None",'Email':"None",'Address':"None",'Phones':{}}
 
     def __str__(self):
-        return f"{self.parent.translate_string('record_name','red','green')}: {self.name}, {self.parent.translate_string('contact_attr_p2','red','green')}: {self.birthday}, {self.parent.translate_string('contact_attr_p3','red','green')}: {self.email}, {self.parent.translate_string('contact_attr_p4','red','green')}: {self.address}, {self.parent.translate_string('contact_attr_p5','red','green')}: {'; '.join(phone for phone in self.phones.values())}"
+        return f"{self.translate_string('record_name','red','green')}: {self.data['Name']}, {self.translate_string('contact_attr_p2','red','green')}: {self.data['Birthday']}, {self.translate_string('contact_attr_p3','red','green')}: {self.data['Email']}, {self.translate_string('contact_attr_p4','red','green')}: {self.data['Address']}, {self.translate_string('contact_attr_p5','red','green')}: {'; '.join(phone for phone in self.data['Phones'].values())}"
 
     def record_error(func):
         #print(func.__name__)
@@ -164,94 +124,103 @@ class RecordManager(MiscChecks):
 
     @record_error
     def add_birthday(self,birthday):
-        self.birthday = self.birthday_check(birthday)
+        self.data['Birthday'] = self.birthday_check(birthday)
 
     @record_error
     def add_name(self,name:str):
-        self.name = name
+        self.data['Name'] = name
 
     @record_error
     def add_email(self,email:str):
-        self.email = self.email_check(email)
+        self.data['Email'] = self.email_check(email)
 
     @record_error
     def add_address(self,address:str):
-        self.address = address
+        self.data['Address'] = address
 
     @record_error
     def edit_birthday(self,new_birthday:str):
-        if self.birthday != "None":
-            self.birthday = self.birthday_check(new_birthday)
+        if self.data['Birthday'] != "None":
+            self.data['Birthday'] = self.birthday_check(new_birthday)
         
-        raise ValueError(self.parent.translate_string('no_birthday','yellow','green'))
+        raise ValueError(self.translate_string('no_birthday','yellow','green'))
 
     @record_error
     def edit_email(self,new_email:str):
-        if self.email != "None":
-                self.email = self.email_check(new_email)
+        if self.data['Email'] != "None":
+                self.data['Email'] = self.email_check(new_email)
 
-        raise ValueError(self.parent.translate_string('no_email','yellow','green'))
+        raise ValueError(self.translate_string('no_email','yellow','green'))
 
     @record_error
     def edit_name(self,name:str):
-        self.name = name
+        self.data['Name'] = name
 
     @record_error
     def edit_address(self,address:str):
-        self.address = address
+        self.data['Address'] = address
 
     def phone_check_and_set(self,mode,phone,new_phone=None):
         try:
             if mode == 'add':
-                if phone.lower() == "stop":
+                if phone.lower() == "stop" or phone.lower() == "n":
                     return True
                 phone = self.p_check(phone)
-                self.phones[len(self.phones)] = phone
-                raise ValueError(f"{self.parent.translate_string('phone_added_p0','yellow','red')}{self.parent.translate_string('phone_added_p1')}{self.parent.translate_string('phone_added_p2','yellow','green')}")
+                self.data['Phones'][len(self.data['Phones'])] = phone
+                raise ValueError(f"{self.translate_string('phone_added_p0','yellow','red')}{self.translate_string('phone_added_p1')}{self.translate_string('phone_added_p2','yellow','green')}")
             elif mode == 'ed':
                 if self.has_phone(phone):
                     if type(self.p_check(new_phone)) == str:
-                        for phone_id,phone_number in self.phones.items():
+                        for phone_id,phone_number in self.data['Phones'].items():
                             if phone_number == phone:
-                                self.phones[phone_id] = new_phone
+                                self.data['Phones'][phone_id] = new_phone
                                 return
                     
-                raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
+                raise ValueError(self.translate_string('phone_not_found','yellow','green'))
             elif mode == 'del':
                 if self.has_phone(phone):
-                    for phone_id,phone_number in self.phones.items():
+                    for phone_id,phone_number in self.data['Phones'].items():
                         if phone_number == phone:
-                            del self.phones[phone_id]
-                            print(self.parent.translate_string('phone_removed','yellow','green'))
+                            del self.data['Phones'][phone_id]
+                            print(self.translate_string('phone_removed','yellow','green'))
                             return
                 
-                raise ValueError(self.parent.translate_string('phone_not_found','yellow','green'))
+                raise ValueError(self.translate_string('phone_not_found','yellow','green'))
         except ValueError as error_text:
             raise ValueError(error_text)
             
     def remove_name(self):
-        self.name = self.parent.translate_string('unnamed_contact')
-        print(self.parent.translate_string('name_removed','yellow','green'))
+        self.data['Name'] = self.translate_string('unnamed_contact')
+        print(self.translate_string('name_removed','yellow','green'))
 
     def remove_birthday(self):
-        self.birthday = self.parent.translate_string('none')
-        print(self.parent.translate_string('birthday_removed','yellow','green'))
+        self.data['Birthday'] = self.translate_string('none')
+        print(self.translate_string('birthday_removed','yellow','green'))
     
     def remove_email(self):
-        self.email = self.parent.translate_string('none')
-        print(self.parent.translate_string('email_removed','yellow','green'))
+        self.data['Email'] = self.translate_string('none')
+        print(self.translate_string('email_removed','yellow','green'))
 
     def remove_address(self):
-        self.address = self.parent.translate_string('none')
-        print(self.parent.translate_string('address_removed','yellow','green'))
+        self.data['Address'] = self.translate_string('none')
+        print(self.translate_string('address_removed','yellow','green'))
         
-    def load_data(self,name,phones,birthday,email,address): # To avoid reoccurring checks when loading from storage.bin
+    def rearrange_phones(self):
+        if self.data['Phones'] != {}:
+            id_generator = 0
+            tmp_array = {}
+            for phone in self.data['Phones'].values(): #rearranging phone ids
+                tmp_array[id_generator] = phone
+                id_generator += 1
+            self.data['Phones'] = tmp_array
+
+    def load_data(self,cfg): # To avoid reoccurring checks when loading from storage.bin
         id_generator = 0
-        for do_not_use,phone in phones.items(): #rearranging phone ids, just like with contactbook records.
-            self.phones[id_generator] = phone
+        for do_not_use,phone in cfg['Phones'].items(): #rearranging phone ids, just like with contactbook records.
+            self.data['Phones'][id_generator] = phone
             id_generator += 1
 
-        self.name = name
-        self.birthday = birthday
-        self.email = email
-        self.address = address
+        self.data['Name'] = cfg['Name']
+        self.data['Birthday'] = cfg['Birthday']
+        self.data['Email'] = cfg['Email']
+        self.data['Address'] = cfg['Address']

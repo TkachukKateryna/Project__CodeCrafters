@@ -1,3 +1,4 @@
+from CodeCrafters_assistant.utils import Id_format, Translate, bcolors
 from CodeCrafters_assistant.contact_book import ContactBook
 from CodeCrafters_assistant.notes import NoteFile
 from CodeCrafters_assistant.sorting import FileSorter
@@ -6,20 +7,7 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.styles import Style
 import xml.etree.ElementTree as ET
 
-class bcolors:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    DEFAULT = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    
-
-
-class InputManager():
+class InputManager(Id_format, Translate):
     def __init__(self):
         # Тут завантажуємо дані з файла (якщо він є. Якщо немає - викликаємо функцію, що його створить і заповнить "скелетом" даних для збереження)
         # Тут же ініціалізуємо технічні змінні для цього класу.
@@ -84,41 +72,6 @@ class InputManager():
         else:
             self.module_chosen = None
 
-
-    def translate_string(self,string:str,st_color=None,end_color=None, mode=None):
-        string = str(string).strip().lower()
-        local = self.localization[0]
-        local_def = self.localization[0]
-        if type(mode) == int and mode < len(self.modules):
-            local = self.localization[int(mode) + 1]
-        elif type(self.module_chosen) == int and self.module_chosen < len(self.modules):
-            local = self.localization[self.module_chosen + 1]
-        colors = {'header':'\033[95m',
-                  'blue':'\033[94m',
-                  'cyan':'\033[96m',
-                  'green':'\033[92m',
-                  'yellow':'\033[93m',
-                  'red':'\033[91m',
-                  'default':'\033[0m',
-                  'bold':'\033[1m',
-                  'underline':'\033[4m'}
-        return_string = ""
-        if st_color and st_color in colors.keys():
-            return_string += colors[st_color]
-        if local.find(string) != None and local.find(string).attrib['text'] != None:
-            return_string += local.find(string).attrib['text']
-        elif local_def.find(string) != None and local_def.find(string).attrib['text'] != None:
-            return_string += local_def.find(string).attrib['text']
-        else:
-            if local_def.find("local_not_found_1") and local_def.find("local_not_found_2"):
-                print(f"{colors['yellow']}{local.find('local_not_found_1').attrib['text']} {colors['red']}{string}{colors['yellow']} {local.find('local_not_found_2').attrib['text']}{colors['green']}")
-            else:
-                print(f"{colors['yellow']}Item {colors['red']}{string}{colors['yellow']} not found in the XML-file!{colors['green']}")
-            return_string += string
-        if end_color and end_color in colors.keys():
-            return_string += colors[end_color]
-        return return_string
-
     def set_language(self,lang):
         try:
             lang = self.input_to_id(lang)
@@ -174,17 +127,6 @@ class InputManager():
             self.module_chosen = None
             del self.actions['default']["back"] 
     
-    def input_to_id(self, text):
-        map = {' ':'','\n':'','\t':'','\r':''}
-        new_line = text.translate(map)
-        try:
-            if int(new_line) >= 0:
-                return int(new_line)
-            else:
-                return self.translate_string('negative_id_error','yellow','green')
-        except ValueError:
-            return self.translate_string('wrong_id_error','yellow','green')
-
     # Список actions автоматично заповнюється командами з відповідних класів (окрім загальних команд, таких як 'help', 'exit', тощо - вони записуються напряму, у _init__() класу Input_manager).
     # У кожного класу, що має певні консольні команди, є поле self.method_table - 
     # в ньому і зберігається назва консольної команди, відповідний метод і екземпляр класу, а також локалізація тексту (що програма буде казати користувачеві перед отриманням аргументів).
@@ -235,6 +177,7 @@ class InputManager():
                 result = self.start_script(self.command)
                 if result == 'leave':
                     break
+
     # Тут в нас перевіряється, чи це команда класу InputManager, чи ні. Якщо ні - витягуємо необхідні дані зі словника. Ітеруємо словник методів. Якщо у метода немає аргументів, 
     # просто запускаємо його виконання. Якщо аргументи є, то ітеруємо по словнику аргументів, кожного разу видаваючи відповідну текстову фразу, що також є у словнику, і 
     # чекаючи на інпут.

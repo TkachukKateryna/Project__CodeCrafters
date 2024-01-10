@@ -1,19 +1,8 @@
-
+from CodeCrafters_assistant.utils import bcolors, Translate
 from pathlib import Path
 
 
-class bcolors:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    DEFAULT = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-class FileSorter:
+class FileSorter(Translate):
     def __init__(self, parent_class):
         self.parent = parent_class
         self.parent.modules.append(self)
@@ -47,7 +36,7 @@ class FileSorter:
             tmp = self.parent.module_chosen
         if mode != 'first':
             self.parent.module_chosen = self.parent.modules.index(self)
-        path = fr"{self.parent.translate_string('path_p0','red')}  {self.parent.translate_string('path_p1','green')}"
+        path = fr"{self.translate_string('path_p0','red')}  {self.translate_string('path_p1','green')}"
         self.method_table = {'__localization':{
                                 'name':'file_sorter_name',
                                 'description':'file_sorter_desc'}, 
@@ -55,8 +44,8 @@ class FileSorter:
                                 'description':"sort_files_desc", 
                                 'methods':{
                                     self.starter:{
-                                        'input':f"{self.parent.translate_string('enter_input_folder','green')} {path}"},
-                                        'output':f"{self.parent.translate_string('enter_output_folder','green')} {path}"}}}
+                                        'input':f"{self.translate_string('enter_input_folder','green')} {path}"},
+                                        'output':f"{self.translate_string('enter_output_folder','green')} {path}"}}}
     
         if mode != 'first':
             self.parent.module_chosen = tmp
@@ -67,14 +56,14 @@ class FileSorter:
         # Перевіряємо, чи існує директорія та чи це директорія
         if not source_path.exists() or not source_path.is_dir():
             # Повертаємо повідомлення про помилку, якщо директорія недійсна
-            return f"{bcolors.RED}{arg1}{self.parent.translate_string('invalid_path','green')}"
+            return f"{bcolors.RED}{arg1}{self.translate_string('invalid_path','green')}"
 
         # Створюємо об'єкт Path для директорії призначення
         destination_path = Path(arg2)
         # Перевіряємо, чи існує директорія та чи це директорія
         if not destination_path.exists() or not destination_path.is_dir():
             # Повертаємо повідомлення про помилку, якщо директорія недійсна
-            return f"{bcolors.RED}{arg2}{self.parent.translate_string('invalid_path','green')}"
+            return f"{bcolors.RED}{arg2}{self.translate_string('invalid_path','green')}"
 
         # Якщо директорії коректні, викликаємо метод real_sorter з правильними директоріями
         self.real_sorter(source_path, destination_path)

@@ -47,6 +47,11 @@
    		<please_enter_p2 text="N"/>
    		<please_enter_p3 text=", якщо бажаєте додати пізніше"/>
 
+   		<choose_search_mode text="номер режиму пошуку"/>
+   		<enter_text_to_find text="текст, який ви бажаєте знайти"/>
+   		<enter_edit text="що ви збираєтесь редагувати"/>
+   		<enter_remove text="що ви збираєтесь видалити"/>
+   		<enter_new_text text="новий текст"/>
 	</default>
 	<contact_book>
 		<!--Contact manager-specific commands start-->
@@ -68,9 +73,6 @@
    		<choose_contact text="номер контакта"/>
    		<choose_contact_to_edit text="номер контакта, який ви хочете відредагувати"/>
    		<choose_contact_to_remove text="номер контакта, який ви хочете видалити"/>
-   		<enter_edit text="що ви збираєтесь редагувати"/>
-   		<enter_remove text="що ви збираєтесь видалити"/>
-   		<enter_new_text text="новий текст"/>
 
    		<edit_phone_desc text="Редагує номер телефона контакта."/>
    		<choose_contact_phone text="номер телефону, який ви збираєтесь редагувати"/>
@@ -81,8 +83,6 @@
    		<phone_number_add text="номер телефону, який ви хочете додати"/>
 
    		<find_desc text="Шукає введений текст у контактах."/>
-   		<choose_search_mode text="номер режиму пошуку"/>
-   		<enter_text_to_find text="текст, який ви бажаєте знайти"/>
 
    		<remove_desc text="Видаляє ім'я/день народження/електронну пошту/адресу/номери телефонів контакту, або сам контакт."/>
 
@@ -102,7 +102,7 @@
 
    		<print_contacts text="Наразі збережені такі контакти"/>
 
-   		<print_contact_attr_p0 text="Оберіть, що ви хочете редагувати"/>
+   		<print_contact_attr_p0 text="Оберіть номер того, що ви хочете редагувати"/>
    		<print_contact_attr_p1 text="Ім'я контакту"/>
    		<print_contact_attr_p2 text="День народження"/>
    		<print_contact_attr_p3 text="Електронну пошту"/>
@@ -196,52 +196,63 @@
    		<tag_added_p0 text="Тег додано. Якщо бажаєте додати ще один, введіть його у консоль. Коли додасте всі, що хотіли, просто пропишіть '"/>
    		<tag_added_p1 text="stop"/>
    		<tag_added_p2 text="' у консоль."/>
+   		<title_removed text="Заголовок видалено."/>
+   		<text_removed text="Текст видалено."/>
    		<tag_removed text="Тег видалено."/>
    		<tag_not_found text="Такого тегу не існує!"/>
    		<unnamed_note text="Безіменна нотатка"/>
    		<none text="немає"/>
 
-   		<str_self_p0 text="Заголовок"/>
-   		<str_self_p1 text="Теги"/>
-   		<str_self_p2 text="Текст"/>
+   		<print_notes text="Наразі збережені такі нотатки"/>
+   		<print_note_attr text="Оберіть номер того, що ви хочете редагувати"/>
+
+   		<note_attr_p0 text="Заголовок"/>
+   		<note_attr_p1 text="Текст"/>
+   		<note_attr_p2 text="Теги"/>
+   		<note_attr_p2_1 text="Тег"/>
+
+   		<what_to_delete_p0 text="Що ви хочете видалити:"/>
+   		<what_to_delete_p1 text="Саму нотатку."/>
+   		<what_to_delete_p2 text="Заголовок/текст/тег."/>
+
+   		<how_to_edit_tag_p0 text="Що ви хочете зробити:"/>
+   		<how_to_edit_tag_p1 text="Відредагувати існуючий тег."/>
+   		<how_to_edit_tag_p2 text="Додати новий."/>
+
+   		<remove_attribute_ask_p0 text="Ви дійсно хочете видалити"/>
+   		<remove_attribute_ask_p1 text="нотатки?"/>
 
    		<note_manager_name text="менеджера нотаток"/>
    		<note_manager_desc text="менеджер нотаток"/>
    		<create_desc text="Додає новий запис до книги нотаток. Можна додати заголовок, текст та теги одразу, а можна й пізніше."/>
-   		<note_attr_p0 text="заголовок"/>
-   		<note_attr_p1 text="текст"/>
-   		<note_attr_p2 text="тег"/>
-   		<edit_desc text="Редагує заголовок, або текст нотатки."/>
-   		<choose_note text="номер нотатки, яку ви хочете відредагувати"/>
+   		<enter_title text="заголовок"/>
+   		<enter_text text="текст"/>
+   		<enter_tag text="тег"/>
+   		<edit_desc text="Редагує заголовок/текст/теги нотатки. Додаэ новий тег."/>
+   		<choose_note text="номер нотатки"/>
+   		<choose_note_to_edit text="номер нотатки, яку ви хочете відредагувати"/>
    		<choose_note_to_remove text="номер нотатки, яку ви хочете видалити"/>
    		<choose_note_attr text="що ви збираєтесь редагувати"/>
    		<edit_note_text text="новий текст"/>
 
    		<edit_tags_desc text="Редагує теги нотатки."/>
    		<choose_note_tag text="тег, який ви збираєтесь редагувати"/>
-   		<edit_note_tag text="новий тег"/>
+   		<choose_tag_edit_option text="що ви хочете зробити"/>
+   		<enter_new_tag text="новий тег"/>
    		<add_tag_desc text="Додає новий тег до нотатки."/>
    		<enter_the_tag text="тег, який ви хочете додати"/>
    		<find_desc text="Шукає введений текст у нотатках."/>
-   		<choose_find_mode text="номер режиму пошуку"/>
-   		<find_text text="текст, який ви бажаєте знайти"/>
-   		<remove_desc text="Видаляє нотатку."/>
+   		<remove_desc text="Видаляє заголовок/текст/теги нотатки, або ж саму нотатку."/>
    		<remove_tag_desc text="Видаляє один з тегів обраної нотатки."/>
    		<choose_tag_to_del text="тег, який ви збираєтеся видалити"/>
    		<show_all_desc text="Виводить всі нотатки, які є в пам'яті."/>
 
-   		<print_contact_p0 text="Наразі збережені такі нотатки"/>
-   		<print_contact_p1 text="Заголовок"/>
-   		<print_contact_p2 text="Текст"/>
-   		<print_contact_p3 text="Теги"/>
-   		<print_contact_p3_1 text="Тег"/>
-
    		<note_list_empty text="Список нотаток порожній!"/>
    		<choose_what_to_edit text="Оберіть, що ви хочете редагувати"/>
-   		<note_not_found text="Нотатки з таким id немає, спробуйте ще раз!"/>
+   		<note_id_not_found text="Нотатки з таким id немає, спробуйте ще раз!"/>
    		<edited text="відредагований."/>
    		<choose_the_tag text="Оберіть потрібний тег"/>
-   		<no_tags text="Нотатка не має тегів!"/>
+   		<no_tags_error text="Нотатка не має тегів!"/>
    		<note_removed text="Нотатка видалена."/>
    		<note_remove_abort text="Видалення скасовано."/>
    		<note_remove_submit text="Ви точно впевнені, що хочете видалити цю нотатку:"/>

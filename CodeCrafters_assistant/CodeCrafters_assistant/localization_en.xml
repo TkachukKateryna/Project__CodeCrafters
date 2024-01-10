@@ -46,6 +46,11 @@
    		<please_enter_p2 text="N"/>
    		<please_enter_p3 text=", if you want to add it later"/>
 
+   		<choose_search_mode text="search mode number"/>
+   		<enter_text_to_find text="text you want to find"/>
+   		<enter_edit text="what you are going to edit"/>
+   		<enter_remove text="what you are going to remove"/>
+   		<enter_new_text text="new text"/>
 	</default>
 	<contact_book>
 		<!--Contact manager-specific commands start-->
@@ -67,9 +72,6 @@
    		<choose_contact text="number of a contact"/>
    		<choose_contact_to_edit text="number of a contact you want to edit"/>
    		<choose_contact_to_remove text="number of a contact you want to delete"/>
-   		<enter_edit text="what you are going to edit"/>
-   		<enter_remove text="what you are going to remove"/>
-   		<enter_new_text text="new text"/>
 
    		<edit_phone_desc text="Edits the phone number of a contact."/>
    		<choose_contact_phone text="phone number, which you are going to edit"/>
@@ -80,8 +82,6 @@
    		<phone_number_add text="phone number, which you are going to add"/>
 
    		<find_desc text="Looks for a specified text in the contacts."/>
-   		<choose_search_mode text="search mode number"/>
-   		<enter_text_to_find text="text you want to find"/>
 
    		<remove_desc text="Removes the name/birthday/email/address/phone number of the contact, or the contact itself."/>
 
@@ -101,7 +101,7 @@
 
    		<print_contacts text="Saved contacts list"/>
 
-   		<print_contact_attr_p0 text="Choose, what you are going to edit"/>
+   		<print_contact_attr_p0 text="Choose the number of the value, which you are going to edit"/>
    		<print_contact_attr_p1 text="Contact name"/>
    		<print_contact_attr_p2 text="The birthday"/>
    		<print_contact_attr_p3 text="The email"/>
@@ -196,22 +196,39 @@
    		<tag_added_p0 text="Tag added. if you want to add another one, enter it in the console. When you are done, just enter '"/>
    		<tag_added_p1 text="stop"/>
    		<tag_added_p2 text="' in the console."/>
+   		<title_removed text="Title removed."/>
+   		<text_removed text="Text removed."/>
    		<tag_removed text="Tag removed."/>
    		<tag_not_found text="No tag with such name!"/>
    		<unnamed_note text="Unnamed note"/>
    		<none text="none"/>
 
-   		<str_self_p0 text="Title"/>
-   		<str_self_p1 text="Tags"/>
-   		<str_self_p2 text="Text"/>
+   		<print_notes text="Saved notes list"/>
+   		<print_note_attr text="Choose the number of the value, which you are going to edit"/>
 
+   		<note_attr_p0 text="Title"/>
+   		<note_attr_p1 text="Text"/>
+   		<note_attr_p2 text="Tags"/>
+   		<note_attr_p2_1 text="Tag"/>
+
+   		<what_to_delete_p0 text="What do you want to delete:"/>
+   		<what_to_delete_p1 text="The note itself."/>
+   		<what_to_delete_p2 text="title/text/tag."/>
+
+   		<how_to_edit_tag_p0 text="What do you want to do:"/>
+   		<how_to_edit_tag_p1 text="Edit the tag."/>
+   		<how_to_edit_tag_p2 text="Add a new one."/>
+
+   		<remove_attribute_ask_p0 text="Do you really want to delete the"/>
+   		<remove_attribute_ask_p1 text="of the note?"/>
+		
    		<note_manager_name text="note manager"/>
    		<note_manager_desc text="note manager"/>
    		<create_desc text="Adds a new record to the note book. You can add a title, text, tags - either when creating a record, or later."/>
    		<note_attr_p0 text="title"/>
    		<note_attr_p1 text="text"/>
    		<note_attr_p2 text="tag"/>
-   		<edit_desc text="Edits the title, or the text of a note."/>
+   		<edit_desc text="Edits the title/text/tags of a note. Adds a new tag."/>
    		<choose_note text="number of a note you want to edit"/>
    		<choose_note_to_remove text="number of a note you want to delete"/>
    		<choose_note_attr text="what you are going to edit"/>
@@ -223,22 +240,14 @@
    		<add_tag_desc text="Add a new tag to the note."/>
    		<enter_the_tag text="tag, which you are going to add"/>
    		<find_desc text="Looks for a specified text in the notes."/>
-   		<choose_find_mode text="search mode number"/>
-   		<find_text text="text you want to find"/>
-   		<remove_desc text="Deletes the note."/>
+   		<remove_desc text="Deletes the title/text/tags of a note, or the note itself."/>
    		<remove_tag_desc text="Deletes one of the tags of the chosen note."/>
    		<choose_tag_to_del text="the tag you are going to delete"/>
    		<show_all_desc text="Displays the contents of the note book."/>
 
-   		<print_contact_p0 text="Saved notes list"/>
-   		<print_contact_p1 text="Title"/>
-   		<print_contact_p2 text="Text"/>
-   		<print_contact_p3 text="Tags"/>
-   		<print_contact_p3_1 text="Tag"/>
-
    		<note_list_empty text="Note list is empty!"/>
    		<choose_what_to_edit text="Choose, what you are going to edit"/>
-   		<note_not_found text="There is no note with this id, try again!"/>
+   		<note_id_not_found text="There is no note with this id, try again!"/>
    		<edited text="edited."/>
    		<choose_the_tag text="Choose the tag you need"/>
    		<no_tags text="The note has no tags!"/>

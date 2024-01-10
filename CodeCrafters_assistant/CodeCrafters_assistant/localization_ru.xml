@@ -46,6 +46,11 @@
    		<please_enter_p2 text="N"/>
    		<please_enter_p3 text=", если желаете добавить позже"/>
 
+   		<choose_search_mode text="номер режима поиска"/>
+   		<enter_text_to_find text="текст, который вы хотите найти"/>
+   		<enter_edit text="что вы собираетесь редактировать"/>
+   		<enter_remove text="что вы собираетесь удалить"/>
+   		<enter_new_text text="новый текст"/>
 	</default>
 	<contact_book>
 		<!--Contact manager-specific commands start-->
@@ -68,9 +73,6 @@
    		<choose_contact_to_edit text="номер контакта, который вы хотите отредактировать"/>
    		<choose_contact_to_remove text="номер контакта, который вы хотите удалить"/>
    		<choose_attr_action text="номер действия"/>
-   		<enter_edit text="что вы собираетесь редактировать"/>
-   		<enter_remove text="что вы собираетесь удалить"/>
-   		<enter_new_text text="новый текст"/>
 
    		<edit_phone_desc text="Редактирует номер телефона контакта."/>
    		<choose_contact_phone text="номер телефона, который вы собираетесь редактировать"/>
@@ -81,8 +83,6 @@
    		<phone_number_add text="номер телефона, который вы хотите добавить"/>
 
    		<find_desc text="Ищет введённый текст в контактах."/>
-   		<choose_search_mode text="номер режима поиска"/>
-   		<enter_text_to_find text="текст, который вы хотите найти"/>
 
    		<remove_desc text="Удаляет имя/день рождения/электронную почту/адрес/номера телефонов контакта, либо же сам контакт."/>
 
@@ -102,7 +102,7 @@
 
    		<print_contacts text="Сейчас сохранены такие контакты"/>
 
-   		<print_contact_attr_p0 text="Выберите, что вы хотите редактировать"/>
+   		<print_contact_attr_p0 text="Выберите номер того, что вы хотите редактировать"/>
    		<print_contact_attr_p1 text="Имя контакта"/>
    		<print_contact_attr_p2 text="День рождения"/>
    		<print_contact_attr_p3 text="Електронную почту"/>
@@ -117,7 +117,7 @@
    		<contact_attr_p5 text="Номера телефонов"/>
    		<contact_attr_p5_1 text="Номер телефона"/>
 
-   		<contact_attr_add_p1 text="Контакт создан с именеи"/>
+   		<contact_attr_add_p1 text="Контакт создан с именем"/>
    		<contact_attr_add_p2 text="днём рождения"/>
    		<contact_attr_add_p3 text="електронной почтой"/>
    		<contact_attr_add_p4 text="адресом"/>
@@ -196,52 +196,63 @@
    		<tag_added_p0 text="Тег добавлен. Если желаете добавить ещё один, введите его в консоль. Когда добавите все, которые хотели, просто напишите '"/>
    		<tag_added_p1 text="stop"/>
    		<tag_added_p2 text="' в консоль."/>
+   		<title_removed text="Заголовок удалён."/>
+   		<text_removed text="Текст удалён."/>
    		<tag_removed text="Тег удалён."/>
    		<tag_not_found text="Такого тега не существует!"/>
    		<unnamed_note text="Безымянная заметка"/>
    		<none text="нет"/>
 
-   		<str_self_p0 text="Заголовок"/>
-   		<str_self_p1 text="Теги"/>
-   		<str_self_p2 text="Текст"/>
+   		<print_notes text="Сейчас сохранены такие заметки"/>
+   		<print_note_attr text="Выберите номер того, что вы хотите редактировать"/>
 
+   		<note_attr_p0 text="Заголовок"/>
+   		<note_attr_p1 text="Текст"/>
+   		<note_attr_p2 text="Теги"/>
+   		<note_attr_p2_1 text="Тег"/>
+
+   		<what_to_delete_p0 text="Что вы хотите удалить:"/>
+   		<what_to_delete_p1 text="Саму заметку."/>
+   		<what_to_delete_p2 text="Заголовок/текст/тег."/>
+
+   		<how_to_edit_tag_p0 text="Что вы хотите сделать:"/>
+   		<how_to_edit_tag_p1 text="Отредактировать существующий тег."/>
+   		<how_to_edit_tag_p2 text="Добавить новый."/>
+
+   		<remove_attribute_ask_p0 text="Вы действительно хотите удалить"/>
+   		<remove_attribute_ask_p1 text="заметки?"/>
+		
    		<note_manager_name text="менеджера заметок"/>
    		<note_manager_desc text="менеджер заметок"/>
    		<create_desc text="Добавляет новую запись в книгу заметок. Можна добавить заголовок, текст и теги сразу, а можна и потом."/>
-   		<note_attr_p0 text="заголовок"/>
-   		<note_attr_p1 text="текст"/>
-   		<note_attr_p2 text="тег"/>
-   		<edit_desc text="Редактирует заголовок, или текст заметки."/>
-   		<choose_note text="номер заметки, которую вы хотите отредактировать"/>
+   		<enter_title text="заголовок"/>
+   		<enter_text text="текст"/>
+   		<enter_tag text="тег"/>
+   		<edit_desc text="Редактирует заголовок/текст/теги заметки. Добавляет новый тег."/>
+   		<choose_note text="номер заметки"/>
+   		<choose_note_to_edit text="номер заметки, которую вы хотите отредактировать"/>
    		<choose_note_to_remove text="номер заметки, которую вы хотите удалить"/>
    		<choose_note_attr text="что вы собираетесь редактировать"/>
    		<edit_note_text text="новый текст"/>
 
    		<edit_tags_desc text="Редактирует теги заметки."/>
    		<choose_note_tag text="тег, который вы собираетесь редактировать"/>
-   		<edit_note_tag text="новый тег"/>
+   		<choose_tag_edit_option text="что вы хотите сделать"/>
+   		<enter_new_tag text="новый тег"/>
    		<add_tag_desc text="Добавляет новый тег к заметке."/>
    		<enter_the_tag text="тег, который вы хотите добавить"/>
-   		<find_desc text="Ище введённый текст в заметках."/>
-   		<choose_find_mode text="номер режима поиска"/>
-   		<find_text text="текст, который вы желаете найти"/>
-   		<remove_desc text="Удаляет заметку."/>
+   		<find_desc text="Ищет введённый текст в заметках."/>
+   		<remove_desc text="Удаляет заголовок/текст/теги заметки, либо же саму заметку."/>
    		<remove_tag_desc text="Удаляет один из тегов выбранной заметки."/>
    		<choose_tag_to_del text="тег, который вы собираетесь удалить"/>
    		<show_all_desc text="Выводит все заметки, которые есть в памяти."/>
 
-   		<print_contact_p0 text="Сейчас сохранены такие заметки"/>
-   		<print_contact_p1 text="Заголовок"/>
-   		<print_contact_p2 text="Текст"/>
-   		<print_contact_p3 text="Теги"/>
-   		<print_contact_p3_1 text="Тег"/>
-
    		<note_list_empty text="Список заметок пуст!"/>
    		<choose_what_to_edit text="Выберите, что вы хотите редактировать"/>
-   		<note_not_found text="Заметки с таким id нет, попробуйте ещё раз!"/>
+   		<note_id_not_found text="Заметки с таким id нет, попробуйте ещё раз!"/>
    		<edited text="отредактирован."/>
    		<choose_the_tag text="Выберите нужный тег"/>
-   		<no_tags text="Заметка не имеет тегов!"/>
+   		<no_tags_error text="Заметка не имеет тегов!"/>
    		<note_removed text="Заметка удалена."/>
    		<note_remove_abort text="Удаление отменено."/>
    		<note_remove_submit text="Вы точно уверены, что хотите удалить эту заметку:"/>
